@@ -1,6 +1,7 @@
 package com.weprintsouvenirs.we_print_souvenirs.user.service;
 
 import com.weprintsouvenirs.we_print_souvenirs.config.JwtUtil;
+import com.weprintsouvenirs.we_print_souvenirs.user.Role;
 import com.weprintsouvenirs.we_print_souvenirs.user.dto.LoginResponseDTO;
 import com.weprintsouvenirs.we_print_souvenirs.user.dto.UserLoginDTO;
 import com.weprintsouvenirs.we_print_souvenirs.user.dto.UserRegisterDTO;
@@ -41,6 +42,8 @@ public class UserService {
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setEmail(dto.getEmail());
+        dto.setRole(Role.USER);
+        user.setRole(dto.getRole());
 
         return userRepository.save(user);
     }
