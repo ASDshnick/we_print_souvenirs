@@ -2,8 +2,6 @@ package com.weprintsouvenirs.we_print_souvenirs.user.model;
 
 import com.weprintsouvenirs.we_print_souvenirs.user.Role;
 import jakarta.persistence.*;
-import lombok.Data;
-import org.springframework.stereotype.Controller;
 
 
 @Entity
@@ -19,6 +17,7 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
 
@@ -28,10 +27,8 @@ public class UserEntity {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "telegram")
-    private String telegram;
 
-    public UserEntity () {
+    public UserEntity() {
 
     }
 
@@ -42,7 +39,6 @@ public class UserEntity {
         this.role = role;
         this.email = email;
         this.phone = phone;
-        this.telegram = telegram;
     }
 
     public long getId() {
@@ -69,10 +65,6 @@ public class UserEntity {
         return phone;
     }
 
-    public String getTelegram() {
-        return telegram;
-    }
-
     public void setId(long id) {
         this.id = id;
     }
@@ -97,7 +89,4 @@ public class UserEntity {
         this.phone = phone;
     }
 
-    public void setTelegram(String telegram) {
-        this.telegram = telegram;
-    }
 }

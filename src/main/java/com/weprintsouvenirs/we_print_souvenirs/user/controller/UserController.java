@@ -1,12 +1,8 @@
 package com.weprintsouvenirs.we_print_souvenirs.user.controller;
 
-import com.weprintsouvenirs.we_print_souvenirs.user.dto.LoginResponseDTO;
-import com.weprintsouvenirs.we_print_souvenirs.user.dto.UserLoginDTO;
-import com.weprintsouvenirs.we_print_souvenirs.user.dto.UserRegisterDTO;
-import com.weprintsouvenirs.we_print_souvenirs.user.dto.UserResponseDTO;
+import com.weprintsouvenirs.we_print_souvenirs.user.dto.*;
 import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
 import com.weprintsouvenirs.we_print_souvenirs.user.service.UserService;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,24 +23,33 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> registerUser (
+    public ResponseEntity<UserResponseDTO> registerUser(
             @RequestBody UserRegisterDTO userRegisterDTO
     ) {
         UserEntity savedEntity = userService.registerUser(userRegisterDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
-//        UserResponseDTO response = new UserResponseDTO();
-//        response.setUsername(savedEntity.getUsername());
-//        response.setEmail(savedEntity.getEmail());
-//        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> loginUser (
+    public ResponseEntity<LoginResponseDTO> loginUser(
             @RequestBody UserLoginDTO userLoginDTO
     ) {
         LoginResponseDTO response = userService.loginUser(userLoginDTO);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/change-password/{id}")
+    public ResponseEntity<String> changePassword(
+            @PathVariable("id") Long id,
+            @RequestBody ChangePasswordRequestDTO requestDTO
+    ) {
+        try {
+            userService.changePassword(id, requestDTO);
+            return ResponseEntity.status(HttpStatus.OK).body("Password changed");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 

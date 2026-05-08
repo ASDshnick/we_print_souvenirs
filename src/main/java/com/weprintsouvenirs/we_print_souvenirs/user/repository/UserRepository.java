@@ -2,7 +2,6 @@ package com.weprintsouvenirs.we_print_souvenirs.user.repository;
 
 import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
