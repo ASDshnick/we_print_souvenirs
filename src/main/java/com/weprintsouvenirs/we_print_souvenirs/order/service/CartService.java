@@ -14,14 +14,16 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+    private final PriceCalculatorService priceCalculatorService;
 
-    public CartService(CartRepository cartRepository, ProductRepository productRepository) {
+    public CartService(CartRepository cartRepository, ProductRepository productRepository, PriceCalculatorService priceCalculatorService) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
+        this.priceCalculatorService = priceCalculatorService;
     }
 
     @Transactional
-    public void addToCart(UserEntity user, CartItemRequestDTO dto){
+    public void addToCart(UserEntity user, CartItemRequestDTO dto) {
         ProductEntity product = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
@@ -33,8 +35,13 @@ public class CartService {
                 dto.getColor()
         ).orElse(null);
 
+        int finalQuantity = (cartItem != null) ? cartItem.getQuantity() + dto.getQuantity() : dto.getQuantity();
+
+        int pricePerItem = priceCalculatorService.calculatePrice(product, dto.getSize(), dto.getColor(), finalQuantity);
+
         if (cartItem != null) {
-            cartItem.setQuantity(cartItem.getQuantity() + dto.getQuantity());
+            cartItem.setQuantity(finalQuantity);
+            cartItem.setPricePerItem(pricePerItem);
             cartRepository.save(cartItem);
         } else {
             CartEntity newItem = new CartEntity();
@@ -43,7 +50,7 @@ public class CartService {
             newItem.setQuantity(dto.getQuantity());
             newItem.setSize(dto.getSize());
             newItem.setColor(dto.getColor());
-
+            newItem.setPricePerItem(pricePerItem);
             cartRepository.save(newItem);
         }
     }

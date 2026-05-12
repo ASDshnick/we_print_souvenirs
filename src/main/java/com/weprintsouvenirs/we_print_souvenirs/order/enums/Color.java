@@ -9,5 +9,6 @@ public enum Color {
     BLUE, // синий
     GREEN, // зеленый
     RED, // красный
-    ORANGE // оранжевый
+    ORANGE, // оранжевый
+    COLORED, // цветной (для карты города)
 }
