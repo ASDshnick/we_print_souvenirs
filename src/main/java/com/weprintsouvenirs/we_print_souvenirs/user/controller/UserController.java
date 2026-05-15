@@ -39,17 +39,21 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/change-password/{id}")
+    @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(
-            @PathVariable("id") Long id,
             @RequestBody ChangePasswordRequestDTO requestDTO
     ) {
         try {
-            userService.changePassword(id, requestDTO);
+            userService.changePassword(requestDTO);
             return ResponseEntity.status(HttpStatus.OK).body("Password changed");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<ProfileResponseDTO> getUserProfile(){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserProfile());
     }
 
 

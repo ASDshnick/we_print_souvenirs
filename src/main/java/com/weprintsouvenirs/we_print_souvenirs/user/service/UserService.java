@@ -2,15 +2,14 @@ package com.weprintsouvenirs.we_print_souvenirs.user.service;
 
 import com.weprintsouvenirs.we_print_souvenirs.config.JwtUtil;
 import com.weprintsouvenirs.we_print_souvenirs.user.Role;
-import com.weprintsouvenirs.we_print_souvenirs.user.dto.ChangePasswordRequestDTO;
-import com.weprintsouvenirs.we_print_souvenirs.user.dto.LoginResponseDTO;
-import com.weprintsouvenirs.we_print_souvenirs.user.dto.UserLoginDTO;
-import com.weprintsouvenirs.we_print_souvenirs.user.dto.UserRegisterDTO;
+import com.weprintsouvenirs.we_print_souvenirs.user.User;
+import com.weprintsouvenirs.we_print_souvenirs.user.dto.*;
 import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
 import com.weprintsouvenirs.we_print_souvenirs.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +33,23 @@ public class UserService {
         this.jwtUtil = jwtUtil;
     }
 
+    /**
+     * Метод регистрации нового пользователя
+     *
+     * Принимает dto с информацией о регистрации.
+     * Проверяет наличие пользователя с таким же username.
+     *
+     * @param dto
+     * JSON:
+     * {
+     *     "username": "username",
+     *     "password": "password",
+     *     "email", "email"
+     * }
+     * @return
+     * Сохранение в базу данных нового пользователя с информацией:
+     * username, password (хэш), email, устанвливается роль по умолчанию USER
+     */
     public UserEntity registerUser(UserRegisterDTO dto) {
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw new RuntimeException("User with this username already exists");
@@ -43,12 +59,32 @@ public class UserService {
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setEmail(dto.getEmail());
-//        dto.setRole(Role.USER);
         user.setRole(Role.USER);
 
         return userRepository.save(user);
     }
 
+    /**
+     * Метод для входа пользователя на сайт
+     *
+     * Принимает DTO.
+     * Проводит аутентификацию пользователя
+     *
+     * @param loginDTO
+     * В DTO содержится введенные пользователем имя пользователя и пароль
+     * JSON:
+     * {
+     *     "username": "username",
+     *     "password": "password"
+     * }
+     * @return
+     * JSON:
+     * {
+     *     "token": "JWTToken",
+     *     "username": "username",
+     *     "email": "email"
+     * }
+     */
     public LoginResponseDTO loginUser(UserLoginDTO loginDTO) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -64,16 +100,30 @@ public class UserService {
         return new LoginResponseDTO(token, user.getUsername(), user.getEmail());
     }
 
-    @Transactional
-    public void changePassword(Long userId, ChangePasswordRequestDTO requestDTO) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-        if (!passwordEncoder.matches(requestDTO.getOldPassword(), user.getPassword())){
+    /**
+     * Метод смены пароля пользователя
+     *
+     * Для смены пароля пользователь должен ввести свой старый пароль и затем ввести новый
+     * @param requestDTO
+     * JSON:
+     * {
+     *      "oldPassword": "oldPassword",
+     *      "newPassword": "newPassword"
+     * }
+     */
+    @Transactional
+    public void changePassword(ChangePasswordRequestDTO requestDTO) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(requestDTO.getOldPassword(), user.getPassword())) {
             throw new RuntimeException("Old password is incorrect");
         }
 
-        if (requestDTO.getNewPassword() == null || requestDTO.getNewPassword().isEmpty()){
+        if (requestDTO.getNewPassword() == null || requestDTO.getNewPassword().isEmpty()) {
             throw new RuntimeException("New password cannot be empty");
         }
 
@@ -81,18 +131,34 @@ public class UserService {
         userRepository.save(user);
     }
 
-//    private User toDomainUser(
-//            UserEntity userEntity
-//    ) {
-//        return new User(
-//                userEntity.getId(),
-//                userEntity.getUsername(),
-//                userEntity.getPassword(),
-//                userEntity.getEmail(),
-//                userEntity.getPhone(),
-//                userEntity.getTelegram()
-//        );
-//    }
+
+    /**
+     * Метод для получения профиля пользователя
+     *
+     * Метод достает из SecurityContex имя пользователя, ищет его в UserRepository
+     * и возвращает его профиль
+     *
+     * @return
+     * JSON:
+     * {
+     *      "username": "username",
+     *      "email": "email",
+     *      "phone": "phione"
+     * }
+     */
+    @Transactional
+    public ProfileResponseDTO getUserProfile() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new ProfileResponseDTO(
+                user.getUsername(),
+                user.getEmail(),
+                user.getPhone()
+        );
+    }
 }
 
 
