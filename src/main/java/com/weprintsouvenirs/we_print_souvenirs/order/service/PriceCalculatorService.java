@@ -11,6 +11,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Класс калькулятора итоговой стоимости товара
+ */
 @Service
 public class PriceCalculatorService {
     private final PricingRuleRepository pricingRuleRepository;
@@ -19,6 +22,15 @@ public class PriceCalculatorService {
         this.pricingRuleRepository = pricingRuleRepository;
     }
 
+    /**
+     * Метод для вычисления итоговой стоимости одного товара, в зависимости от параметров
+     *
+     * @param product  : Продукт, который добавляет пользователь, из него берется id
+     * @param size     : Размер
+     * @param color    : Цвет
+     * @param quantity : Количество
+     * @return : (int) Итоговая стоимость
+     */
     public int calculatePrice(ProductEntity product, Size size, Color color, int quantity) {
         int finalPrice = product.getPrice();
 
@@ -35,13 +47,28 @@ public class PriceCalculatorService {
         return finalPrice;
     }
 
-
+    /**
+     * Общий метод для применения различных параметров и расчета стоимости из этого
+     * Берет правила стоимости из таблицы в БД
+     *
+     * @param productId : id продукта
+     * @param type      : Тип правила
+     * @param key       : Параметр правила
+     * @return : (int) расчетная стоимость
+     */
     private int getModifier(Long productId, String type, String key) {
         return pricingRuleRepository.findByProductIdAndRuleTypeAndKeyValue(productId, type, key)
                 .map(PricingRuleEntity::getAdjustment)
                 .orElse(0);
     }
 
+    /**
+     * Метод для применения модификатора цвета
+     *
+     * @param productId : id продукта
+     * @param color     : Цвет
+     * @return : возвращает результат применения метода getModifier()
+     */
     private int getColorModifier(Long productId, Color color) {
         if (color == null) {
             return getModifier(productId, "COLOR", "BLACK");
@@ -53,14 +80,17 @@ public class PriceCalculatorService {
                 .findByProductIdAndRuleTypeAndKeyValue(productId, "COLOR", colorName)
                 .map(PricingRuleEntity::getAdjustment);
 
-        if (specificMod.isPresent()) {
-            return specificMod.get();
-        }
-
-        return getModifier(productId, "COLOR", "OTHERS");
+        return specificMod.orElseGet(() -> getModifier(productId, "COLOR", "OTHERS"));
 
     }
 
+    /**
+     * Метод для подсчета скидки в зависимости от количества конкретного товара
+     *
+     * @param productId : id продукта
+     * @param quantity  : Количество
+     * @return : возвращает скидку за количество
+     */
     private int getQuantityDiscount(Long productId, int quantity) {
         List<PricingRuleEntity> rules = pricingRuleRepository.findByProductIdAndRuleType(productId, "QUANTITY");
         return rules.stream()

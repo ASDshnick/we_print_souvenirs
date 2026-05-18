@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Класс обработки действий с корзиной
+ */
 @Service
 public class CartService {
 
@@ -31,6 +34,18 @@ public class CartService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Метод для добавления товара в корзину пользователя
+     *
+     * @param user
+     * @param dto  JSON:
+     *             {
+     *             "productId": (int) id,
+     *             "quantity": (int) quantity,
+     *             "size": "SIZE", (из enum Size)
+     *             "color": "COLOR" (из enum Color)
+     *             }
+     */
     @Transactional
     public void addToCart(UserEntity user, CartItemRequestDTO dto) {
         ProductEntity product = productRepository.findById(dto.getProductId())
@@ -64,6 +79,25 @@ public class CartService {
         }
     }
 
+    /**
+     * @return Возвращает DTO со всеми товара корзины и общей суммой
+     * JSON:
+     * {
+     * "items": [
+     * {
+     * "id": (int) id,
+     * "productId": (int) productId,
+     * "productName": "Название продукта",
+     * "quantity": (int) quantity,
+     * "size": "SIZE", (из enum Size)
+     * "color": "COLOR", (из enum Color)
+     * "pricePerItem": (int) pricePerItem,
+     * "totalPrice": (int) totalPrice
+     * }
+     * ],
+     * "totalAmount": (int) totalAmount
+     * }
+     */
     public CartResponseDTO findAllItemsInCart() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -99,5 +133,26 @@ public class CartService {
                 .sum();
 
         return new CartResponseDTO(items, totalAmount);
+    }
+
+    /**
+     * Метод для удаления товара из корзины пользователя
+     *
+     * @param itemId : (int) передается в url
+     */
+    public void removeItemFromCart(Long itemId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        CartEntity cartItem = cartRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+
+        // проверка на принадлежность текущему пользователю
+        if (cartItem.getUser().getId() != user.getId()) {
+            throw new RuntimeException("You can't remove other's item");
+        }
+
+        cartRepository.delete(cartItem);
     }
 }
