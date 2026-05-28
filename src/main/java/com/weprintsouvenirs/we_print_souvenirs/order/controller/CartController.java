@@ -1,16 +1,15 @@
 package com.weprintsouvenirs.we_print_souvenirs.order.controller;
 
 import com.weprintsouvenirs.we_print_souvenirs.order.dto.CartItemRequestDTO;
+import com.weprintsouvenirs.we_print_souvenirs.order.dto.CartResponseDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.service.CartService;
 import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
 import com.weprintsouvenirs.we_print_souvenirs.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/cart")
@@ -36,5 +35,18 @@ public class CartController {
         cartService.addToCart(user, dto);
 
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/items")
+    public ResponseEntity<CartResponseDTO> getItemsFromCart() {
+        return ResponseEntity.ok(cartService.findAllItemsInCart());
+    }
+
+    @DeleteMapping("items/{itemId}")
+    public ResponseEntity<String> deleteFromCart(
+        @PathVariable("itemId") Long itemId
+    ) {
+        cartService.removeItemFromCart(itemId);
+        return ResponseEntity.status(HttpStatus.OK).body("Item removed from cart");
     }
 }

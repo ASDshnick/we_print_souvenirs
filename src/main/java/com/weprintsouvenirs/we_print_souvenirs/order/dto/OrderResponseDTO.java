@@ -1,54 +1,27 @@
-package com.weprintsouvenirs.we_print_souvenirs.order.model;
+package com.weprintsouvenirs.we_print_souvenirs.order.dto;
 
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Payment;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
-import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
-import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "orders")
-public class OrderEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+/**
+ * Возвращаемое DTO после создания заказа
+ */
+public class OrderResponseDTO {
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
-
-    @Column(name = "customer_username")
     private String customerUsername;
-
-    @Column(name = "customer_email")
     private String customerEmail;
-
-    @Column(name = "total_amount")
     private int totalAmount;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status = Status.NEW;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method")
-    private Payment paymentMethod = Payment.CARD;
-
-    @Column(name = "created_at")
+    private Status status;
+    private Payment paymentMethod;
     private LocalDateTime createdAt;
 
-    @PrePersist
-    private void onCreate() {
-        this.createdAt = LocalDateTime.now();
+    public OrderResponseDTO() {
     }
 
-    public OrderEntity() {
-    }
-
-    public OrderEntity(Long id, UserEntity user, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt) {
+    public OrderResponseDTO(Long id, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt) {
         this.id = id;
-        this.user = user;
         this.customerUsername = customerUsername;
         this.customerEmail = customerEmail;
         this.totalAmount = totalAmount;
@@ -59,10 +32,6 @@ public class OrderEntity {
 
     public Long getId() {
         return id;
-    }
-
-    public UserEntity getUser() {
-        return user;
     }
 
     public String getCustomerUsername() {
@@ -91,10 +60,6 @@ public class OrderEntity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
     }
 
     public void setCustomerUsername(String customerUsername) {
