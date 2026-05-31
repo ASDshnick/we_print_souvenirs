@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/user/register").permitAll()
                         .requestMatchers("/user/login").permitAll()
+                        .requestMatchers("/user/orders").hasRole("USER")
                         .requestMatchers("/user/change-password/**").hasRole("USER")
                         .requestMatchers("/admin/users").hasRole("ADMIN")
                         .anyRequest().authenticated()
