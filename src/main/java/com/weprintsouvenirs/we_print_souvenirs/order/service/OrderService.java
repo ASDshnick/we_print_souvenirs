@@ -1,5 +1,6 @@
 package com.weprintsouvenirs.we_print_souvenirs.order.service;
 
+import com.weprintsouvenirs.we_print_souvenirs.order.dto.AllUserOrdersDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.dto.CheckoutRequestDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Payment;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
@@ -15,8 +16,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Класс обработки действий с заказами
@@ -116,6 +119,23 @@ public class OrderService {
         cartRepository.deleteByUser(user);
 
         return order;
+    }
 
+    public List<AllUserOrdersDTO> getOrdersForUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<OrderEntity> orders = orderRepository.findByUser(user);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+        return orders.stream()
+                .map(order -> new AllUserOrdersDTO(
+                        order.getId(),
+                        order.getTotalAmount(),
+                        order.getStatus(),
+                        order.getCreatedAt().format(formatter)
+                ))
+                .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,7 @@
 package com.weprintsouvenirs.we_print_souvenirs.user.controller;
 
+import com.weprintsouvenirs.we_print_souvenirs.order.dto.AllUserOrdersDTO;
+import com.weprintsouvenirs.we_print_souvenirs.order.service.OrderService;
 import com.weprintsouvenirs.we_print_souvenirs.user.dto.*;
 import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
 import com.weprintsouvenirs.we_print_souvenirs.user.service.UserService;
@@ -9,17 +11,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final OrderService orderService;
 
     public UserController(
-            UserService userService
+            UserService userService,
+            OrderService orderService
     ) {
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @PostMapping("/register")
@@ -52,5 +59,10 @@ public class UserController {
         }
     }
 
+    @GetMapping("/orders")
+    public ResponseEntity<List<AllUserOrdersDTO>> getUserOrders() {
+        List<AllUserOrdersDTO> orders = orderService.getOrdersForUser();
+        return ResponseEntity.status(HttpStatus.OK).body(orders);
+    }
 
 }
