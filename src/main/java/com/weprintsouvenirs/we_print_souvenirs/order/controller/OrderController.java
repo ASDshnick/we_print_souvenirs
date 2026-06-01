@@ -1,6 +1,5 @@
 package com.weprintsouvenirs.we_print_souvenirs.order.controller;
 
-import com.weprintsouvenirs.we_print_souvenirs.order.dto.AllUserOrdersDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.dto.OrderDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.dto.OrderResponseDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.model.OrderEntity;
@@ -8,8 +7,6 @@ import com.weprintsouvenirs.we_print_souvenirs.order.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user/orders")
@@ -30,12 +27,6 @@ public class OrderController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    /** История заказов пользователя (FR-10) */
-    @GetMapping
-    public ResponseEntity<List<AllUserOrdersDTO>> getMyOrders() {
-        return ResponseEntity.ok(orderService.getOrdersForUser());
     }
 
     private OrderResponseDTO toDTO(OrderEntity order) {
