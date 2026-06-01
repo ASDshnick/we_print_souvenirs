@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/user/orders").hasRole("USER")
                         .requestMatchers("/user/change-password/**").hasRole("USER")
+                        .requestMatchers("/user/change-data").hasRole("USER")
                         .requestMatchers("/admin/users").hasRole("ADMIN")
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/chat/**").authenticated()

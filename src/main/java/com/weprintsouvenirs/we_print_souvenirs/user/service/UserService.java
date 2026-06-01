@@ -35,7 +35,6 @@ public class UserService {
 
     /**
      * Метод регистрации нового пользователя
-     *
      * Принимает dto с информацией о регистрации.
      * Проверяет наличие пользователя с таким же username.
      *
@@ -66,7 +65,6 @@ public class UserService {
 
     /**
      * Метод для входа пользователя на сайт
-     *
      * Принимает DTO.
      * Проводит аутентификацию пользователя
      *
@@ -103,8 +101,8 @@ public class UserService {
 
     /**
      * Метод смены пароля пользователя
-     *
      * Для смены пароля пользователь должен ввести свой старый пароль и затем ввести новый
+     *
      * @param requestDTO
      * JSON:
      * {
@@ -134,7 +132,6 @@ public class UserService {
 
     /**
      * Метод для получения профиля пользователя
-     *
      * Метод достает из SecurityContex имя пользователя, ищет его в UserRepository
      * и возвращает его профиль
      *
@@ -153,6 +150,49 @@ public class UserService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        return new ProfileResponseDTO(
+                user.getUsername(),
+                user.getEmail(),
+                user.getPhone()
+        );
+    }
+
+    /**
+     * Метод для обновления личных данных пользователя: username, почта, номер телефона
+     *
+     * @param requestDTO Принимает DTO с новыми данными, которые пользователь ввел
+     *                   JSON:
+     *                   {
+     *                      "username": "username",
+     *                      "email": "email",
+     *                      "phone": "+71234567890"
+     *                   }
+     * @return Возвращает DTO с новыми данными пользователя; формат JSON, такой же, как и принимаемый
+     */
+    @Transactional
+    public ProfileResponseDTO changeUserData(ChangeUserDataRequestDTO requestDTO) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (requestDTO.getUsername() != null && !requestDTO.getUsername().isBlank()) {
+            if (!requestDTO.getUsername().equals(user.getUsername())
+                    && userRepository.existsByUsername(requestDTO.getUsername())) {
+                throw new RuntimeException("Username is already exists");
+            }
+            user.setUsername(requestDTO.getUsername());
+        }
+
+        if (requestDTO.getEmail() != null && !requestDTO.getEmail().isBlank()) {
+            user.setEmail(requestDTO.getEmail());
+        }
+
+        if (requestDTO.getPhone() != null && !requestDTO.getPhone().isBlank()) {
+            user.setPhone(requestDTO.getPhone());
+        }
+
+        userRepository.save(user);
         return new ProfileResponseDTO(
                 user.getUsername(),
                 user.getEmail(),
