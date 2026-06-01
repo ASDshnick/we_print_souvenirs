@@ -63,6 +63,8 @@ public class SecurityConfig {
                         .requestMatchers("/user/orders").hasRole("USER")
                         .requestMatchers("/user/change-password/**").hasRole("USER")
                         .requestMatchers("/admin/users").hasRole("ADMIN")
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/chat/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())
@@ -75,7 +77,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:63342"));
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:63342/",
+                "http://127.0.0.1:63342/",
+                "http://localhost:5500/",
+                "http://127.0.0.1:5500/",
+                "http://localhost:3000/",
+                "http://127.0.0.1:3000/",
+                "http://localhost:4200/",
+                "http://127.0.0.1:4200/",
+                "http://localhost:8080/"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
