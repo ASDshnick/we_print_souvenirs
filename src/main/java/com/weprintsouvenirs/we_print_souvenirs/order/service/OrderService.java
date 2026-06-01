@@ -1,14 +1,8 @@
 package com.weprintsouvenirs.we_print_souvenirs.order.service;
 
 import com.weprintsouvenirs.we_print_souvenirs.order.dto.AllUserOrdersDTO;
-import com.weprintsouvenirs.we_print_souvenirs.order.dto.CheckoutRequestDTO;
-import com.weprintsouvenirs.we_print_souvenirs.order.enums.Payment;
-import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
-import com.weprintsouvenirs.we_print_souvenirs.order.model.CartEntity;
+import com.weprintsouvenirs.we_print_souvenirs.order.dto.OrderDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.model.OrderEntity;
-import com.weprintsouvenirs.we_print_souvenirs.order.model.OrderItemEntity;
-import com.weprintsouvenirs.we_print_souvenirs.order.repository.CartRepository;
-import com.weprintsouvenirs.we_print_souvenirs.order.repository.OrderItemRepository;
 import com.weprintsouvenirs.we_print_souvenirs.order.repository.OrderRepository;
 import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
 import com.weprintsouvenirs.we_print_souvenirs.user.repository.UserRepository;
@@ -17,110 +11,59 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Класс обработки действий с заказами
- */
 @Service
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
-    private final CartRepository cartRepository;
     private final UserRepository userRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderItemRepository orderItemRepository, CartRepository cartRepository, UserRepository userRepository) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
-        this.orderItemRepository = orderItemRepository;
-        this.cartRepository = cartRepository;
         this.userRepository = userRepository;
     }
 
     /**
-     *
-     * @param requestDTO
-     * JSON:
-     * {
-     *     "customerUsername": "username",
-     *     "customerEmail": "email",
-     *     "customerPhone": "+71231231212",
-     *     "paymentMethod": "CARD"/"CASH"
-     * }
-     * @return {@link OrderEntity}
-     * JSON:
-     * {
-     *     "id": (int),
-     *     "customerUsername": "username",
-     *     "customerEmail": "email",
-     *     "totalAmount": (int),
-     *     "status": "NEW",
-     *     "paymentMethod": "CARD",
-     *     "createdAt": "(LocalDateTime)"
-     * }
+     * Создание заказа (FR-06 — FR-09).
+     * Доступно только авторизованным пользователям.
      */
     @Transactional
-    public OrderEntity checkout(CheckoutRequestDTO requestDTO) {
+    public OrderEntity createOrder(OrderDTO dto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // товары из корзины пользователя
-        List<CartEntity> cartItems = cartRepository.findByUser(user);
-        if (cartItems.isEmpty()) {
-            throw new RuntimeException("Cart is empty");
+        if (dto.getType() == null) {
+            throw new RuntimeException("Order type is required");
         }
 
         OrderEntity order = new OrderEntity();
         order.setUser(user);
+        order.setType(dto.getType());
+        order.setRequirements(dto.getRequirements());
+        order.setPolygons(dto.getPolygons());
+        order.setPolygonsImportant(dto.isPolygonsImportant());
+        order.setDeadlineImportant(dto.isDeadlineImportant());
+        order.setDeadline(dto.getDeadline());
 
-        order.setCustomerUsername(requestDTO.getCustomerUsername() != null
-                ? requestDTO.getCustomerUsername() : user.getUsername());
-        order.setCustomerEmail(requestDTO.getCustomerEmail() != null
-                ? requestDTO.getCustomerEmail() : user.getEmail());
-
-        Payment paymentMethod = requestDTO.getPaymentMethod();
-        if ((paymentMethod == Payment.CARD || paymentMethod == Payment.CASH)) {
-            order.setPaymentMethod(paymentMethod);
-        } else {
-            order.setPaymentMethod(Payment.CARD);
+        if (dto.getDeliveryType() != null) {
+            order.setDeliveryType(dto.getDeliveryType());
+        }
+        if (dto.getQuantity() != null) {
+            order.setQuantity(dto.getQuantity());
+        }
+        if (dto.getColorPrint() != null) {
+            order.setColorPrint(dto.getColorPrint());
         }
 
-        order.setStatus(Status.NEW);
-
-        // перенос товаров из корзины
-        List<OrderItemEntity> orderItems = new ArrayList<>();
-        int totalAmount = 0;
-
-        for (CartEntity cartItem : cartItems) {
-            OrderItemEntity orderItem = new OrderItemEntity();
-            orderItem.setOrder(order);
-            orderItem.setProduct(cartItem.getProduct());
-            orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setSize(cartItem.getSize());
-            orderItem.setColor(cartItem.getColor());
-            orderItem.setPricePerItem(cartItem.getPricePerItem());
-
-            orderItems.add(orderItem);
-            totalAmount += cartItem.getPricePerItem() * cartItem.getQuantity();
-        }
-
-        order.setTotalAmount(totalAmount);
-
-        order = orderRepository.save(order);
-
-        for (OrderItemEntity item : orderItems) {
-            item.setOrder(order);
-            orderItemRepository.save(item);
-        }
-
-        cartRepository.deleteByUser(user);
-
-        return order;
+        return orderRepository.save(order);
     }
 
+    /**
+     * История заказов текущего пользователя (FR-10, FR-11).
+     */
     public List<AllUserOrdersDTO> getOrdersForUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByUsername(username)
@@ -132,8 +75,9 @@ public class OrderService {
         return orders.stream()
                 .map(order -> new AllUserOrdersDTO(
                         order.getId(),
-                        order.getTotalAmount(),
+                        order.getType(),
                         order.getStatus(),
+                        order.getCompletionPercentage(),
                         order.getCreatedAt().format(formatter)
                 ))
                 .collect(Collectors.toList());

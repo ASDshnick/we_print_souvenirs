@@ -1,17 +1,18 @@
 package com.weprintsouvenirs.we_print_souvenirs.order.controller;
 
-import com.weprintsouvenirs.we_print_souvenirs.order.dto.CheckoutRequestDTO;
+import com.weprintsouvenirs.we_print_souvenirs.order.dto.AllUserOrdersDTO;
+import com.weprintsouvenirs.we_print_souvenirs.order.dto.OrderDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.dto.OrderResponseDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.model.OrderEntity;
 import com.weprintsouvenirs.we_print_souvenirs.order.service.OrderService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/user/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -20,35 +21,36 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/checkout")
-    public ResponseEntity<OrderResponseDTO> checkout(
-            @RequestBody CheckoutRequestDTO checkoutRequestDTO
-    ) {
+    /** Создать заказ (FR-06 — FR-09) */
+    @PostMapping
+    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody OrderDTO dto) {
         try {
-            OrderEntity order = orderService.checkout(checkoutRequestDTO);
-            OrderResponseDTO response = convertToDTO(order);
-            return ResponseEntity.ok(response);
+            OrderEntity order = orderService.createOrder(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(order));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
-    /**
-     * Приватный метод для перевода сущности заказа в возвращаемое DTO
-     * @param order
-     * @return {@link OrderResponseDTO}
-     */
-    private OrderResponseDTO convertToDTO(OrderEntity order) {
+    /** История заказов пользователя (FR-10) */
+    @GetMapping
+    public ResponseEntity<List<AllUserOrdersDTO>> getMyOrders() {
+        return ResponseEntity.ok(orderService.getOrdersForUser());
+    }
+
+    private OrderResponseDTO toDTO(OrderEntity order) {
         OrderResponseDTO dto = new OrderResponseDTO();
         dto.setId(order.getId());
-        dto.setCustomerUsername(order.getCustomerUsername());
-        dto.setCustomerEmail(order.getCustomerEmail());
-        dto.setTotalAmount(order.getTotalAmount());
+        dto.setType(order.getType());
+        dto.setRequirements(order.getRequirements());
         dto.setStatus(order.getStatus());
-        dto.setPaymentMethod(order.getPaymentMethod());
+        dto.setCompletionPercentage(order.getCompletionPercentage());
+        dto.setLabels(order.getLabels());
+        dto.setRevisionCount(order.getRevisionCount());
+        dto.setDeliveryType(order.getDeliveryType());
+        dto.setQuantity(order.getQuantity());
+        dto.setColorPrint(order.getColorPrint());
         dto.setCreatedAt(order.getCreatedAt());
         return dto;
     }
-
-
 }

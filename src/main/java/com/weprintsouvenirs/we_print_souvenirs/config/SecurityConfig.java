@@ -53,16 +53,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // активация cors
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/user/register").permitAll()
-                        .requestMatchers("/user/login").permitAll()
-                        .requestMatchers("/user/orders").hasRole("USER")
-                        .requestMatchers("/user/change-password/**").hasRole("USER")
-                        .requestMatchers("/admin/users").hasRole("ADMIN")
+                        .requestMatchers("/user/register", "/user/login").permitAll()
+                        .requestMatchers("/user/change-password", "/user/profile", "/user/orders").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())

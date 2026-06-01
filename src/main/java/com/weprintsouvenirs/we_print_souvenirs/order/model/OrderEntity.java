@@ -1,7 +1,8 @@
 package com.weprintsouvenirs.we_print_souvenirs.order.model;
 
-import com.weprintsouvenirs.we_print_souvenirs.order.enums.Payment;
-import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
+import com.weprintsouvenirs.we_print_souvenirs.order.DeliveryType;
+import com.weprintsouvenirs.we_print_souvenirs.order.OrderStatus;
+import com.weprintsouvenirs.we_print_souvenirs.order.OrderType;
 import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
 import jakarta.persistence.*;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "orders")
 public class OrderEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,106 +20,96 @@ public class OrderEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @Column(name = "customer_username")
-    private String customerUsername;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private OrderType type;
 
-    @Column(name = "customer_email")
-    private String customerEmail;
+    @Column(name = "requirements", columnDefinition = "TEXT")
+    private String requirements;
 
-    @Column(name = "total_amount")
-    private int totalAmount;
+    @Column(name = "polygons")
+    private Integer polygons;
+
+    @Column(name = "polygons_important")
+    private boolean polygonsImportant = false;
+
+    @Column(name = "deadline_important")
+    private boolean deadlineImportant = false;
+
+    @Column(name = "deadline")
+    private String deadline;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status = Status.NEW;
+    @Column(name = "status", nullable = false)
+    private OrderStatus status = OrderStatus.NEW;
 
+    @Column(name = "completion_percentage", nullable = false)
+    private int completionPercentage = 0;
+
+    @Column(name = "labels")
+    private String labels;
+
+    @Column(name = "revision_count", nullable = false)
+    private int revisionCount = 0;
+
+    // Только для PRINT_3D
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method")
-    private Payment paymentMethod = Payment.CARD;
+    @Column(name = "delivery_type")
+    private DeliveryType deliveryType;
 
-    @Column(name = "created_at")
+    @Column(name = "quantity")
+    private Integer quantity;
+
+    @Column(name = "color_print")
+    private Boolean colorPrint;
+
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
-    @PrePersist
-    private void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
 
     public OrderEntity() {
     }
 
-    public OrderEntity(Long id, UserEntity user, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt) {
-        this.id = id;
-        this.user = user;
-        this.customerUsername = customerUsername;
-        this.customerEmail = customerEmail;
-        this.totalAmount = totalAmount;
-        this.status = status;
-        this.paymentMethod = paymentMethod;
-        this.createdAt = createdAt;
+    @PrePersist
+    private void prePersist() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        if (status == null) {
+            status = OrderStatus.NEW;
+        }
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public UserEntity getUser() { return user; }
+    public OrderType getType() { return type; }
+    public String getRequirements() { return requirements; }
+    public Integer getPolygons() { return polygons; }
+    public boolean isPolygonsImportant() { return polygonsImportant; }
+    public boolean isDeadlineImportant() { return deadlineImportant; }
+    public String getDeadline() { return deadline; }
+    public OrderStatus getStatus() { return status; }
+    public int getCompletionPercentage() { return completionPercentage; }
+    public String getLabels() { return labels; }
+    public int getRevisionCount() { return revisionCount; }
+    public DeliveryType getDeliveryType() { return deliveryType; }
+    public Integer getQuantity() { return quantity; }
+    public Boolean getColorPrint() { return colorPrint; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public String getCustomerUsername() {
-        return customerUsername;
-    }
-
-    public String getCustomerEmail() {
-        return customerEmail;
-    }
-
-    public int getTotalAmount() {
-        return totalAmount;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public Payment getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-    public void setCustomerUsername(String customerUsername) {
-        this.customerUsername = customerUsername;
-    }
-
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
-    }
-
-    public void setTotalAmount(int totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public void setPaymentMethod(Payment paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setUser(UserEntity user) { this.user = user; }
+    public void setType(OrderType type) { this.type = type; }
+    public void setRequirements(String requirements) { this.requirements = requirements; }
+    public void setPolygons(Integer polygons) { this.polygons = polygons; }
+    public void setPolygonsImportant(boolean polygonsImportant) { this.polygonsImportant = polygonsImportant; }
+    public void setDeadlineImportant(boolean deadlineImportant) { this.deadlineImportant = deadlineImportant; }
+    public void setDeadline(String deadline) { this.deadline = deadline; }
+    public void setStatus(OrderStatus status) { this.status = status; }
+    public void setCompletionPercentage(int completionPercentage) { this.completionPercentage = completionPercentage; }
+    public void setLabels(String labels) { this.labels = labels; }
+    public void setRevisionCount(int revisionCount) { this.revisionCount = revisionCount; }
+    public void setDeliveryType(DeliveryType deliveryType) { this.deliveryType = deliveryType; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public void setColorPrint(Boolean colorPrint) { this.colorPrint = colorPrint; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
