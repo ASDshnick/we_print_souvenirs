@@ -69,4 +69,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(orders);
     }
 
+    @PutMapping("/change-data")
+    public ResponseEntity<?> changeUserData(
+            @RequestBody ChangeUserDataRequestDTO requestDTO
+    ) {
+        try {
+            ProfileResponseDTO updated = userService.changeUserData(requestDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }
