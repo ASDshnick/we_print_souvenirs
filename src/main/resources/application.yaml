@@ -3,7 +3,7 @@ spring:
     name: we-print-souvenirs
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}
+    url: jdbc:postgresql://localhost:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
     password: ${DB_PASS}
 
