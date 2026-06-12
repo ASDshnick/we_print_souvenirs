@@ -8,15 +8,17 @@ public class CartItemRequestDTO {
     private int quantity;
     private Size size;
     private Color color;
+    private String comment;
 
     public CartItemRequestDTO() {
     }
 
-    public CartItemRequestDTO(Long productId, int quantity, Size size, Color color) {
+    public CartItemRequestDTO(Long productId, int quantity, Size size, Color color, String comment) {
         this.productId = productId;
         this.quantity = quantity;
         this.size = size;
         this.color = color;
+        this.comment = comment;
     }
 
     public Long getProductId() {
@@ -35,6 +37,10 @@ public class CartItemRequestDTO {
         return color;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
     public void setProductId(Long productId) {
         this.productId = productId;
     }
@@ -49,5 +55,9 @@ public class CartItemRequestDTO {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

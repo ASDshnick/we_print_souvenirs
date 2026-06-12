@@ -12,11 +12,12 @@ public class CartItemDTO {
     private Color color;
     private int pricePerItem;
     private int totalPrice;
+    private String comment;
 
     public CartItemDTO() {
     }
 
-    public CartItemDTO(Long id, Long productId, String productName, int quantity, Size size, Color color, int pricePerItem, int totalPrice) {
+    public CartItemDTO(Long id, Long productId, String productName, int quantity, Size size, Color color, int pricePerItem, int totalPrice, String comment) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;
@@ -25,6 +26,7 @@ public class CartItemDTO {
         this.color = color;
         this.pricePerItem = pricePerItem;
         this.totalPrice = totalPrice;
+        this.comment = comment;
     }
 
     public Long getId() {
@@ -59,6 +61,10 @@ public class CartItemDTO {
         return totalPrice;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -89,5 +95,9 @@ public class CartItemDTO {
 
     public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

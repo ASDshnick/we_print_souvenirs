@@ -34,17 +34,20 @@ public class CartEntity {
     @Column(name = "price_per_item")
     private int pricePerItem;
 
+    @Column(name = "comment")
+    private String comment;
 
     public CartEntity() {
     }
 
-    public CartEntity(Long id, ProductEntity product, int quantity, Size size, Color color, int pricePerItem) {
+    public CartEntity(Long id, ProductEntity product, int quantity, Size size, Color color, int pricePerItem, String comment) {
         this.id = id;
         this.product = product;
         this.quantity = quantity;
         this.size = size;
         this.color = color;
         this.pricePerItem = pricePerItem;
+        this.comment = comment;
     }
 
     public Long getId() {
@@ -75,6 +78,10 @@ public class CartEntity {
         return pricePerItem;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -101,5 +108,9 @@ public class CartEntity {
 
     public void setPricePerItem(int pricePerItem) {
         this.pricePerItem = pricePerItem;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

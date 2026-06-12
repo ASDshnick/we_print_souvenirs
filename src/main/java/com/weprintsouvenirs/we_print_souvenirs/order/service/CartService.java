@@ -44,6 +44,7 @@ public class CartService {
      *             "quantity": (int) quantity,
      *             "size": "SIZE", (из enum Size)
      *             "color": "COLOR" (из enum Color)
+     *             "comment": "comment from user"
      *             }
      */
     @Transactional
@@ -66,6 +67,9 @@ public class CartService {
         if (cartItem != null) {
             cartItem.setQuantity(finalQuantity);
             cartItem.setPricePerItem(pricePerItem);
+            if (dto.getComment() != null) {
+                cartItem.setComment(dto.getComment());
+            }
             cartRepository.save(cartItem);
         } else {
             CartEntity newItem = new CartEntity();
@@ -75,6 +79,7 @@ public class CartService {
             newItem.setSize(dto.getSize());
             newItem.setColor(dto.getColor());
             newItem.setPricePerItem(pricePerItem);
+            newItem.setComment(dto.getComment());
             cartRepository.save(newItem);
         }
     }
@@ -125,6 +130,7 @@ public class CartService {
             dto.setColor(cartItem.getColor());
             dto.setPricePerItem(currentPricePerItem);
             dto.setTotalPrice(currentPricePerItem * cartItem.getQuantity());
+            dto.setComment(cartItem.getComment());
             return dto;
         }).collect(Collectors.toList());
 
@@ -155,4 +161,24 @@ public class CartService {
 
         cartRepository.delete(cartItem);
     }
+
+    /**
+     * Метод для обновления комментариев к товарам в заказе
+     * @param itemId
+     * @param newComment
+     */
+    @Transactional
+    public void updateComment(Long itemId, String newComment) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        CartEntity cartItem = cartRepository.findById(itemId)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+        if (cartItem.getUser().getId() != user.getId()) {
+            throw new RuntimeException("Access denied");
+        }
+        cartItem.setComment(newComment);
+        cartRepository.save(cartItem);
+    }
+
 }
