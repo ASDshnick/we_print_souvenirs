@@ -35,9 +35,10 @@ public class UserEntity {
 
     }
 
-    public UserEntity(long id, String username, String password, Role role, String email, String phone, String telegram) {
+    public UserEntity(long id, String username, String name, String password, Role role, String email, String phone, String telegram) {
         this.id = id;
         this.username = username;
+        this.name = name;
         this.password = password;
         this.role = role;
         this.email = email;
