@@ -102,6 +102,7 @@ public class OrderService {
             orderItem.setSize(cartItem.getSize());
             orderItem.setColor(cartItem.getColor());
             orderItem.setPricePerItem(cartItem.getPricePerItem());
+            orderItem.setComment(cartItem.getComment());
 
             orderItems.add(orderItem);
             totalAmount += cartItem.getPricePerItem() * cartItem.getQuantity();

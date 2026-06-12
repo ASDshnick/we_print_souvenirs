@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/cart")
@@ -48,5 +50,21 @@ public class CartController {
     ) {
         cartService.removeItemFromCart(itemId);
         return ResponseEntity.status(HttpStatus.OK).body("Item removed from cart");
+    }
+
+    /**
+     * Изменение уже написанного комментария к товару
+     * @param itemId
+     * @param payload
+     * @return Сообщение о том, что комментарий обновлен
+     */
+    @PutMapping("/items/{itemId}/comment")
+    public ResponseEntity<String> updateComment(
+            @PathVariable Long itemId,
+            @RequestBody Map<String, String> payload
+    ) {
+        String newComment = payload.get("comment");
+        cartService.updateComment(itemId, newComment);
+        return ResponseEntity.status(HttpStatus.OK).body("Comment updated");
     }
 }

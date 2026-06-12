@@ -14,6 +14,9 @@ public class UserEntity {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "password")
     private String password;
 
@@ -32,9 +35,10 @@ public class UserEntity {
 
     }
 
-    public UserEntity(long id, String username, String password, Role role, String email, String phone, String telegram) {
+    public UserEntity(long id, String username, String name, String password, Role role, String email, String phone, String telegram) {
         this.id = id;
         this.username = username;
+        this.name = name;
         this.password = password;
         this.role = role;
         this.email = email;
@@ -47,6 +51,10 @@ public class UserEntity {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getPassword() {
@@ -71,6 +79,10 @@ public class UserEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setPassword(String password) {
