@@ -20,7 +20,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     AuthenticationManager authenticationManager;
     JwtUtil jwtUtil;
-
+    
     public UserService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
