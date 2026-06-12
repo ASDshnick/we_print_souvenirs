@@ -14,6 +14,9 @@ public class UserEntity {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "password")
     private String password;
 
@@ -49,6 +52,10 @@ public class UserEntity {
         return username;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -71,6 +78,10 @@ public class UserEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setPassword(String password) {

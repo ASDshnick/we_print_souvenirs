@@ -34,7 +34,10 @@ public class UserController {
             @RequestBody UserRegisterDTO userRegisterDTO
     ) {
         UserEntity savedEntity = userService.registerUser(userRegisterDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        UserResponseDTO response = new UserResponseDTO();
+        response.setName(savedEntity.getName());
+        response.setUsername(savedEntity.getUsername());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
     }
 

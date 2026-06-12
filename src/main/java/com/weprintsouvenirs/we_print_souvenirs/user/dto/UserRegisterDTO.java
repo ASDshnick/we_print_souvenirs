@@ -3,9 +3,9 @@ package com.weprintsouvenirs.we_print_souvenirs.user.dto;
 import com.weprintsouvenirs.we_print_souvenirs.user.Role;
 
 public class UserRegisterDTO {
+    String name;
     String username;
     String password;
-    String email;
     Role role;
 
     public String getUsername() {
@@ -16,8 +16,8 @@ public class UserRegisterDTO {
         return password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getName() {
+        return name;
     }
 
     public Role getRole() {
@@ -32,8 +32,8 @@ public class UserRegisterDTO {
         this.password = password;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setRole(Role role) {

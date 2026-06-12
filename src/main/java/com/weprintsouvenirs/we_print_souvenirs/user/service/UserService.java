@@ -55,9 +55,9 @@ public class UserService {
         }
 
         UserEntity user = new UserEntity();
+        user.setName(dto.getName());
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setEmail(dto.getEmail());
         user.setRole(Role.USER);
 
         return userRepository.save(user);
