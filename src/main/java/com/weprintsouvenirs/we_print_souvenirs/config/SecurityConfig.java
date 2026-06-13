@@ -66,6 +66,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/change-password/**").permitAll()
                         .requestMatchers("/user/change-data").permitAll()
                         .requestMatchers("/chat/{orderId}").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
 
                         .requestMatchers("/ws/**").permitAll()
 
