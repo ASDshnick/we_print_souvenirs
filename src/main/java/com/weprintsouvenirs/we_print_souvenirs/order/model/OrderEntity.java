@@ -1,6 +1,7 @@
 package com.weprintsouvenirs.we_print_souvenirs.order.model;
 
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Payment;
+import com.weprintsouvenirs.we_print_souvenirs.order.enums.PaymentStatus;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
 import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
 import jakarta.persistence.*;
@@ -38,6 +39,10 @@ public class OrderEntity {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_status")
+    private PaymentStatus paymentStatus = PaymentStatus.NOT_PAID;
+
     @PrePersist
     private void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -46,7 +51,7 @@ public class OrderEntity {
     public OrderEntity() {
     }
 
-    public OrderEntity(Long id, UserEntity user, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt) {
+    public OrderEntity(Long id, UserEntity user, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt, PaymentStatus paymentStatus) {
         this.id = id;
         this.user = user;
         this.customerUsername = customerUsername;
@@ -55,6 +60,7 @@ public class OrderEntity {
         this.status = status;
         this.paymentMethod = paymentMethod;
         this.createdAt = createdAt;
+        this.paymentStatus = paymentStatus;
     }
 
     public Long getId() {
@@ -89,6 +95,10 @@ public class OrderEntity {
         return createdAt;
     }
 
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -119,5 +129,9 @@ public class OrderEntity {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

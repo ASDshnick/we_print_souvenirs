@@ -2,7 +2,6 @@ package com.weprintsouvenirs.we_print_souvenirs.user.service;
 
 import com.weprintsouvenirs.we_print_souvenirs.config.JwtUtil;
 import com.weprintsouvenirs.we_print_souvenirs.user.Role;
-import com.weprintsouvenirs.we_print_souvenirs.user.User;
 import com.weprintsouvenirs.we_print_souvenirs.user.dto.*;
 import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
 import com.weprintsouvenirs.we_print_souvenirs.user.repository.UserRepository;
@@ -151,6 +150,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return new ProfileResponseDTO(
+                user.getName(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getPhone()
@@ -176,12 +176,8 @@ public class UserService {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (requestDTO.getUsername() != null && !requestDTO.getUsername().isBlank()) {
-            if (!requestDTO.getUsername().equals(user.getUsername())
-                    && userRepository.existsByUsername(requestDTO.getUsername())) {
-                throw new RuntimeException("Username is already exists");
-            }
-            user.setUsername(requestDTO.getUsername());
+        if (requestDTO.getName() != null && !requestDTO.getName().isBlank()) {
+            user.setName(requestDTO.getName());
         }
 
         if (requestDTO.getEmail() != null && !requestDTO.getEmail().isBlank()) {
@@ -193,7 +189,9 @@ public class UserService {
         }
 
         userRepository.save(user);
+
         return new ProfileResponseDTO(
+                user.getName(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getPhone()

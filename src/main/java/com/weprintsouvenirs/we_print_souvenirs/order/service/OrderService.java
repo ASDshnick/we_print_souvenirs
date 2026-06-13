@@ -3,6 +3,7 @@ package com.weprintsouvenirs.we_print_souvenirs.order.service;
 import com.weprintsouvenirs.we_print_souvenirs.order.dto.AllUserOrdersDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.dto.CheckoutRequestDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Payment;
+import com.weprintsouvenirs.we_print_souvenirs.order.enums.PaymentStatus;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
 import com.weprintsouvenirs.we_print_souvenirs.order.model.CartEntity;
 import com.weprintsouvenirs.we_print_souvenirs.order.model.OrderEntity;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,6 +91,7 @@ public class OrderService {
         }
 
         order.setStatus(Status.NEW);
+        order.setPaymentStatus(PaymentStatus.NOT_PAID);
 
         // перенос товаров из корзины
         List<OrderItemEntity> orderItems = new ArrayList<>();
@@ -128,15 +131,24 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         List<OrderEntity> orders = orderRepository.findByUser(user);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
         return orders.stream()
-                .map(order -> new AllUserOrdersDTO(
-                        order.getId(),
-                        order.getTotalAmount(),
-                        order.getStatus(),
-                        order.getCreatedAt().format(formatter)
-                ))
+                .sorted(Comparator.comparing(OrderEntity::getId).reversed()) // сортировка заказов от новых к старым
+                .map(order -> {
+                    List<Long> productIds = orderItemRepository.findByOrder(order)
+                            .stream()
+                            .map(item -> item.getProduct().getId())
+                            .collect(Collectors.toList());
+
+                    return new AllUserOrdersDTO(
+                            order.getId(),
+                            order.getTotalAmount(),
+                            order.getStatus(),
+                            order.getCreatedAt().format(formatter),
+                            productIds
+                    );
+                })
                 .collect(Collectors.toList());
     }
 }

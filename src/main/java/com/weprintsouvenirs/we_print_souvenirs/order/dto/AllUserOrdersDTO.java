@@ -2,21 +2,25 @@ package com.weprintsouvenirs.we_print_souvenirs.order.dto;
 
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
 
+import java.util.List;
+
 public class AllUserOrdersDTO {
 
     private Long id;
     private int totalAmount;
     private Status status;
     private String date;
+    private List<Long> productsIds;
 
     public AllUserOrdersDTO() {
     }
 
-    public AllUserOrdersDTO(Long id, int totalAmount, Status status, String date) {
+    public AllUserOrdersDTO(Long id, int totalAmount, Status status, String date, List<Long> productsIds) {
         this.id = id;
         this.totalAmount = totalAmount;
         this.status = status;
         this.date = date;
+        this.productsIds = productsIds;
     }
 
     public Long getId() {
@@ -35,6 +39,10 @@ public class AllUserOrdersDTO {
         return date;
     }
 
+    public List<Long> getProductsIds() {
+        return productsIds;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -49,5 +57,9 @@ public class AllUserOrdersDTO {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void setProductsIds(List<Long> productsIds) {
+        this.productsIds = productsIds;
     }
 }

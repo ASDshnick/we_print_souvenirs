@@ -1,21 +1,21 @@
 package com.weprintsouvenirs.we_print_souvenirs.user.dto;
 
 public class ChangeUserDataRequestDTO {
-    private String username;
+    private String name;
     private String email;
     private String phone;
 
     public ChangeUserDataRequestDTO() {
     }
 
-    public ChangeUserDataRequestDTO(String username, String email, String phone) {
-        this.username = username;
+    public ChangeUserDataRequestDTO(String name, String email, String phone) {
+        this.name = name;
         this.email = email;
         this.phone = phone;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
     public String getEmail() {
@@ -26,8 +26,8 @@ public class ChangeUserDataRequestDTO {
         return phone;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setEmail(String email) {
