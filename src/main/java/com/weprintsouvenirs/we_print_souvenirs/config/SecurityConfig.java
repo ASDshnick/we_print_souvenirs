@@ -67,6 +67,11 @@ public class SecurityConfig {
                         .requestMatchers("/user/change-data").permitAll()
                         .requestMatchers("/chat/{orderId}").permitAll()
 
+                        .requestMatchers("/admin/users").hasRole("ADMIN")
+                        .requestMatchers("/admin/users/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/orders").hasRole("ADMIN")
+                        .requestMatchers("/admin/orders/**").hasRole("ADMIN")
+
                         .requestMatchers("/ws/**").permitAll()
 
                         .requestMatchers(HttpMethod.PUT, "/user/change-data").authenticated()

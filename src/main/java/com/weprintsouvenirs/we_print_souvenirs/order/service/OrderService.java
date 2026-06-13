@@ -1,13 +1,13 @@
 package com.weprintsouvenirs.we_print_souvenirs.order.service;
 
-import com.weprintsouvenirs.we_print_souvenirs.order.dto.AllUserOrdersDTO;
-import com.weprintsouvenirs.we_print_souvenirs.order.dto.CheckoutRequestDTO;
+import com.weprintsouvenirs.we_print_souvenirs.order.dto.*;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Payment;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.PaymentStatus;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
 import com.weprintsouvenirs.we_print_souvenirs.order.model.CartEntity;
 import com.weprintsouvenirs.we_print_souvenirs.order.model.OrderEntity;
 import com.weprintsouvenirs.we_print_souvenirs.order.model.OrderItemEntity;
+import com.weprintsouvenirs.we_print_souvenirs.order.model.ProductEntity;
 import com.weprintsouvenirs.we_print_souvenirs.order.repository.CartRepository;
 import com.weprintsouvenirs.we_print_souvenirs.order.repository.OrderItemRepository;
 import com.weprintsouvenirs.we_print_souvenirs.order.repository.OrderRepository;
@@ -150,5 +150,125 @@ public class OrderService {
                     );
                 })
                 .collect(Collectors.toList());
+    }
+
+    public OrderDetailsResponseDTO getOrderDetailsForCurrentUser(Long orderId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        if (order.getUser().getId() != user.getId()) {
+            throw new RuntimeException("Access denied");
+        }
+
+        return convertToDetailsDTO(order);
+    }
+
+    public List<OrderResponseDTO> getAllOrdersForAdmin() {
+        return orderRepository.findAll().stream()
+                .sorted(Comparator.comparing(OrderEntity::getId).reversed())
+                .map(order -> {
+                    List<Long> productIds = orderItemRepository.findByOrder(order).stream()
+                            .map(item -> item.getProduct().getId())
+                            .collect(Collectors.toList());
+                    return convertToResponseDTO(order, productIds);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public OrderDetailsResponseDTO getOrderDetailsForAdmin(Long orderId) {
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        return convertToDetailsDTO(order);
+    }
+
+    @Transactional
+    public OrderResponseDTO updateOrderForAdmin(Long orderId, AdminOrderUpdateRequestDTO requestDTO) {
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        if (requestDTO.getStatus() != null) {
+            order.setStatus(requestDTO.getStatus());
+        }
+
+        if (requestDTO.getPaymentStatus() != null) {
+            order.setPaymentStatus(requestDTO.getPaymentStatus());
+        }
+
+        if (requestDTO.getAdminNote() != null) {
+            order.setAdminNote(requestDTO.getAdminNote());
+        }
+
+        List<Long> productIds = orderItemRepository.findByOrder(order).stream()
+                .map(item -> item.getProduct().getId())
+                .collect(Collectors.toList());
+
+        return convertToResponseDTO(orderRepository.save(order), productIds);
+    }
+
+    private OrderResponseDTO convertToResponseDTO(OrderEntity order, List<Long> productIds) {
+        return new OrderResponseDTO(
+                order.getId(),
+                order.getCustomerUsername(),
+                order.getCustomerEmail(),
+                order.getTotalAmount(),
+                order.getStatus(),
+                order.getPaymentMethod(),
+                order.getCreatedAt(),
+                order.getPaymentStatus(),
+                productIds
+        );
+    }
+
+    private OrderDetailsResponseDTO convertToDetailsDTO(OrderEntity order) {
+        UserEntity user = order.getUser();
+
+        OrderUserResponseDTO userDTO = new OrderUserResponseDTO(
+                Long.valueOf(user.getId()),
+                user.getName(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getRole()
+        );
+
+        List<OrderItemResponseDTO> items = orderItemRepository.findByOrder(order).stream()
+                .map(this::convertToItemDTO)
+                .collect(Collectors.toList());
+
+        return new OrderDetailsResponseDTO(
+                order.getId(),
+                order.getCustomerUsername(),
+                order.getCustomerEmail(),
+                order.getTotalAmount(),
+                order.getStatus(),
+                order.getPaymentMethod(),
+                order.getPaymentStatus(),
+                order.getAdminNote(),
+                order.getCreatedAt(),
+                userDTO,
+                items
+        );
+    }
+
+    private OrderItemResponseDTO convertToItemDTO(OrderItemEntity item) {
+        ProductEntity product = item.getProduct();
+
+        return new OrderItemResponseDTO(
+                item.getId(),
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                item.getQuantity(),
+                item.getSize(),
+                item.getColor(),
+                item.getPricePerItem(),
+                item.getPricePerItem() * item.getQuantity(),
+                item.getComment()
+        );
     }
 }
