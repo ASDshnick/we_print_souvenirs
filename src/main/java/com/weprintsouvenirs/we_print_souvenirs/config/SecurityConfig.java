@@ -67,6 +67,15 @@ public class SecurityConfig {
                         .requestMatchers("/admin/users").hasRole("ADMIN")
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/chat/**").authenticated()
+                        .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/profile.html",
+                                "/orders.html",
+                                "/edit-profile.html",
+                                "/assets/**",
+                                "/images/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())
