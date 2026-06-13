@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>МоделМастер — Уникальные работы</title>
+  <link rel="stylesheet" href="/assets/css/styles.css"/>
+  <script src="/assets/js/api.js"></script>
+</head>
+<body>
+
+<!-- шапка -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_9_839)">
+            <path d="M3.25496 3.25499C1.45733 5.05262 3.91536 10.4252 8.74513 15.255C13.5749 20.0847 18.9475 22.5428 20.7451 20.7451C22.5427 18.9475 20.0847 13.5749 15.2549 8.74516C10.4252 3.91539 5.05259 1.45736 3.25496 3.25499Z" stroke="#333333" stroke-width="1.8"/>
+            <path d="M20.749 3.25498C22.5466 5.05261 20.0886 10.4252 15.2588 15.255C10.429 20.0847 5.05644 22.5428 3.2588 20.7451C1.46117 18.9475 3.91921 13.5749 8.74898 8.74516C13.5788 3.91539 18.9513 1.45735 20.749 3.25498Z" stroke="#333333" stroke-width="1.8"/>
+          </g>
+          <defs>
+            <clipPath id="clip0_9_839">
+              <rect width="24" height="24" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">МОДЕЛМАСТЕР</span>
+    </a>
+    <nav class="header-nav">
+      <a href="#about">О мастере</a>
+      <a href="#work-types">Виды работ</a>
+      <a href="#contacts">Контакты</a>
+
+    </nav>
+    <div class="header-right">
+      <div class="header-icons">
+        <div class="header-profile-wrap">
+          <button id="profile-button" class="icon-btn" aria-label="Профиль">
+            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.49996 9.50003C11.4078 9.50003 12.9545 7.95338 12.9545 6.04549C12.9545 4.13759 11.4078 2.59094 9.49996 2.59094C7.59206 2.59094 6.04541 4.13759 6.04541 6.04549C6.04541 7.95338 7.59206 9.50003 9.49996 9.50003Z" stroke="black" stroke-width="1.72727"/>
+              <path d="M16.409 17.2728C16.409 14.4109 13.3157 12.0909 9.49991 12.0909C5.68412 12.0909 2.59082 14.4109 2.59082 17.2728" stroke="black" stroke-width="1.72727" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <!-- меню профиля -->
+          <div class="profile-menu" id="profile-menu">
+            <!-- имя и кнопка выхода -->
+            <div class="pm-user-section">
+              <span class="pm-username" id="menu-username">—</span>
+              <button class="pm-logout-btn" id="menu-logout-btn" aria-label="Выйти">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M13 3h4a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-4" stroke="#8F8F8F" stroke-width="1.5" stroke-linecap="round"/>
+                  <polyline points="10 14 14 10 10 6" stroke="#8F8F8F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <line x1="14" y1="10" x2="3" y2="10" stroke="#8F8F8F" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <a href="/user/change-data" class="pm-edit-link">Редактировать профиль</a>
+            </div>
+            <!-- ссылки меню -->
+            <div class="pm-links-section">
+              <div class="pm-links">
+                <a href="/user/profile" class="pm-link">Личный кабинет</a>
+                <a href="/user/orders" class="pm-link">Мои заказы</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="header-cart-wrap">
+          <button class="icon-btn" id="header-cart-btn" aria-label="Корзина">
+            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_9_870)">
+                <path d="M3.17817 5.96787C3.21829 5.52274 3.59139 5.18176 4.03832 5.18176H14.9619C15.4088 5.18176 15.7819 5.52274 15.822 5.96787L16.7562 16.3315C16.8017 16.8371 16.4036 17.2727 15.896 17.2727H3.10418C2.5966 17.2727 2.19847 16.8371 2.24403 16.3315L3.17817 5.96787Z" stroke="black" stroke-width="1.55455"/>
+                <path d="M12.9545 7.77274V4.31819C12.9545 2.4103 11.4078 0.863647 9.49996 0.863647C7.59206 0.863647 6.04541 2.4103 6.04541 4.31819V7.77274" stroke="black" stroke-width="1.59773"/>
+              </g>
+              <defs>
+                <clipPath id="clip0_9_870"><rect width="19" height="19" fill="white"/></clipPath>
+              </defs>
+            </svg>
+          </button>
+          <span class="header-cart-badge" id="header-cart-badge">0</span>
+        </div>
+      </div>
+      <a href="#service-2"><button class="btn-cta">Сделать заказ</button></a>
+    </div>
+  </div>
+</header>
+
+<!-- окно входа -->
+<div class="modal-overlay" id="auth-modal" aria-hidden="false">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <button class="modal-close" aria-label="Закрыть форму авторизации">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 4L4 12M4 4L12 12" stroke="#000000" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="modal-header">
+      <h2 id="auth-title" class="modal-title">Авторизация</h2>
+    </div>
+    <form class="modal-form">
+      <div class="modal-field">
+        <label for="auth-login">Логин</label>
+        <input id="auth-login" type="text" name="login" placeholder="Введите логин" required />
+      </div>
+      <div class="modal-field modal-field-password">
+        <label for="auth-password">Пароль</label>
+        <div class="password-container">
+          <input id="auth-password" type="password" name="password" placeholder="Введите свой пароль" required />
+          <button type="button" class="password-toggle" aria-label="Показать пароль">
+            <svg width="25" height="15" viewBox="0 0 25 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12.5 10C15.4 10 17.5 7.91 17.5 5C17.5 2.09 15.4 0 12.5 0C9.6 0 7.5 2.09 7.5 5C7.5 7.91 9.6 10 12.5 10Z" stroke="#777777" stroke-width="1.16279"/>
+              <circle cx="12.5" cy="5" r="2.5" stroke="#777777" stroke-width="1.16279"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="modal-button">Вход</button>
+      <div class="modal-footer">
+        <a href="#" class="modal-link" id="switch-to-register">Нет аккаунта? Зарегистрируйтесь</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- окно регистрации -->
+<div class="modal-overlay" id="registration-modal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="registration-title">
+    <button class="modal-close" aria-label="Закрыть форму регистрации">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 4L4 12M4 4L12 12" stroke="#000000" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="modal-header">
+      <h2 id="registration-title" class="modal-title">Регистрация</h2>
+    </div>
+    <form class="modal-form" id="reg-form">
+      <div class="modal-field">
+        <label for="reg-name">Имя</label>
+        <input id="reg-name" type="text" name="name" placeholder="Введите имя" required />
+        <span class="field-error" id="name-error"></span>
+      </div>
+
+      <div class="modal-field">
+        <label for="reg-login">Логин</label>
+        <input id="reg-login" type="text" name="login" placeholder="Введите логин" required />
+        <span class="field-error" id="login-error"></span>
+      </div>
+
+      <div class="modal-field">
+        <label for="reg-email">Email</label>
+        <input id="reg-email" type="email" name="email" placeholder="Введите email" required />
+      </div>
+
+      <div class="modal-field modal-field-password">
+        <label for="reg-password">Пароль</label>
+        <div class="password-container">
+          <input id="reg-password" type="password" name="password" placeholder="Создайте свой пароль" required />
+          <button type="button" class="password-toggle" aria-label="Показать пароль">
+            <svg width="25" height="15" viewBox="0 0 25 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12.5 10C15.4 10 17.5 7.91 17.5 5C17.5 2.09 15.4 0 12.5 0C9.6 0 7.5 2.09 7.5 5C7.5 7.91 9.6 10 12.5 10Z" stroke="#777777" stroke-width="1.16279"/>
+              <circle cx="12.5" cy="5" r="2.5" stroke="#777777" stroke-width="1.16279"/>
+            </svg>
+          </button>
+        </div>
+        <span class="field-error" id="password-error"></span>
+      </div>
+
+      <button type="submit" class="modal-button">Зарегистрироваться</button>
+      <div class="reg-global-error" id="reg-global-error"></div>
+      <div class="modal-footer">
+        <a href="#" class="modal-link" id="switch-to-auth">Уже есть аккаунт? Войдите</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<section class="hero-section">
+  <div class="wrap">
+    <div class="hero-text">
+      <h1>Уникальные работы</h1>
+      <p>Создаю особенные модели, сувениры для разных городов, любые творческие проекты, с помощью 3D-моделей и 3D-принтера.</p>
+    </div>
+  </div>
+  <div class="hero-img-wrap">
+    <div class="hero-img">
+      <span><img src="/assets/images\image1.png"></span>
+    </div>
+  </div>
+</section>
+
+
+<section class="about-section" id="about">
+  <div class="about-inner reveal">
+    <div class="about-title">О мастере</div>
+    <div class="about-body">
+      Я — частный мастер, который создаёт уникальные изделия с помощью передовых технологий 3D-печати, обретая возможность воплотить в жизнь самые смелые идеи и замыслы. Моя цель — предложить клиентам оригинальные изделия, которые будут отличаться высоким качеством и неповторимым дизайном.
+    </div>
+  </div>
+</section>
+
+
+<section class="work-types-section" id="work-types">
+  <div class="wrap">
+    <div class="section-heading">
+      <h2>Виды работ</h2>
+      <p>Можно создать разнообразные модели с использованием 3D-моделей и 3D-принтера. Применяю современные материалы и технологии.</p>
+    </div>
+  </div>
+  <div class="work-list">
+    <div class="work-item reveal reveal-delay-1">
+      <div class="work-icon">
+        <svg width="65" height="65" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M60.775 30.5501C60.7757 25.8275 59.5798 21.1818 57.2988 17.0465C55.0179 12.9113 51.7263 9.42142 47.7314 6.90275C43.7365 4.38408 39.1686 2.91871 34.454 2.64347C29.7395 2.36822 25.032 3.29206 20.7712 5.32874C16.5103 7.36542 12.835 10.4485 10.0884 14.2902C7.34172 18.132 5.61328 22.607 5.06441 27.2976C4.51555 31.9882 5.16416 36.7414 6.9497 41.1134C8.73524 45.4854 11.5995 49.3338 15.275 52.2991V59.4491C15.2715 59.5793 15.2942 59.7089 15.3416 59.8302C15.3891 59.9515 15.4603 60.0621 15.5512 60.1554C15.6421 60.2487 15.7508 60.3229 15.8708 60.3735C15.9908 60.4241 16.1198 60.4502 16.25 60.4501H49.4C49.6586 60.4501 49.9066 60.3474 50.0894 60.1645C50.2723 59.9817 50.375 59.7337 50.375 59.4751V52.3251C53.6322 49.7093 56.2584 46.3935 58.0588 42.6239C59.8593 38.8543 60.7876 34.7276 60.775 30.5501ZM48.425 58.5001H17.225V52.6501H48.425V58.5001ZM49.244 50.7001H16.406C12.2445 47.3097 9.23431 42.7142 7.78877 37.5447C6.34323 32.3752 6.53316 26.8849 8.33249 21.8276C10.1318 16.7704 13.4523 12.3939 17.8382 9.29917C22.2241 6.20441 27.4604 4.54299 32.8283 4.54299C38.1961 4.54299 43.4324 6.20441 47.8183 9.29917C52.2042 12.3939 55.5247 16.7704 57.324 21.8276C59.1234 26.8849 59.3133 32.3752 57.8678 37.5447C56.4222 42.7142 53.4121 47.3097 49.2505 50.7001H49.244Z" fill="black"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M55.2501 34.5931C51.9649 33.1858 48.424 32.4732 44.8501 32.5001C39.3251 32.5001 35.4056 34.5866 31.6226 36.6081C29.1526 37.9081 26.7671 39.2081 24.0176 39.8581V32.5001H30.8361C31.0006 32.5005 31.1625 32.4592 31.3068 32.3802C31.451 32.3011 31.573 32.1869 31.6612 32.0481C31.7494 31.9092 31.8011 31.7503 31.8114 31.5862C31.8217 31.422 31.7903 31.2579 31.7201 31.1091L23.9591 14.6966C23.88 14.53 23.7552 14.3892 23.5994 14.2907C23.4435 14.1921 23.2628 14.1398 23.0784 14.1398C22.8939 14.1398 22.7133 14.1921 22.5574 14.2907C22.4015 14.3892 22.2767 14.53 22.1976 14.6966L14.4301 31.1091C14.3599 31.2579 14.3285 31.422 14.3388 31.5862C14.3491 31.7503 14.4008 31.9092 14.489 32.0481C14.5772 32.1869 14.6992 32.3011 14.8434 32.3802C14.9877 32.4592 15.1496 32.5005 15.3141 32.5001H22.1001V40.1896C18.6778 40.5861 15.2153 39.9452 12.1616 38.3501C11.9332 38.2286 11.6658 38.2027 11.4184 38.2783C11.1709 38.3539 10.9636 38.5247 10.8421 38.7531C10.7206 38.9815 10.6948 39.2489 10.7703 39.4963C10.8459 39.7438 11.0167 39.9511 11.2451 40.0726C13.9885 41.5217 17.0476 42.2697 20.1501 42.2501C25.1876 42.2501 28.9251 40.2546 32.5391 38.3501C36.3091 36.3351 39.8386 34.4501 44.8501 34.4501C48.1481 34.4339 51.4141 35.0977 54.4441 36.4001C54.6837 36.507 54.956 36.5143 55.201 36.4204C55.446 36.3266 55.6437 36.1392 55.7506 35.8996C55.8575 35.66 55.8648 35.3877 55.7709 35.1427C55.6771 34.8977 55.4897 34.7 55.2501 34.5931ZM23.0751 17.3941L29.3021 30.5501H16.8481L23.0751 17.3941ZM43.9141 23.0595C43.7007 23.0616 43.4898 23.1058 43.2935 23.1894C43.0971 23.273 42.9192 23.3945 42.7698 23.5469C42.6204 23.6993 42.5025 23.8797 42.4228 24.0777C42.3431 24.2756 42.3032 24.4873 42.3054 24.7007C42.3075 24.9141 42.3516 25.125 42.4353 25.3214C42.5189 25.5177 42.6404 25.6957 42.7928 25.845C42.9452 25.9944 43.1255 26.1123 43.3235 26.192C43.5215 26.2717 43.7332 26.3116 43.9466 26.3095C44.3776 26.3052 44.7892 26.1298 45.0909 25.8221C45.3926 25.5143 45.5597 25.0992 45.5554 24.6682C45.551 24.2373 45.3757 23.8257 45.0679 23.524C44.7601 23.2223 44.3451 23.0552 43.9141 23.0595ZM49.7368 20.4016C49.3058 20.406 48.8942 20.5813 48.5925 20.8891C48.2908 21.1969 48.1237 21.6119 48.1281 22.0429C48.1324 22.4739 48.3077 22.8855 48.6155 23.1872C48.9233 23.4889 49.3383 23.656 49.7693 23.6516C49.9827 23.6495 50.1936 23.6054 50.3899 23.5217C50.5863 23.4381 50.7642 23.3166 50.9136 23.1642C51.063 23.0118 51.1809 22.8315 51.2606 22.6335C51.3403 22.4355 51.3802 22.2238 51.3781 22.0104C51.3759 21.797 51.3318 21.5861 51.2481 21.3898C51.1645 21.1934 51.043 21.0155 50.8906 20.8661C50.7382 20.7167 50.5579 20.5988 50.3599 20.5191C50.1619 20.4394 49.9502 20.3995 49.7368 20.4016ZM35.3549 12.0953C34.9239 12.0996 34.5123 12.2749 34.2106 12.5827C33.9089 12.8905 33.7418 13.3056 33.7462 13.7365C33.7505 14.1675 33.9258 14.5791 34.2336 14.8808C34.5414 15.1825 34.9564 15.3496 35.3874 15.3453C35.6008 15.3432 35.8117 15.299 36.008 15.2154C36.2044 15.1317 36.3823 15.0103 36.5317 14.8579C36.6811 14.7055 36.799 14.5251 36.8787 14.3271C36.9584 14.1292 36.9983 13.9174 36.9962 13.704C36.994 13.4906 36.9499 13.2798 36.8662 13.0834C36.7826 12.8871 36.6611 12.7091 36.5087 12.5598C36.3563 12.4104 36.176 12.2925 35.978 12.2128C35.78 12.1331 35.5683 12.0932 35.3549 12.0953Z" fill="black"/>
+        </svg>
+
+      </div>
+      <div class="work-text">
+        <h4>Декоративные элементы</h4>
+        <p>Делаю любые уникальные декоративные элементы для интерьера.</p>
+      </div>
+    </div>
+    <div class="work-item reveal reveal-delay-2">
+      <div class="work-icon">
+        <svg width="65" height="65" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M45.2074 38.2869C45.204 38.2869 45.2005 38.2869 45.197 38.2869C44.8572 38.2831 44.5438 38.1029 44.3696 37.8111C41.2803 32.623 38.1911 27.435 35.1019 22.2468C35.0761 22.2036 35.0537 22.1584 35.0349 22.1116C33.8788 20.2136 33.268 18.0337 33.2695 15.8112C33.2812 9.10905 38.7386 3.66334 45.4375 3.66334C45.4425 3.66334 45.4475 3.66334 45.4525 3.66334C48.6808 3.65827 51.7769 4.94599 54.0494 7.239C56.332 9.5192 57.6081 12.6174 57.5938 15.8437C57.5938 18.0394 56.9867 20.2019 55.8362 22.111C55.8137 22.1739 55.7845 22.2343 55.7491 22.291C52.511 27.4704 49.273 32.6499 46.0349 37.8293C45.8557 38.1136 45.5435 38.2862 45.2074 38.2869ZM36.8673 21.3999C39.654 26.0801 42.4408 30.7603 45.2276 35.4405C48.1474 30.7703 51.0672 26.1 53.987 21.4298C54.0091 21.37 54.037 21.3115 54.0715 21.2562C55.0998 19.6137 55.6432 17.7417 55.6432 15.843V15.8417C55.6559 13.132 54.5845 10.5297 52.6675 8.6144C50.7591 6.68988 48.1601 5.60893 45.4499 5.6127C45.4455 5.6127 45.4412 5.6127 45.4369 5.6127C39.8111 5.6127 35.2286 10.1854 35.2195 15.8125C35.2195 17.7326 35.7597 19.6059 36.7808 21.2283C36.8159 21.2822 36.8445 21.3401 36.8673 21.3999Z" fill="black"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M45.4408 20.3789C45.4373 20.3789 45.4338 20.3789 45.4304 20.3789C44.0648 20.3821 42.7548 19.8383 41.793 18.8689C40.8238 17.9034 40.2818 16.5898 40.2882 15.2218C40.2863 13.8566 40.8307 12.5475 41.8001 11.5863C42.7636 10.6207 44.0728 10.0797 45.4369 10.0835C45.4386 10.0835 45.4403 10.0835 45.4421 10.0835C48.2793 10.0868 50.5862 12.3995 50.5836 15.2393C50.586 16.6053 50.0415 17.9154 49.0717 18.8774C48.1098 19.8417 46.8028 20.3822 45.4408 20.3789ZM45.4362 12.0335C44.5887 12.0312 43.7753 12.3674 43.1768 12.9676C42.5748 13.5643 42.2367 14.3773 42.2382 15.225C42.2345 16.0752 42.5714 16.8914 43.1736 17.4916C43.7709 18.0935 44.5843 18.431 45.4323 18.4289C45.4345 18.4289 45.4367 18.4289 45.4388 18.4289C46.2851 18.4314 47.0973 18.0959 47.695 17.4968C48.2972 16.8996 48.6353 16.0861 48.6336 15.238C48.6336 13.4724 47.2051 12.0396 45.4395 12.0342L45.4362 12.0335ZM49.6086 15.2387C49.6107 15.2387 49.6129 15.2387 49.6151 15.2387H49.6086ZM61.3593 52.1177C41.89 52.1177 22.4208 52.1177 2.95157 52.1177C2.25191 52.1176 1.78001 51.4025 2.05522 50.7592C5.59662 42.4735 9.13808 34.1877 12.6795 25.9019C12.8329 25.543 13.1855 25.3101 13.5758 25.3098C21.9322 25.3098 30.2886 25.3098 38.645 25.3098C39.3956 25.3098 39.8647 26.1223 39.4894 26.7723C39.3152 27.0739 38.9934 27.2598 38.645 27.2598C30.5031 27.2598 22.3612 27.2598 14.2193 27.2598C10.9557 34.8955 7.69202 42.5313 4.42837 50.1671C22.9129 50.1671 41.3973 50.1671 59.8818 50.1671C56.7189 42.7679 53.556 35.3687 50.3931 27.9696C50.0982 27.2793 50.6611 26.5286 51.4063 26.6183C51.7522 26.6599 52.0496 26.8829 52.1865 27.2032C55.5429 35.055 58.8992 42.9068 62.2556 50.7586C62.5299 51.4019 62.0586 52.1165 61.3593 52.1177Z" fill="black"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M45.3225 51.9427C44.8273 51.9419 44.4114 51.5702 44.3553 51.0782C44.3495 51.0301 43.7268 46.2331 37.0103 45.0937C36.3857 44.9877 35.3892 44.8909 34.2348 44.7797C27.8785 44.1648 22.0805 43.3666 20.9625 40.3942C20.241 38.4767 21.2953 37.0148 22.1416 35.8403C23.0685 34.5546 23.374 33.993 22.9008 33.1863C22.6011 32.6754 21.6469 32.2594 20.7239 31.8571C18.9169 31.0693 16.4417 29.9903 16.4287 27.0328C16.4262 26.4943 16.8607 26.0558 17.3992 26.0532C17.4007 26.0532 17.4022 26.0532 17.4037 26.0532C17.9404 26.0532 18.3762 26.487 18.3787 27.0237C18.3859 28.5967 19.5643 29.2239 21.5039 30.0696C22.7129 30.5967 23.9629 31.1414 24.5836 32.2003C25.7439 34.1789 24.5765 35.7987 23.7243 36.981C22.9248 38.0899 22.4516 38.8147 22.7883 39.7078C23.5716 41.7897 30.901 42.4982 34.4233 42.8395C35.6148 42.9545 36.6437 43.054 37.3366 43.1716C45.4824 44.5542 46.2637 50.6011 46.293 50.8579C46.3586 51.4368 45.9052 51.9437 45.3225 51.9427Z" fill="black"/>
+        </svg>
+
+      </div>
+      <div class="work-text">
+        <h4>3D-карты</h4>
+        <p>Могу создать копию любых улиц города.</p>
+      </div>
+    </div>
+    <div class="work-item reveal reveal-delay-3">
+      <div class="work-icon">
+        <svg width="65" height="65" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M49.9721 32.4479C49.898 32.2711 49.7734 32.12 49.6138 32.0137C49.4543 31.9073 49.2669 31.8503 49.0751 31.8499H37.8496L44.3496 5.44692C44.3953 5.24058 44.3727 5.02498 44.2852 4.8326C44.1977 4.64023 44.0501 4.48148 43.8646 4.38028C43.679 4.27908 43.4656 4.24091 43.2565 4.2715C43.0474 4.3021 42.8539 4.39981 42.7051 4.54992L15.2361 32.1359C15.1 32.2723 15.0072 32.4459 14.9697 32.6349C14.9321 32.824 14.9514 33.0199 15.0252 33.1979C15.0989 33.376 15.2237 33.5282 15.3839 33.6353C15.5441 33.7425 15.7324 33.7998 15.9251 33.7999H27.1506L20.6506 60.2029C20.605 60.4093 20.6276 60.6249 20.7151 60.8172C20.8026 61.0096 20.9502 61.1684 21.1357 61.2696C21.3213 61.3708 21.5346 61.4089 21.7438 61.3783C21.9529 61.3477 22.1464 61.25 22.2951 61.0999L49.7641 33.5139C49.9006 33.3769 49.9933 33.2024 50.0303 33.0126C50.0674 32.8228 50.0471 32.6262 49.9721 32.4479ZM23.4001 57.2584L29.3541 33.0589C29.3898 32.9146 29.392 32.7639 29.3606 32.6186C29.3291 32.4732 29.2648 32.337 29.1726 32.2203C29.0804 32.1037 28.9627 32.0096 28.8286 31.9454C28.6944 31.8812 28.5474 31.8486 28.3986 31.8499H18.2716L41.6001 8.39142L35.6591 32.5909C35.6237 32.7342 35.6213 32.8837 35.652 33.0281C35.6828 33.1725 35.7459 33.308 35.8367 33.4244C35.9275 33.5408 36.0435 33.6351 36.176 33.7001C36.3085 33.7652 36.454 33.7993 36.6016 33.7999H46.7286L23.4001 57.2584ZM46.1891 44.8109C46.0043 44.6387 45.7599 44.5449 45.5073 44.5494C45.2547 44.5539 45.0137 44.6562 44.835 44.8348C44.6564 45.0135 44.5541 45.2545 44.5496 45.507C44.5452 45.7596 44.6389 46.0041 44.8111 46.1889L52.6111 53.9889C52.796 54.1611 53.0404 54.2549 53.293 54.2505C53.5456 54.246 53.7866 54.1437 53.9653 53.965C54.1439 53.7864 54.2462 53.5454 54.2507 53.2928C54.2551 53.0402 54.1614 52.7958 53.9891 52.6109L46.1891 44.8109ZM18.2001 19.8249C18.3929 19.8248 18.5812 19.7675 18.7414 19.6603C18.9016 19.5532 19.0264 19.401 19.1001 19.2229C19.1738 19.0449 19.1931 18.849 19.1556 18.6599C19.118 18.4709 19.0253 18.2973 18.8891 18.1609L11.0891 10.3609C10.9043 10.1887 10.6599 10.0949 10.4073 10.0994C10.1547 10.1039 9.91367 10.2062 9.73503 10.3848C9.5564 10.5635 9.45407 10.8045 9.44961 11.057C9.44516 11.3096 9.53892 11.5541 9.71114 11.7389L17.5111 19.5389C17.6938 19.7218 17.9416 19.8247 18.2001 19.8249Z" fill="black"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M44.486 19.214C44.6689 19.3966 44.9167 19.4991 45.175 19.4991C45.4334 19.4991 45.6812 19.3966 45.864 19.214L53.664 11.414C53.8363 11.2292 53.93 10.9847 53.9256 10.7321C53.9211 10.4795 53.8188 10.2385 53.6402 10.0599C53.4615 9.88125 53.2205 9.77893 52.9679 9.77447C52.7153 9.77002 52.4709 9.86378 52.286 10.036L44.486 17.836C44.3035 18.0188 44.2009 18.2666 44.2009 18.525C44.2009 18.7834 44.3035 19.0312 44.486 19.214ZM17.836 45.136L10.036 52.936C9.94026 53.0253 9.86342 53.1329 9.81013 53.2525C9.75684 53.3721 9.72819 53.5012 9.72588 53.6321C9.72357 53.763 9.74765 53.8931 9.79669 54.0145C9.84573 54.1359 9.91871 54.2462 10.0113 54.3387C10.1039 54.4313 10.2142 54.5043 10.3356 54.5534C10.457 54.6024 10.587 54.6265 10.7179 54.6242C10.8488 54.6219 10.9779 54.5932 11.0975 54.5399C11.2171 54.4866 11.3248 54.4098 11.414 54.314L19.214 46.514C19.3863 46.3292 19.48 46.0847 19.4756 45.8321C19.4711 45.5795 19.3688 45.3385 19.1902 45.1599C19.0115 44.9813 18.7705 44.8789 18.5179 44.8745C18.2653 44.87 18.0209 44.9638 17.836 45.136ZM12.025 39C11.5941 39 11.1807 39.1712 10.876 39.4759C10.5713 39.7807 10.4 40.194 10.4 40.625C10.4 41.056 10.5713 41.4693 10.876 41.774C11.1807 42.0788 11.5941 42.25 12.025 42.25C12.456 42.25 12.8694 42.0788 13.1741 41.774C13.4788 41.4693 13.65 41.056 13.65 40.625C13.65 40.194 13.4788 39.7807 13.1741 39.4759C12.8694 39.1712 12.456 39 12.025 39ZM6.17505 34.45C5.74407 34.45 5.33075 34.6212 5.026 34.9259C4.72125 35.2307 4.55005 35.644 4.55005 36.075C4.55005 36.506 4.72125 36.9193 5.026 37.224C5.33075 37.5288 5.74407 37.7 6.17505 37.7C6.60603 37.7 7.01935 37.5288 7.3241 37.224C7.62884 36.9193 7.80005 36.506 7.80005 36.075C7.80005 35.644 7.62884 35.2307 7.3241 34.9259C7.01935 34.6212 6.60603 34.45 6.17505 34.45ZM58.175 26C57.7441 26 57.3307 26.1712 57.026 26.476C56.7212 26.7807 56.55 27.194 56.55 27.625C56.55 28.056 56.7212 28.4693 57.026 28.774C57.3307 29.0788 57.7441 29.25 58.175 29.25C58.606 29.25 59.0193 29.0788 59.3241 28.774C59.6288 28.4693 59.8 28.056 59.8 27.625C59.8 27.194 59.6288 26.7807 59.3241 26.476C59.0193 26.1712 58.606 26 58.175 26ZM20.475 9.75C20.0441 9.75 19.6307 9.9212 19.326 10.226C19.0213 10.5307 18.85 10.944 18.85 11.375C18.85 11.806 19.0213 12.2193 19.326 12.524C19.6307 12.8288 20.0441 13 20.475 13C20.906 13 21.3194 12.8288 21.6241 12.524C21.9288 12.2193 22.1 11.806 22.1 11.375C22.1 10.944 21.9288 10.5307 21.6241 10.226C21.3194 9.9212 20.906 9.75 20.475 9.75Z" fill="black"/>
+        </svg>
+
+      </div>
+      <div class="work-text">
+        <h4>Сувениры</h4>
+        <p>Превращаю любую достопримечательность города в нечто особенное, создаю уникальные и необычные сувениры, которые точно обратят на себя внимание.</p>
+      </div>
+    </div>
+  </div>
+  <div class="work-cta">
+    <a href="#service-1">
+      <button class="btn-beige">Оформить заказ</button>
+    </a>
+  </div>
+</section>
+
+
+<section class="process-section">
+  <div class="wrap">
+    <div class="section-heading">
+      <h2>Процесс работы</h2>
+    </div>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-img">
+        <span><img src="/assets/images\image2.png" alt="Создание 3D-моделей"></span>
+      </div>
+      <div class="step-info">
+        <h3>Создание 3D-моделей</h3>
+        <p>Разработка уникальных 3D-моделей по вашему запросу.</p>
+      </div>
+    </div>
+    <div class="process-step reverse reveal reveal-delay-2">
+      <div class="step-info">
+        <h3>Печать</h3>
+        <p>Печать на 3D-принтере с учётом ваших пожеланий.</p>
+      </div>
+      <div class="step-img dark-bg">
+        <span><img src="/assets/images\image3.png" alt="Печать"></span>
+      </div>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <div class="step-img" style="background:rgba(193,127,59,0.15);">
+        <span><img src="/assets/images\image4.png" alt="Индивидуальный заказ"></span>
+      </div>
+      <div class="step-info">
+        <h3>Индивидуальный заказ</h3>
+        <p>Есть возможность изготовить модели по индивидуальному дизайну и вашим требованиям.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="services-header-section" id="service-2">
+  <div class="wrap">
+    <div class="section-heading">
+      <h2>Услуги и цены</h2>
+      <p>Чтобы я смогла приступить к выполнению вашего заказа, выберите одну из предложенных услуг ниже и нажмите «оформить заказ».</p>
+    </div>
+  </div>
+</section>
+
+
+<section class="service-card-section" id="service-1">
+  <div class="service-card reveal">
+    <div class="service-photo" style="background:rgba(193,127,59,0.15);">
+      <span><img src="/assets/images/service1.png" alt="Индивидуальный заказ"></span>
+    </div>
+    <div class="service-info">
+      <h3>Индивидуальный заказ</h3>
+      <p class="service-sub">Разработка модели по Вашей идее и печать партии</p>
+      <div class="service-price">
+        <span class="amount" id="total-price">650</span>
+        <span class="unit">р.</span>
+      </div>
+
+
+      <div class="service-fields">
+        <div class="field-row">
+          <label>Доступные цвета (для цветной печати выбрать основной)</label>
+          <select id="color-select">
+            <option value="0"  data-enum="WHITE"  selected>Белый</option>
+            <option value="0"  data-enum="BLACK">Чёрный</option>
+            <option value="10" data-enum="GRAY">Серый</option>
+            <option value="60" data-enum="BLUE">Синий</option>
+            <option value="60" data-enum="GREEN">Зеленый</option>
+            <option value="60" data-enum="RED">Красный</option>
+            <option value="60" data-enum="BROWN">Коричневый</option>
+            <option value="60" data-enum="BEIGE">Бежевый</option>
+            <option value="60" data-enum="ORANGE">Оранжевый</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <label>Количество (влияет на скидку)</label>
+          <div class="qty-input-wrap">
+            <input type="number" id="count-input" min="1" value="1" class="qty-input">
+          </div>
+        </div>
+
+
+        <div class="field-row">
+          <label>Размер</label>
+          <select class="wide" id="size-select">
+            <option value="0"    data-enum="SMALL"  selected>Маленький (до 5×5×5)</option>
+            <option value="350"  data-enum="MEDIUM">Средний (до 10×10×10)</option>
+            <option value="550"  data-enum="BIG">Большой (до 20×20×20)</option>
+            <option value="1150" data-enum="LARGE">Очень Большой</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-red" id="order-btn-1" data-product-id="1">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 17S2 12 2 7a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 5-8 10-8 10z" fill="white"/></svg>
+        ОФОРМИТЬ ЗАКАЗ
+      </button>
+      <p class="service-note">Цена указывается за единицу товара. Полученный результат не является финальным. Счетчик работает для примерного ознакомления.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // тир скидок услуга 1
+  const QTY_TIERS_1 = [
+    { min: 1,   label: '1–5 шт.',     discount: 0   },
+    { min: 6,   label: '6–20 шт.',    discount: 100 },
+    { min: 21,  label: '21–50 шт.',   discount: 200 },
+    { min: 51,  label: '51–100 шт.',  discount: 300 },
+    { min: 101, label: '101–200 шт.', discount: 350 },
+    { min: 201, label: '201+ шт.',    discount: 400 },
+  ];
+
+  function getTier(tiers, qty) {
+    qty = Math.max(1, parseInt(qty) || 1);
+    let t = tiers[0];
+    for (const tier of tiers) { if (qty >= tier.min) t = tier; else break; }
+    return t;
+  }
+
+  const sizeSelect   = document.getElementById('size-select');
+  const colorSelect  = document.getElementById('color-select');
+  const countInput   = document.getElementById('count-input');
+  const priceDisplay = document.getElementById('total-price');
+
+  const BASE_PRICE = 650;
+
+  function calculate() {
+    const sizeExtra  = parseInt(sizeSelect.value)  || 0;
+    const colorExtra = parseInt(colorSelect.value) || 0;
+    const tier = getTier(QTY_TIERS_1, countInput.value);
+
+    let result = (BASE_PRICE + sizeExtra + colorExtra) - tier.discount;
+    if (result < 100) result = 100;
+    priceDisplay.textContent = result;
+  }
+
+  [sizeSelect, colorSelect].forEach(el => el?.addEventListener('change', calculate));
+  countInput?.addEventListener('input', calculate);
+  calculate();
+</script>
+
+
+<section class="service-card-section" style="background:#F8F8F8;">
+  <div class="service-card reveal">
+    <div class="service-photo" style="background:rgba(193,127,59,0.25);">
+      <span><img src="/assets/images/service2.png" alt="Разработка сувенирной продукции"></span>
+    </div>
+    <div class="service-info">
+      <h3>Разработка сувенирной продукции</h3>
+      <p class="service-sub">Исследование вашего региона, разработка концепций для утверждения. Формирование макетов и их печать</p>
+      <div class="service-price">
+        <span class="amount" id="total-price-2">450</span>
+        <span class="unit">р.</span>
+      </div>
+      <div class="service-fields">
+        <div class="field-row">
+          <label>Доступные цвета (для цветной печати выбрать основной)</label>
+          <select id="color-select-2">
+            <option value="0"  data-enum="WHITE"  selected>Белый</option>
+            <option value="0"  data-enum="BLACK">Чёрный</option>
+            <option value="10" data-enum="GRAY">Серый</option>
+            <option value="60" data-enum="BLUE">Синий</option>
+            <option value="60" data-enum="GREEN">Зеленый</option>
+            <option value="60" data-enum="RED">Красный</option>
+            <option value="60" data-enum="BROWN">Коричневый</option>
+            <option value="60" data-enum="BEIGE">Бежевый</option>
+            <option value="60" data-enum="ORANGE">Оранжевый</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label>Количество (влияет на скидку)</label>
+          <div class="qty-input-wrap">
+            <input type="number" id="count-input-2" min="1" value="1" class="qty-input">
+          </div>
+        </div>
+        <div class="field-row">
+          <label>Размер</label>
+          <select class="wide" id="size-select-2">
+            <option value="0"    data-enum="SMALL"  selected>Маленький (до 5×5×5)</option>
+            <option value="350"  data-enum="MEDIUM">Средний (до 10×10×10)</option>
+            <option value="550"  data-enum="BIG">Большой (до 20×20×20)</option>
+            <option value="1150" data-enum="LARGE">Очень большой</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-red" id="order-btn-2" data-product-id="2">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 17S2 12 2 7a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 5-8 10-8 10z" fill="white"/></svg>
+        ОФОРМИТЬ ЗАКАЗ
+      </button>
+      <p class="service-note">Цена указывается за единицу товара. Полученный результат не является финальным. Счетчик работает для примерного ознакомления.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // тир скидок услуга 2
+  const QTY_TIERS_2 = [
+    { min: 1,   label: '1–5 шт.',     discount: 0   },
+    { min: 6,   label: '6–20 шт.',    discount: 100 },
+    { min: 21,  label: '21–50 шт.',   discount: 100 },
+    { min: 51,  label: '51–100 шт.',  discount: 120 },
+    { min: 101, label: '101–200 шт.', discount: 140 },
+    { min: 201, label: '201+ шт.',    discount: 150 },
+  ];
+
+  const sizeSelect2   = document.getElementById('size-select-2');
+  const colorSelect2  = document.getElementById('color-select-2');
+  const countInput2   = document.getElementById('count-input-2');
+  const priceDisplay2 = document.getElementById('total-price-2');
+
+  const BASE_PRICE_2 = 450;
+
+  function calculate2() {
+    const sizeExtra  = parseInt(sizeSelect2.value)  || 0;
+    const colorExtra = parseInt(colorSelect2.value) || 0;
+    const tier = getTier(QTY_TIERS_2, countInput2.value);
+
+    let result = (BASE_PRICE_2 + sizeExtra + colorExtra) - tier.discount;
+    if (result < 50) result = 50;
+    priceDisplay2.textContent = result;
+  }
+
+  [sizeSelect2, colorSelect2].forEach(el => el?.addEventListener('change', calculate2));
+  countInput2?.addEventListener('input', calculate2);
+  calculate2();
+</script>
+
+
+<section class="service-card-section">
+  <div class="service-card reveal">
+    <div class="service-photo" style="background:rgba(193,127,59,0.15);">
+      <span><img src="/assets/images/service3.png" alt="Карты города"></span>
+    </div>
+    <div class="service-info">
+      <h3>Карты города</h3>
+      <p class="service-sub">Создание модели по заданному месту, утверждение и печать</p>
+      <div class="service-price">
+        <span class="amount" id="total-price-3">900</span>
+        <span class="unit">р.</span>
+      </div>
+      <div class="service-fields">
+        <div class="field-row">
+          <label>Количество (влияет на скидку)</label>
+          <div class="qty-input-wrap">
+            <input type="number" id="count-input-3" min="1" value="1" class="qty-input">
+          </div>
+        </div>
+        <div class="field-row">
+          <label>Параметры печати</label>
+          <select id="color-select-3">
+            <option value="0"   data-enum="BLACK">Черно-белая</option>
+            <option value="900" data-enum="COLORED">Цветная</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-red" id="order-btn-3" data-product-id="3">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 17S2 12 2 7a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 5-8 10-8 10z" fill="white"/></svg>
+        ОФОРМИТЬ ЗАКАЗ
+      </button>
+      <p class="service-note">Цена указывается за единицу товара. Полученный результат не является финальным. Счетчик работает для примерного ознакомления.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  // тир скидок услуга 3
+  const QTY_TIERS_3 = [
+    { min: 1,  label: '1–10 шт.', discount: 0   },
+    { min: 11, label: '11+ шт.',  discount: 100 },
+  ];
+
+  const colorSelect3  = document.getElementById('color-select-3');
+  const countInput3   = document.getElementById('count-input-3');
+  const priceDisplay3 = document.getElementById('total-price-3');
+
+  const BASE_PRICE_3 = 900;
+
+  function calculate3() {
+    const colorExtra = parseInt(colorSelect3.value) || 0;
+    const tier = getTier(QTY_TIERS_3, countInput3.value);
+
+    let result = (BASE_PRICE_3 + colorExtra) - tier.discount;
+    if (result < 200) result = 200;
+    priceDisplay3.textContent = result;
+  }
+
+  colorSelect3?.addEventListener('change', calculate3);
+  countInput3?.addEventListener('input', calculate3);
+  calculate3();
+</script>
+
+
+<section class="contacts-section" id="contacts">
+  <p class="contacts-label">Контакты</p>
+  <p class="contacts-email">ryb.modelmaster@bk.ru</p>
+  <p class="contacts-phone">+7 (995) 931-24-60</p>
+  <div class="social-list">
+    <button class="social-btn" aria-label="Email">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <rect x="2" y="4" width="20" height="16" rx="2" stroke="#555" stroke-width="1.8"/>
+        <path d="M2 7l10 7 10-7" stroke="#555" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button class="social-btn" aria-label="Телефон">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2C7 21 3 7 3 6a2 2 0 0 1 2-2z" stroke="#555" stroke-width="1.8"/>
+      </svg>
+    </button>
+  </div>
+</section>
+
+
+<footer class="footer-section">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-legal-bold">
+        Проект создан при поддержке Федерального государственного бюджетного учреждения «Фонд содействия развитию малых форм предприятий в научно-технической сфере» в рамках программы «Студенческий стартап» федерального проекта «Платформа университетского технологического предпринимательства»
+      </p>
+      <p class="footer-legal-text">
+        ООО «МОДЕЛМАСТЕР»<br>
+        Компания Моделмастер осуществляет деятельность при поддержке Фонда Содействия Инновациям.<br>
+        ИНН: 7610142993 КПП: 761001001<br>
+        ГЕНЕРАЛЬНЫЙ ДИРЕКТОР: Першина Светлана Викторовна
+      </p>
+    </div>
+    <div class="fasie-badge">
+      <div class="fasie-box">
+        <span class="fasie-box"><img src="/assets/images/fond_sodeistviya_inovaciyam.png"></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+  const profileButton = document.getElementById('profile-button');
+  const authModal = document.getElementById('auth-modal');
+  const registrationModal = document.getElementById('registration-modal');
+
+  // авторизация
+  const authModalClose = authModal?.querySelector('.modal-close');
+  const authModalForm = authModal?.querySelector('.modal-form');
+  const authPasswordToggle = authModal?.querySelector('.password-toggle');
+  const authPasswordInput = authModal?.querySelector('input[type="password"]');
+  const switchToRegisterLink = document.getElementById('switch-to-register');
+
+  // регистрация
+  const regModalClose = registrationModal?.querySelector('.modal-close');
+  const regModalForm = registrationModal?.querySelector('.modal-form');
+  const regPasswordToggle = registrationModal?.querySelector('.password-toggle');
+  const regPasswordInput = registrationModal?.querySelector('input[type="password"]');
+  const switchToAuthLink = document.getElementById('switch-to-auth');
+
+  // функции для авторизации
+  function openAuthModal() {
+    authModal?.classList.add('active');
+    authModal?.setAttribute('aria-hidden', 'false');
+    registrationModal?.classList.remove('active');
+    registrationModal?.setAttribute('aria-hidden', 'true');
+    // Меняем URL на /user/login
+    window.history.pushState({ modal: 'auth' }, 'Login', '/user/login');
+  }
+
+  function closeAuthModal() {
+    authModal?.classList.remove('active');
+    authModal?.setAttribute('aria-hidden', 'true');
+    // Возвращаемся на главную
+    window.history.pushState(null, '', '/');
+  }
+
+  // Функции для регистрации
+  function openRegistrationModal() {
+    registrationModal?.classList.add('active');
+    registrationModal?.setAttribute('aria-hidden', 'false');
+    authModal?.classList.remove('active');
+    authModal?.setAttribute('aria-hidden', 'true');
+    // Меняем URL на /user/register
+    window.history.pushState({ modal: 'register' }, 'Register', '/user/register');
+  }
+
+  function closeRegistrationModal() {
+    registrationModal?.classList.remove('active');
+    registrationModal?.setAttribute('aria-hidden', 'true');
+    // Возвращаемся на главную
+    window.history.pushState(null, '', '/');
+  }
+
+  // Функция переключения видимости пароля
+  function togglePasswordVisibility(passwordInput, toggle) {
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      toggle?.setAttribute('aria-label', 'Скрыть пароль');
+    } else {
+      passwordInput.type = 'password';
+      toggle?.setAttribute('aria-label', 'Показать пароль');
+    }
+  }
+
+  // обработчики авторизации
+  authModalClose?.addEventListener('click', closeAuthModal);
+  authPasswordToggle?.addEventListener('click', (event) => {
+    event.preventDefault();
+    togglePasswordVisibility(authPasswordInput, authPasswordToggle);
+  });
+  authModalForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const loginInput = authModalForm.querySelector('input[name="login"]');
+    const passwordInput = authModalForm.querySelector('input[name="password"]');
+
+    if (!loginInput || !passwordInput) return;
+
+    // Отправляем запрос на авторизацию
+    const result = await loginUser({
+      username: loginInput.value,
+      password: passwordInput.value
+    });
+
+    if (result.success) {
+      console.log('Авторизация успешна');
+      closeAuthModal();
+      // Очищаем форму
+      authModalForm.reset();
+      // Обновляем UI (скроем иконку профиля, покажем профиль)
+      updateUIAfterLogin();
+      // Переходим на страницу профиля через 500ms
+      setTimeout(() => {
+        window.location.href = '/user/profile';
+      }, 500);
+    } else {
+      alert('Ошибка авторизации: ' + result.message);
+    }
+  });
+  switchToRegisterLink?.addEventListener('click', (event) => {
+    event.preventDefault();
+    openRegistrationModal();
+  });
+
+  // события для регистрации
+  regModalClose?.addEventListener('click', closeRegistrationModal);
+  regPasswordToggle?.addEventListener('click', (event) => {
+    event.preventDefault();
+    togglePasswordVisibility(regPasswordInput, regPasswordToggle);
+  });
+
+  const regNameInput   = document.getElementById('reg-name');
+  const regLoginInput  = document.getElementById('reg-login');
+  const regPassInput   = document.getElementById('reg-password');
+  const nameError      = document.getElementById('name-error');
+  const loginError     = document.getElementById('login-error');
+  const passwordError  = document.getElementById('password-error');
+  const regGlobalError = document.getElementById('reg-global-error');
+
+  // проверяем поле и показываем ошибку под ним
+  function validateField(input, errorEl, minLen, msg) {
+    const val = input?.value?.trim() || '';
+    if (val.length > 0 && val.length < minLen) {
+      errorEl.textContent = msg;
+      errorEl.classList.add('visible');
+      input.classList.add('input-error');
+      return false;
+    }
+    errorEl.classList.remove('visible');
+    input.classList.remove('input-error');
+    return true;
+  }
+
+  regNameInput?.addEventListener('input', () =>
+    validateField(regNameInput, nameError, 2, 'Имя не может быть короче 2х символов'));
+  regLoginInput?.addEventListener('input', () =>
+    validateField(regLoginInput, loginError, 5, 'Логин не может быть короче 5 символов'));
+  regPassInput?.addEventListener('input', () =>
+    validateField(regPassInput, passwordError, 5, 'Минимальная длина пароля - 5 символов'));
+
+  regModalForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    regGlobalError?.classList.remove('visible');
+
+    const n = validateField(regNameInput, nameError, 2, 'Имя не может быть короче 2х символов');
+    const l = validateField(regLoginInput, loginError, 5, 'Логин не может быть короче 5 символов');
+    const p = validateField(regPassInput, passwordError, 5, 'Минимальная длина пароля - 5 символов');
+    if (!n || !l || !p) return;
+
+    // отправляем запрос на регистрацию
+    const result = await registerUser({
+      username: regNameInput.value.trim(),
+      login:    regLoginInput.value.trim(),
+      email:    document.getElementById('reg-email')?.value?.trim() || '',
+      password: regPassInput.value
+    });
+
+    if (result.success) {
+      regModalForm.reset();
+      closeRegistrationModal();
+      openAuthModal();
+    } else {
+      // показываем блок ошибки под кнопкой
+      const msg = result.message || '';
+      regGlobalError.textContent = (msg.includes('exist') || msg.includes('занят') || msg.includes('already') || msg.includes('зарегистр'))
+        ? 'Пользователь с таким логином уже зарегистрирован'
+        : (msg || 'Ошибка регистрации');
+      regGlobalError.classList.add('visible');
+    }
+  });
+  switchToAuthLink?.addEventListener('click', (event) => {
+    event.preventDefault();
+    openAuthModal();
+  });
+
+  // закрытие модального по нажатию на фоне
+  authModal?.addEventListener('click', (event) => {
+    if (event.target === authModal) closeAuthModal();
+  });
+  registrationModal?.addEventListener('click', (event) => {
+    if (event.target === registrationModal) closeRegistrationModal();
+  });
+
+  // закрытие модального по esc
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      if (authModal?.classList.contains('active')) {
+        closeAuthModal();
+      } else if (registrationModal?.classList.contains('active')) {
+        closeRegistrationModal();
+      }
+    }
+  });
+
+  window.addEventListener('popstate', (event) => {
+    if (event.state?.modal === 'auth') {
+      openAuthModal();
+    } else if (event.state?.modal === 'register') {
+      openRegistrationModal();
+    } else {
+      closeAuthModal();
+      closeRegistrationModal();
+    }
+  });
+
+  (function () {
+    const path = window.location.pathname;
+    if (path === '/user/login') {
+      window.addEventListener('load', openAuthModal);
+    } else if (path === '/user/register') {
+      window.addEventListener('load', openRegistrationModal);
+    }
+  })();
+
+  // обновление ui после логина
+  function updateUIAfterLogin() {
+    console.log('UI обновлен после логина');
+    // Обновляем имя в меню если оно уже открыто
+    const username = localStorage.getItem('userLogin') || '';
+    const menuUsername = document.getElementById('menu-username');
+    if (menuUsername && username) menuUsername.textContent = username;
+  }
+
+  // меню профиля
+  const profileMenu   = document.getElementById('profile-menu');
+  const menuUsername  = document.getElementById('menu-username');
+  const menuLogoutBtn = document.getElementById('menu-logout-btn');
+
+  // клик на кнопку профиля
+  profileButton?.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    if (isAuthenticated()) {
+      // Показываем имя и переключаем меню
+      const username = localStorage.getItem('userLogin') || 'Профиль';
+      if (menuUsername) menuUsername.textContent = username;
+      profileMenu?.classList.toggle('open');
+    } else {
+      openAuthModal();
+    }
+  });
+
+  // Закрытие меню при клике вне
+  document.addEventListener('click', (e) => {
+    if (profileMenu && !profileMenu.contains(e.target) && !profileButton?.contains(e.target)) {
+      profileMenu.classList.remove('open');
+    }
+  });
+
+  // выход из аккаунта
+  menuLogoutBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (confirm('Вы уверены, что хотите выйти?')) {
+      logout();
+    }
+  });
+
+  // подставляем имя при загрузке
+  window.addEventListener('load', () => {
+    if (isAuthenticated() && menuUsername) {
+      menuUsername.textContent = localStorage.getItem('userLogin') || 'Профиль';
+    }
+  });
+</script>
+
+<div id="cart-overlay" class="cart-overlay" aria-hidden="true">
+  <div class="cart-panel" id="cart-panel">
+
+    <!-- Кнопка закрытия -->
+    <button class="cart-close-btn" id="cart-close-btn" aria-label="Закрыть корзину">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="26" height="26" rx="2" stroke="#222D38" stroke-width="1.5"/>
+        <line x1="9" y1="9" x2="19" y2="19" stroke="#222D38" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="19" y1="9" x2="9" y2="19" stroke="#222D38" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- Заголовок -->
+    <div class="cart-panel-header">
+      <h2 class="cart-panel-title">Ваш заказ:</h2>
+    </div>
+
+    <!-- Список товаров -->
+    <div class="cart-items-list" id="cart-items-list"></div>
+
+    <!-- Промежуточная сумма -->
+    <div class="cart-subtotal-row" id="cart-subtotal-row">
+      <span class="cart-subtotal-label">Сумма:&nbsp;</span>
+      <span class="cart-subtotal-label" id="cart-subtotal-amount">0</span>
+      <span class="cart-subtotal-label">&nbsp;р.</span>
+    </div>
+
+    <!-- Форма оформления -->
+    <div class="cart-form-section" id="cart-form-section">
+
+      <!-- Блок авторизации -->
+      <div class="cart-auth-block">
+        <div class="cart-auth-text">
+          Вы авторизованы как
+          <a href="/user/profile" class="cart-auth-link" id="cart-auth-username">—</a>
+        </div>
+        <button class="cart-auth-logout-btn" id="cart-logout-btn">Выйти</button>
+      </div>
+
+      <!-- Имя -->
+      <div class="cart-field">
+        <label class="cart-field-label" for="cart-name">Имя</label>
+        <input class="cart-field-input" id="cart-name" type="text" placeholder="Ваше имя" autocomplete="name"/>
+      </div>
+
+      <!-- Email -->
+      <div class="cart-field">
+        <label class="cart-field-label" for="cart-email">Email</label>
+        <input class="cart-field-input" id="cart-email" type="email" placeholder="Email для связи" autocomplete="email"/>
+      </div>
+
+      <!-- Телефон -->
+      <div class="cart-field">
+        <label class="cart-field-label" for="cart-phone">Номер телефона для связи</label>
+        <div class="cart-phone-wrap">
+          <div class="cart-phone-flag">
+            <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+              <rect width="18" height="4.33" fill="white"/>
+              <rect y="4.33" width="18" height="4.33" fill="#0039A6"/>
+              <rect y="8.67" width="18" height="4.33" fill="#D52B1E"/>
+            </svg>
+            <span>+7</span>
+          </div>
+          <input class="cart-phone-input" id="cart-phone" type="tel" placeholder="(920) 655-24-60" autocomplete="tel"/>
+        </div>
+      </div>
+
+      <!-- Способ оплаты -->
+      <div class="cart-payment-section">
+        <p class="cart-payment-title">Способ оплаты</p>
+        <div class="cart-payment-options">
+          <label class="cart-payment-label">
+            <input type="radio" name="cart-payment" value="CASH" checked>
+            Наличными при получении
+          </label>
+          <label class="cart-payment-label">
+            <input type="radio" name="cart-payment" value="CARD">
+            Безналичная оплата
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Итоговая сумма -->
+    <div class="cart-total-row" id="cart-total-row">
+      <span class="cart-total-label">Итоговая сумма:&nbsp;</span>
+      <span class="cart-total-label" id="cart-total-amount">0</span>
+      <span class="cart-total-label">&nbsp;р.</span>
+    </div>
+
+    <!-- Ошибка -->
+    <p class="cart-error" id="cart-error"></p>
+
+    <!-- Кнопка -->
+    <button class="cart-submit-btn" id="cart-submit">ОФОРМИТЬ</button>
+
+  </div>
+</div>
+
+<script>
+  // локальная корзина
+  const CART_KEY = 'modelmaster_cart';
+
+  function getLocalCart() {
+    try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+    catch { return []; }
+  }
+
+  function saveLocalCart(cart) {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    updateCartBadges();
+  }
+
+  function addLocalCartItem(item) {
+    const cart = getLocalCart();
+    // Если уже есть товар с такими же опциями — увеличиваем cartQty
+    const existing = cart.find(i =>
+      i.productId  === item.productId  &&
+      i.colorEnum  === item.colorEnum  &&
+      i.sizeEnum   === item.sizeEnum
+    );
+    if (existing) {
+      existing.cartQty  += item.cartQty;
+      existing.unitPrice = item.unitPrice; // обновляем цену
+    } else {
+      item.localId = 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+      cart.push(item);
+    }
+    saveLocalCart(cart);
+  }
+
+  function removeLocalCartItem(localId) {
+    saveLocalCart(getLocalCart().filter(i => i.localId !== localId));
+  }
+
+  function updateLocalCartQty(localId, delta) {
+    const cart = getLocalCart();
+    const item = cart.find(i => i.localId === localId);
+    if (item) item.cartQty = Math.max(1, item.cartQty + delta);
+    saveLocalCart(cart);
+  }
+
+  function clearLocalCart() {
+    localStorage.removeItem(CART_KEY);
+    updateCartBadges();
+  }
+
+  function getCartCount()  { return getLocalCart().reduce((s, i) => s + i.cartQty, 0); }
+  function getCartTotal()  { return getLocalCart().reduce((s, i) => s + i.unitPrice * i.cartQty, 0); }
+
+  function updateCartBadges() {
+    const count = getCartCount();
+    // Бейдж в шапке
+    const b = document.getElementById('header-cart-badge');
+    if (b) { b.textContent = count; b.style.display = count > 0 ? 'flex' : 'none'; }
+  }
+
+  // открытие / закрытие корзины
+  function openCartModal() {
+    const overlay = document.getElementById('cart-overlay');
+    if (!overlay) return;
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    renderCartModal();
+    prefillCartForm();
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCartModal() {
+    const overlay = document.getElementById('cart-overlay');
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  // Закрытие по клику вне
+  document.getElementById('cart-overlay')?.addEventListener('click', e => {
+    if (e.target === document.getElementById('cart-overlay')) closeCartModal();
+  });
+
+  // Кнопка крестика внутри панели корзины
+  document.getElementById('cart-close-btn')?.addEventListener('click', closeCartModal);
+
+  // Кнопка корзины в шапке
+  document.getElementById('header-cart-btn')?.addEventListener('click', () => {
+    if (!isAuthenticated()) { openAuthModal(); return; }
+    openCartModal();
+  });
+
+  // Кнопка «Выйти» внутри корзины
+  document.getElementById('cart-logout-btn')?.addEventListener('click', () => {
+    if (confirm('Вы уверены, что хотите выйти?')) logout();
+  });
+
+  // отрисовка корзины
+  function renderCartModal() {
+    const list = document.getElementById('cart-items-list');
+    if (!list) return;
+    const cart    = getLocalCart();
+    const hasItems = cart.length > 0;
+
+    ['cart-subtotal-row', 'cart-form-section', 'cart-total-row', 'cart-submit', 'cart-error'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = (hasItems || id === 'cart-error') ? '' : 'none';
+    });
+
+    if (!hasItems) {
+      list.innerHTML = `<div class="cart-empty">
+        <p>Корзина пуста</p>
+        <p>Выберите услугу на главной странице</p>
+      </div>`;
+      return;
+    }
+
+    list.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="cart-item-img-col">
+          <img class="cart-item-img" src="${item.image}" alt="${item.serviceName}"
+               onerror="this.style.background='#eee';this.removeAttribute('src')">
+        </div>
+        <div class="cart-item-info">
+          <p class="cart-item-name">${item.serviceName}</p>
+          <div class="cart-item-specs">
+            ${item.colorLabel   ? `<p>Цвет: ${item.colorLabel}</p>` : ''}
+            ${item.qtyTierLabel ? `<p>Количество: ${item.qtyTierLabel}</p>` : ''}
+            ${item.sizeLabel    ? `<p>Размер: ${item.sizeLabel}</p>` : ''}
+          </div>
+          ${item.description ? `<p class="cart-item-desc">${item.description}</p>` : ''}
+        </div>
+        <div class="cart-item-qty-col">
+          <button class="cart-qty-btn" onclick="changeCartQty('${item.localId}',-1)" aria-label="Уменьшить">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7.5" stroke="#000" stroke-opacity=".4"/>
+              <line x1="5" y1="8" x2="11" y2="8" stroke="#000" stroke-opacity=".6" stroke-width="1.2"/>
+            </svg>
+          </button>
+          <span class="cart-qty-num">${item.cartQty}</span>
+          <button class="cart-qty-btn" onclick="changeCartQty('${item.localId}',1)" aria-label="Увеличить">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7.5" stroke="#000" stroke-opacity=".4"/>
+              <line x1="5" y1="8" x2="11" y2="8" stroke="#000" stroke-opacity=".6" stroke-width="1.2"/>
+              <line x1="8" y1="5" x2="8" y2="11" stroke="#000" stroke-opacity=".6" stroke-width="1.2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="cart-item-price-col">
+          <span class="cart-item-price">${item.unitPrice * item.cartQty}&nbsp;р.</span>
+        </div>
+        <div class="cart-item-remove-col">
+          <button class="cart-item-remove" onclick="removeCartItemById('${item.localId}')" aria-label="Удалить">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="9.5" stroke="#000" stroke-opacity=".4"/>
+              <line x1="6.5" y1="6.5" x2="13.5" y2="13.5" stroke="#000" stroke-opacity=".5" stroke-width="1.3"/>
+              <line x1="13.5" y1="6.5" x2="6.5" y2="13.5" stroke="#000" stroke-opacity=".5" stroke-width="1.3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="cart-item-comment">
+        <label class="cart-item-comment-label">Описание заказа</label>
+        <input class="cart-item-comment-input" type="text"
+               placeholder="Уточните детали заказа (цвет, надпись, размер и т.д.)"
+               value="${(item.comment || '').replace(/"/g, '&quot;')}"
+               oninput="updateCartComment('${item.localId}', this.value)">
+      </div>`).join('');
+
+    const total = getCartTotal();
+    const sub   = document.getElementById('cart-subtotal-amount');
+    const tot   = document.getElementById('cart-total-amount');
+    if (sub) sub.textContent = total;
+    if (tot) tot.textContent = total;
+  }
+
+  function changeCartQty(localId, delta) {
+    updateLocalCartQty(localId, delta);
+    renderCartModal();
+  }
+
+  function removeCartItemById(localId) {
+    removeLocalCartItem(localId);
+    renderCartModal();
+  }
+
+  function updateCartComment(localId, comment) {
+    const cart = getLocalCart();
+    const item = cart.find(i => i.localId === localId);
+    if (item) item.comment = comment;
+    // Сохраняем без перерисовки чтобы не сбить фокус
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  }
+
+  // предзаполнение формы данными профиля
+  async function prefillCartForm() {
+    if (!isAuthenticated()) return;
+    const login = localStorage.getItem('userLogin') || '';
+    const usernameEl = document.getElementById('cart-auth-username');
+    if (usernameEl) usernameEl.textContent = login;
+
+    const result = await getUserProfile();
+    if (!result.success) return;
+    const d = result.data;
+    const nameEl  = document.getElementById('cart-name');
+    const emailEl = document.getElementById('cart-email');
+    const phoneEl = document.getElementById('cart-phone');
+    if (nameEl  && !nameEl.value)  nameEl.value  = d.username || d.login || '';
+    if (emailEl && !emailEl.value) emailEl.value = d.email || '';
+    if (phoneEl && !phoneEl.value) phoneEl.value = d.phone || '';
+  }
+
+  // добавление товара в корзину с карточки услуги
+  function enumVal(sel) { return sel?.options[sel.selectedIndex]?.dataset.enum || null; }
+  function qtyVal(sel)  { return parseInt(sel?.options[sel.selectedIndex]?.dataset.qty) || 1; }
+
+  document.getElementById('order-btn-1')?.addEventListener('click', () => {
+    if (!isAuthenticated()) { openAuthModal(); return; }
+    const cSel = document.getElementById('color-select');
+    const sSel = document.getElementById('size-select');
+    const qty1 = Math.max(1, parseInt(document.getElementById('count-input')?.value) || 1);
+    const tier1 = getTier(QTY_TIERS_1, qty1);
+    addLocalCartItem({
+      productId:     1,
+      serviceName:   'Индивидуальный заказ',
+      image:         'assets/images/service1.png',
+      description:   'Разработка модели по Вашей идее и печать партии',
+      colorEnum:     enumVal(cSel),
+      colorLabel:    cSel?.options[cSel.selectedIndex]?.text || '',
+      sizeEnum:      enumVal(sSel),
+      sizeLabel:     sSel?.options[sSel.selectedIndex]?.text || '',
+      qtyTierLabel:  tier1.label,
+      apiQty:        qty1,
+      cartQty:       1,
+      unitPrice:     parseInt(document.getElementById('total-price')?.textContent) || 650
+    });
+    openCartModal();
+  });
+
+  document.getElementById('order-btn-2')?.addEventListener('click', () => {
+    if (!isAuthenticated()) { openAuthModal(); return; }
+    const cSel = document.getElementById('color-select-2');
+    const sSel = document.getElementById('size-select-2');
+    const qty2 = Math.max(1, parseInt(document.getElementById('count-input-2')?.value) || 1);
+    const tier2 = getTier(QTY_TIERS_2, qty2);
+    addLocalCartItem({
+      productId:     2,
+      serviceName:   'Разработка сувенирной продукции',
+      image:         'assets/images/service2.png',
+      description:   'Исследование вашего региона, разработка концепций для утверждения. Формирование макетов и их печать',
+      colorEnum:     enumVal(cSel),
+      colorLabel:    cSel?.options[cSel.selectedIndex]?.text || '',
+      sizeEnum:      enumVal(sSel),
+      sizeLabel:     sSel?.options[sSel.selectedIndex]?.text || '',
+      qtyTierLabel:  tier2.label,
+      apiQty:        qty2,
+      cartQty:       1,
+      unitPrice:     parseInt(document.getElementById('total-price-2')?.textContent) || 450
+    });
+    openCartModal();
+  });
+
+  document.getElementById('order-btn-3')?.addEventListener('click', () => {
+    if (!isAuthenticated()) { openAuthModal(); return; }
+    const cSel = document.getElementById('color-select-3');
+    const qty3 = Math.max(1, parseInt(document.getElementById('count-input-3')?.value) || 1);
+    const tier3 = getTier(QTY_TIERS_3, qty3);
+    addLocalCartItem({
+      productId:     3,
+      serviceName:   'Карты города',
+      image:         'assets/images/service3.png',
+      description:   'Создание модели по заданному месту, утверждение и печать',
+      colorEnum:     enumVal(cSel),
+      colorLabel:    cSel?.options[cSel.selectedIndex]?.text || '',
+      sizeEnum:      null,
+      sizeLabel:     '',
+      qtyTierLabel:  tier3.label,
+      apiQty:        qty3,
+      cartQty:       1,
+      unitPrice:     parseInt(document.getElementById('total-price-3')?.textContent) || 900
+    });
+    openCartModal();
+  });
+
+  // оформление заказа
+  document.getElementById('cart-submit')?.addEventListener('click', async () => {
+    const cart = getLocalCart();
+    if (!cart.length) return;
+
+    const btn   = document.getElementById('cart-submit');
+    const errEl = document.getElementById('cart-error');
+    btn.disabled = true;
+    btn.textContent = 'Оформляем...';
+    errEl.style.display = 'none';
+    errEl.classList.remove('visible');
+
+    try {
+      // Добавляем все товары на сервер
+      for (const item of cart) {
+        const r = await addToCart({
+          productId: item.productId,
+          quantity:  item.apiQty * item.cartQty,
+          size:      item.sizeEnum,
+          color:     item.colorEnum,
+          comment:   item.comment || ''
+        });
+        if (!r.success) throw new Error(r.message || 'Ошибка добавления в корзину');
+      }
+
+      // Оформляем заказ
+      const paymentMethod  = document.querySelector('input[name="cart-payment"]:checked')?.value || 'CASH';
+      const contactName    = document.getElementById('cart-name')?.value?.trim()  || '';
+      const contactEmail   = document.getElementById('cart-email')?.value?.trim() || '';
+      const contactPhone   = document.getElementById('cart-phone')?.value?.trim() || '';
+
+      const orderResult = await checkout({ paymentMethod, contactName, contactEmail, contactPhone });
+      if (!orderResult.success) throw new Error(orderResult.message || 'Ошибка оформления заказа');
+
+      const orderId = orderResult.data?.id;
+      if (orderId) {
+        localStorage.setItem('order_items_' + orderId, JSON.stringify(cart));
+      }
+      clearLocalCart();
+      closeCartModal();
+      window.location.href = '/user/profile';
+
+    } catch (err) {
+      errEl.textContent = err.message || 'Что-то пошло не так. Попробуйте ещё раз.';
+      errEl.classList.add('visible');
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'ОФОРМИТЬ';
+    }
+  });
+
+  // инициализация
+  window.addEventListener('load', () => {
+    updateCartBadges();
+    // Если пришли с другой страницы с запросом открыть корзину
+    if (new URLSearchParams(window.location.search).get('cart') === '1') {
+      if (isAuthenticated()) openCartModal();
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  });
+</script>
+
+</body>
+</html>
+
+<!-- анимации появления -->
+<script>
+  (function(){
+    const obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+  })();
+</script>
+</body>
+</html>
