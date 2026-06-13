@@ -170,7 +170,12 @@ public class OrderService {
     public List<OrderResponseDTO> getAllOrdersForAdmin() {
         return orderRepository.findAll().stream()
                 .sorted(Comparator.comparing(OrderEntity::getId).reversed())
-                .map(this::convertToResponseDTO)
+                .map(order -> {
+                    List<Long> productIds = orderItemRepository.findByOrder(order).stream()
+                            .map(item -> item.getProduct().getId())
+                            .collect(Collectors.toList());
+                    return convertToResponseDTO(order, productIds);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -198,10 +203,14 @@ public class OrderService {
             order.setAdminNote(requestDTO.getAdminNote());
         }
 
-        return convertToResponseDTO(orderRepository.save(order));
+        List<Long> productIds = orderItemRepository.findByOrder(order).stream()
+                .map(item -> item.getProduct().getId())
+                .collect(Collectors.toList());
+
+        return convertToResponseDTO(orderRepository.save(order), productIds);
     }
 
-    private OrderResponseDTO convertToResponseDTO(OrderEntity order) {
+    private OrderResponseDTO convertToResponseDTO(OrderEntity order, List<Long> productIds) {
         return new OrderResponseDTO(
                 order.getId(),
                 order.getCustomerUsername(),
@@ -210,7 +219,8 @@ public class OrderService {
                 order.getStatus(),
                 order.getPaymentMethod(),
                 order.getCreatedAt(),
-                order.getPaymentStatus()
+                order.getPaymentStatus(),
+                productIds
         );
     }
 

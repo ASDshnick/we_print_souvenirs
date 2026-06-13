@@ -5,6 +5,7 @@ import com.weprintsouvenirs.we_print_souvenirs.order.enums.PaymentStatus;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Возвращаемое DTO после создания заказа
@@ -18,11 +19,12 @@ public class OrderResponseDTO {
     private Payment paymentMethod;
     private LocalDateTime createdAt;
     private PaymentStatus paymentStatus;
+    private List<Long> productIds;
 
     public OrderResponseDTO() {
     }
 
-    public OrderResponseDTO(Long id, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt, PaymentStatus paymentStatus) {
+    public OrderResponseDTO(Long id, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt, PaymentStatus paymentStatus, List<Long> productIds) {
         this.id = id;
         this.customerUsername = customerUsername;
         this.customerEmail = customerEmail;
@@ -31,6 +33,7 @@ public class OrderResponseDTO {
         this.paymentMethod = paymentMethod;
         this.createdAt = createdAt;
         this.paymentStatus = paymentStatus;
+        this.productIds = productIds;
     }
 
     public Long getId() {
@@ -65,6 +68,10 @@ public class OrderResponseDTO {
         return paymentStatus;
     }
 
+    public List<Long> getProductIds() {
+        return productIds;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -95,5 +102,9 @@ public class OrderResponseDTO {
 
     public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public void setProductIds(List<Long> productIds) {
+        this.productIds = productIds;
     }
 }
