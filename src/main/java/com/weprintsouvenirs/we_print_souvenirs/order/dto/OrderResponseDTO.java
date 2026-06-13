@@ -1,6 +1,7 @@
 package com.weprintsouvenirs.we_print_souvenirs.order.dto;
 
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Payment;
+import com.weprintsouvenirs.we_print_souvenirs.order.enums.PaymentStatus;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
 
 import java.time.LocalDateTime;
@@ -16,11 +17,12 @@ public class OrderResponseDTO {
     private Status status;
     private Payment paymentMethod;
     private LocalDateTime createdAt;
+    private PaymentStatus paymentStatus;
 
     public OrderResponseDTO() {
     }
 
-    public OrderResponseDTO(Long id, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt) {
+    public OrderResponseDTO(Long id, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt, PaymentStatus paymentStatus) {
         this.id = id;
         this.customerUsername = customerUsername;
         this.customerEmail = customerEmail;
@@ -28,6 +30,7 @@ public class OrderResponseDTO {
         this.status = status;
         this.paymentMethod = paymentMethod;
         this.createdAt = createdAt;
+        this.paymentStatus = paymentStatus;
     }
 
     public Long getId() {
@@ -58,6 +61,10 @@ public class OrderResponseDTO {
         return createdAt;
     }
 
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -84,5 +91,9 @@ public class OrderResponseDTO {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }
