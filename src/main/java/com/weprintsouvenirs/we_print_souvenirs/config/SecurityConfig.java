@@ -58,15 +58,23 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         .requestMatchers("/user/register").permitAll()
                         .requestMatchers("/user/login").permitAll()
-                        .requestMatchers("/user/orders").hasRole("USER")
-                        .requestMatchers("/user/change-password/**").hasRole("USER")
-                        .requestMatchers("/user/change-data").hasRole("USER")
-                        .requestMatchers("/order/checkout").hasRole("USER")
-                        .requestMatchers("/admin/users").hasRole("ADMIN")
+                        .requestMatchers("/user/orders").permitAll()
+                        .requestMatchers("/user/profile").permitAll()
+                        .requestMatchers("/user/change-password/**").permitAll()
+                        .requestMatchers("/user/change-data").permitAll()
+                        .requestMatchers("/chat/{orderId}").permitAll()
+
                         .requestMatchers("/ws/**").permitAll()
-                        .requestMatchers("/chat/**").authenticated()
+
+                        .requestMatchers(HttpMethod.PUT, "/user/change-data").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/user/change-password").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/order/checkout").hasRole("USER")
+                        .requestMatchers("/cart/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/chat/{orderId}/history").authenticated()
+
                         .requestMatchers(
                                 "/",
                                 "/index.html",
@@ -76,6 +84,7 @@ public class SecurityConfig {
                                 "/assets/**",
                                 "/images/**"
                         ).permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())
@@ -89,15 +98,15 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:63342/",
-                "http://127.0.0.1:63342/",
-                "http://localhost:5500/",
-                "http://127.0.0.1:5500/",
-                "http://localhost:3000/",
-                "http://127.0.0.1:3000/",
-                "http://localhost:4200/",
-                "http://127.0.0.1:4200/",
-                "http://localhost:8080/"
+                "http://localhost:63342",
+                "http://127.0.0.1:63342",
+                "http://localhost:5500",
+                "http://127.0.0.1:5500",
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+                "http://localhost:4200",
+                "http://127.0.0.1:4200",
+                "http://localhost:8080"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
