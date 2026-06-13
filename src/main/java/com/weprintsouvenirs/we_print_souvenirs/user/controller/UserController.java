@@ -8,6 +8,7 @@ import com.weprintsouvenirs.we_print_souvenirs.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,12 +63,12 @@ public class UserController {
         }
     }
 
-    @GetMapping("/profile")
+    @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProfileResponseDTO> getUserProfile(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserProfile());
     }
 
-    @GetMapping("/orders")
+    @GetMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AllUserOrdersDTO>> getUserOrders() {
         List<AllUserOrdersDTO> orders = orderService.getOrdersForUser();
         return ResponseEntity.status(HttpStatus.OK).body(orders);
