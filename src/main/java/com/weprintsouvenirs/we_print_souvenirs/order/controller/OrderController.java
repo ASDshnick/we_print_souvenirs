@@ -47,7 +47,7 @@ public class OrderController {
         dto.setStatus(order.getStatus());
         dto.setPaymentMethod(order.getPaymentMethod());
         dto.setCreatedAt(order.getCreatedAt());
-        dto.setPaymentStatus(dto.getPaymentStatus());
+        dto.setPaymentStatus(order.getPaymentStatus());
         return dto;
     }
 

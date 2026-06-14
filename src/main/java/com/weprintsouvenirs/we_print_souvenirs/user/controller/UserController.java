@@ -1,6 +1,7 @@
 package com.weprintsouvenirs.we_print_souvenirs.user.controller;
 
 import com.weprintsouvenirs.we_print_souvenirs.order.dto.AllUserOrdersDTO;
+import com.weprintsouvenirs.we_print_souvenirs.order.dto.OrderDetailsResponseDTO;
 import com.weprintsouvenirs.we_print_souvenirs.order.service.OrderService;
 import com.weprintsouvenirs.we_print_souvenirs.user.dto.*;
 import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
@@ -59,6 +60,16 @@ public class UserController {
     public ResponseEntity<List<AllUserOrdersDTO>> getUserOrders() {
         List<AllUserOrdersDTO> orders = orderService.getOrdersForUser();
         return ResponseEntity.status(HttpStatus.OK).body(orders);
+    }
+
+    @GetMapping(value = "/orders/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getUserOrderDetails(@PathVariable Long orderId) {
+        try {
+            OrderDetailsResponseDTO order = orderService.getOrderDetailsForCurrentUser(orderId);
+            return ResponseEntity.status(HttpStatus.OK).body(order);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PutMapping("/change-data")

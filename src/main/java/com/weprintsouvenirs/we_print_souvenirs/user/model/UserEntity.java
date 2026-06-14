@@ -3,6 +3,8 @@ package com.weprintsouvenirs.we_print_souvenirs.user.model;
 import com.weprintsouvenirs.we_print_souvenirs.user.Role;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "users")
@@ -30,6 +32,15 @@ public class UserEntity {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "admin_note", length = 2000)
+    private String adminNote;
+
+    @Column(name = "registered_at")
+    private LocalDateTime registeredAt;
+
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+
 
     public UserEntity() {
 
@@ -43,6 +54,13 @@ public class UserEntity {
         this.role = role;
         this.email = email;
         this.phone = phone;
+    }
+
+    @PrePersist
+    private void onCreate() {
+        if (this.registeredAt == null) {
+            this.registeredAt = LocalDateTime.now();
+        }
     }
 
     public long getId() {
@@ -73,6 +91,18 @@ public class UserEntity {
         return phone;
     }
 
+    public String getAdminNote() {
+        return adminNote;
+    }
+
+    public LocalDateTime getRegisteredAt() {
+        return registeredAt;
+    }
+
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -99,6 +129,18 @@ public class UserEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void setAdminNote(String adminNote) {
+        this.adminNote = adminNote;
+    }
+
+    public void setRegisteredAt(LocalDateTime registeredAt) {
+        this.registeredAt = registeredAt;
+    }
+
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
     }
 
 }

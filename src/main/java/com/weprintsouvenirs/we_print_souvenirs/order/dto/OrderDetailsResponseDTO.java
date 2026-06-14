@@ -1,78 +1,44 @@
-package com.weprintsouvenirs.we_print_souvenirs.order.model;
+package com.weprintsouvenirs.we_print_souvenirs.order.dto;
 
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Payment;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.PaymentStatus;
 import com.weprintsouvenirs.we_print_souvenirs.order.enums.Status;
-import com.weprintsouvenirs.we_print_souvenirs.user.model.UserEntity;
-import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Entity
-@Table(name = "orders")
-public class OrderEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class OrderDetailsResponseDTO {
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
-
-    @Column(name = "customer_username")
     private String customerUsername;
-
-    @Column(name = "customer_email")
     private String customerEmail;
-
-    @Column(name = "total_amount")
     private int totalAmount;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status = Status.NEW;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method")
-    private Payment paymentMethod = Payment.CARD;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_status")
-    private PaymentStatus paymentStatus = PaymentStatus.NOT_PAID;
-
-    @Column(name = "admin_note")
+    private Status status;
+    private Payment paymentMethod;
+    private PaymentStatus paymentStatus;
     private String adminNote;
+    private LocalDateTime createdAt;
+    private OrderUserResponseDTO user;
+    private List<OrderItemResponseDTO> items;
 
-    @PrePersist
-    private void onCreate() {
-        this.createdAt = LocalDateTime.now();
+    public OrderDetailsResponseDTO() {
     }
 
-    public OrderEntity() {
-    }
-
-    public OrderEntity(Long id, UserEntity user, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt, PaymentStatus paymentStatus, String adminNote) {
+    public OrderDetailsResponseDTO(Long id, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, PaymentStatus paymentStatus, String adminNote, LocalDateTime createdAt, OrderUserResponseDTO user, List<OrderItemResponseDTO> items) {
         this.id = id;
-        this.user = user;
         this.customerUsername = customerUsername;
         this.customerEmail = customerEmail;
         this.totalAmount = totalAmount;
         this.status = status;
         this.paymentMethod = paymentMethod;
-        this.createdAt = createdAt;
         this.paymentStatus = paymentStatus;
         this.adminNote = adminNote;
+        this.createdAt = createdAt;
+        this.user = user;
+        this.items = items;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public UserEntity getUser() {
-        return user;
     }
 
     public String getCustomerUsername() {
@@ -95,10 +61,6 @@ public class OrderEntity {
         return paymentMethod;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
     public PaymentStatus getPaymentStatus() {
         return paymentStatus;
     }
@@ -107,12 +69,20 @@ public class OrderEntity {
         return adminNote;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setUser(UserEntity user) {
-        this.user = user;
+    public OrderUserResponseDTO getUser() {
+        return user;
+    }
+
+    public List<OrderItemResponseDTO> getItems() {
+        return items;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setCustomerUsername(String customerUsername) {
@@ -135,15 +105,23 @@ public class OrderEntity {
         this.paymentMethod = paymentMethod;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 
     public void setAdminNote(String adminNote) {
         this.adminNote = adminNote;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUser(OrderUserResponseDTO user) {
+        this.user = user;
+    }
+
+    public void setItems(List<OrderItemResponseDTO> items) {
+        this.items = items;
     }
 }
