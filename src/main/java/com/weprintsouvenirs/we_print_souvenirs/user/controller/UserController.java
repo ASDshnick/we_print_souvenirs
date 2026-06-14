@@ -50,18 +50,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping("/change-password")
-    public ResponseEntity<String> changePassword(
-            @RequestBody ChangePasswordRequestDTO requestDTO
-    ) {
-        try {
-            userService.changePassword(requestDTO);
-            return ResponseEntity.status(HttpStatus.OK).body("Password changed");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
     @GetMapping(value = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProfileResponseDTO> getUserProfile(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserProfile());

@@ -99,37 +99,6 @@ public class UserService {
 
 
     /**
-     * Метод смены пароля пользователя
-     * Для смены пароля пользователь должен ввести свой старый пароль и затем ввести новый
-     *
-     * @param requestDTO
-     * JSON:
-     * {
-     *      "oldPassword": "oldPassword",
-     *      "newPassword": "newPassword"
-     * }
-     */
-    @Transactional
-    public void changePassword(ChangePasswordRequestDTO requestDTO) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!passwordEncoder.matches(requestDTO.getOldPassword(), user.getPassword())) {
-            throw new RuntimeException("Old password is incorrect");
-        }
-
-        if (requestDTO.getNewPassword() == null || requestDTO.getNewPassword().isEmpty()) {
-            throw new RuntimeException("New password cannot be empty");
-        }
-
-        user.setPassword(passwordEncoder.encode(requestDTO.getNewPassword()));
-        userRepository.save(user);
-    }
-
-
-    /**
      * Метод для получения профиля пользователя
      * Метод достает из SecurityContex имя пользователя, ищет его в UserRepository
      * и возвращает его профиль
