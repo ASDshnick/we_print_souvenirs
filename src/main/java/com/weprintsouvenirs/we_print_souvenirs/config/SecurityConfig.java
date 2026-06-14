@@ -62,13 +62,17 @@ public class SecurityConfig {
                         .requestMatchers("/user/register").permitAll()
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/user/orders").permitAll()
+                        .requestMatchers("/user/orders/{orderId}").permitAll()
                         .requestMatchers("/user/profile").permitAll()
                         .requestMatchers("/user/change-data").permitAll()
                         .requestMatchers("/chat/{orderId}").permitAll()
 
-                        .requestMatchers("/admin/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/admin").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/admin/users").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/admin/users/{userId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/admin/orders").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/admin/orders/{orderId}").permitAll()
                         .requestMatchers("/admin/users/**").hasRole("ADMIN")
-                        .requestMatchers("/admin/orders").hasRole("ADMIN")
                         .requestMatchers("/admin/orders/**").hasRole("ADMIN")
 
                         .requestMatchers("/ws/**").permitAll()
@@ -83,9 +87,14 @@ public class SecurityConfig {
                                 "/index.html",
                                 "/profile.html",
                                 "/orders.html",
+                                "/order-detail.html",
+                                "/admin.html",
+                                "/admin-user.html",
+                                "/admin-orders.html",
                                 "/edit-profile.html",
                                 "/assets/**",
-                                "/images/**"
+                                "/images/**",
+                                "/favicon.ico"
                         ).permitAll()
 
                         .anyRequest().authenticated()

@@ -147,11 +147,6 @@
         <span class="field-error" id="login-error"></span>
       </div>
 
-      <div class="modal-field">
-        <label for="reg-email">Email</label>
-        <input id="reg-email" type="email" name="email" placeholder="Введите email" required />
-      </div>
-
       <div class="modal-field modal-field-password">
         <label for="reg-password">Пароль</label>
         <div class="password-container">
@@ -309,6 +304,7 @@
 <section class="service-card-section" id="service-1">
   <div class="service-card reveal">
     <div class="service-photo" style="background:rgba(193,127,59,0.15);">
+      <!-- <img src="/assets/images\service1.png" alt="Индивидуальный заказ"> -->
       <span><img src="/assets/images/service1.png" alt="Индивидуальный заказ"></span>
     </div>
     <div class="service-info">
@@ -752,7 +748,6 @@
     const result = await registerUser({
       username: regNameInput.value.trim(),
       login:    regLoginInput.value.trim(),
-      email:    document.getElementById('reg-email')?.value?.trim() || '',
       password: regPassInput.value
     });
 
@@ -793,6 +788,7 @@
     }
   });
 
+  // обработка кнопки возврата
   window.addEventListener('popstate', (event) => {
     if (event.state?.modal === 'auth') {
       openAuthModal();
@@ -864,6 +860,7 @@
   });
 </script>
 
+<!-- корзина + оформление заказа -->
 <div id="cart-overlay" class="cart-overlay" aria-hidden="true">
   <div class="cart-panel" id="cart-panel">
 
@@ -1090,7 +1087,7 @@
           <p class="cart-item-name">${item.serviceName}</p>
           <div class="cart-item-specs">
             ${item.colorLabel   ? `<p>Цвет: ${item.colorLabel}</p>` : ''}
-            ${item.qtyTierLabel ? `<p>Количество: ${item.qtyTierLabel}</p>` : ''}
+            ${item.apiQty ? `<p>Количество: ${item.apiQty} шт.</p>` : ''}
             ${item.sizeLabel    ? `<p>Размер: ${item.sizeLabel}</p>` : ''}
           </div>
           ${item.description ? `<p class="cart-item-desc">${item.description}</p>` : ''}
@@ -1153,7 +1150,6 @@
     const cart = getLocalCart();
     const item = cart.find(i => i.localId === localId);
     if (item) item.comment = comment;
-    // Сохраняем без перерисовки чтобы не сбить фокус
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
   }
 

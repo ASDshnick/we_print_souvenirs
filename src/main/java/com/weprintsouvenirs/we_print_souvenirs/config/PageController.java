@@ -1,5 +1,6 @@
 package com.weprintsouvenirs.we_print_souvenirs.config;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -7,13 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PageController {
 
     // личный кабинет
-    @GetMapping("/user/profile")
+    @GetMapping(value = "/user/profile", produces = MediaType.TEXT_HTML_VALUE)
     public String profilePage() {
         return "forward:/profile.html";
     }
 
     // мои заказы
-    @GetMapping("/user/orders")
+    @GetMapping(value = "/user/orders", produces = MediaType.TEXT_HTML_VALUE)
     public String ordersPage() {
         return "forward:/orders.html";
     }
@@ -40,5 +41,41 @@ public class PageController {
     @GetMapping("/chat/{orderId}")
     public String chatPage() {
         return "forward:/orders.html";
+    }
+
+    // детали заказа (пользователь)
+    @GetMapping(value = "/user/orders/{orderId}", produces = MediaType.TEXT_HTML_VALUE)
+    public String orderDetailPage() {
+        return "forward:/order-detail.html";
+    }
+
+    // /admin -> редирект на /admin/users
+    @GetMapping("/admin")
+    public String adminRedirect() {
+        return "redirect:/admin/users";
+    }
+
+    // страница пользователей (админ)
+    @GetMapping(value = "/admin/users", produces = MediaType.TEXT_HTML_VALUE)
+    public String adminUsersPage() {
+        return "forward:/admin.html";
+    }
+
+    // детали пользователя (админ)
+    @GetMapping(value = "/admin/users/{userId}", produces = MediaType.TEXT_HTML_VALUE)
+    public String adminUserDetailPage() {
+        return "forward:/admin-user.html";
+    }
+
+    // страница заказов (админ)
+    @GetMapping(value = "/admin/orders", produces = MediaType.TEXT_HTML_VALUE)
+    public String adminOrdersPage() {
+        return "forward:/admin-orders.html";
+    }
+
+    // детали заказа (админ)
+    @GetMapping(value = "/admin/orders/{orderId}", produces = MediaType.TEXT_HTML_VALUE)
+    public String adminOrderDetailPage() {
+        return "forward:/admin-orders.html";
     }
 }
