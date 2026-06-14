@@ -41,4 +41,10 @@ public class PageController {
     public String chatPage() {
         return "forward:/orders.html";
     }
+
+    // детали заказа
+    @GetMapping("/user/orders/{orderId}")
+    public String orderDetailPage() {
+        return "forward:/order-detail.html";
+    }
 }

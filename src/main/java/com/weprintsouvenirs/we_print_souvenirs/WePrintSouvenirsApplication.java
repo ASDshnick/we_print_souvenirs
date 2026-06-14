@@ -13,6 +13,7 @@ public class WePrintSouvenirsApplication {
 		System.setProperty("DB_NAME", dotenv.get("DB_NAME"));
 		System.setProperty("DB_USER", dotenv.get("DB_USER"));
 		System.setProperty("DB_PASS", dotenv.get("DB_PASS"));
+		System.setProperty("DB_PORT", dotenv.get("DB_PORT"));
 		System.setProperty("JWT_SECRET_KEY", dotenv.get("JWT_SECRET_KEY"));
 		SpringApplication.run(WePrintSouvenirsApplication.class, args);
 	}

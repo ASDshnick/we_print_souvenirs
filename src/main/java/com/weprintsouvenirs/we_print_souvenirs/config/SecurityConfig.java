@@ -62,8 +62,8 @@ public class SecurityConfig {
                         .requestMatchers("/user/register").permitAll()
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/user/orders").permitAll()
+                        .requestMatchers("/user/orders/{orderId}").permitAll()
                         .requestMatchers("/user/profile").permitAll()
-                        .requestMatchers("/user/change-password/**").permitAll()
                         .requestMatchers("/user/change-data").permitAll()
                         .requestMatchers("/chat/{orderId}").permitAll()
 
@@ -75,7 +75,6 @@ public class SecurityConfig {
                         .requestMatchers("/ws/**").permitAll()
 
                         .requestMatchers(HttpMethod.PUT, "/user/change-data").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/user/change-password").permitAll()
                         .requestMatchers(HttpMethod.POST, "/order/checkout").hasRole("USER")
                         .requestMatchers("/cart/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/chat/{orderId}/history").authenticated()
@@ -85,6 +84,7 @@ public class SecurityConfig {
                                 "/index.html",
                                 "/profile.html",
                                 "/orders.html",
+                                "/order-detail.html",
                                 "/edit-profile.html",
                                 "/assets/**",
                                 "/images/**"
