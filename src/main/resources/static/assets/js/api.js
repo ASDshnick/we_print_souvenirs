@@ -1,4 +1,3 @@
-
 const API_BASE_URL = 'http://localhost:8080';
 
 console.log('API_BASE_URL установлен на:', API_BASE_URL);
@@ -373,5 +372,28 @@ async function changeUserData(userData) {
   } catch (error) {
     console.error('Ошибка обновления данных:', error);
     return { success: false, message: 'Ошибка подключения к серверу' };
+  }
+}
+
+async function getOrderDetails(orderId) {
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/user/orders/${orderId}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (response.ok) {
+      return { success: true, data: await response.json() };
+    } else if (response.status === 401) {
+      localStorage.removeItem('authToken');
+      return { success: false, message: 'Сессия истекла' };
+    } else {
+      return { success: false, message: 'Ошибка загрузки заказа' };
+    }
+  } catch (error) {
+    console.error('ошибка загрузки заказа:', error);
+    return { success: false, message: 'Ошибка подключения' };
   }
 }

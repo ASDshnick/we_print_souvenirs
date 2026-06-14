@@ -6,7 +6,6 @@
   <title>Мои заказы — МоделМастер</title>
   <link rel="stylesheet" href="/assets/css/styles.css"/>
   <script src="/assets/js/api.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </head>
@@ -115,7 +114,6 @@
     }));
   }
   let items = JSON.parse(localStorage.getItem('order_items_' + order.id) || '[]');
-  // 🔧 Исправляем пути (добавляем слеш, если нужно)
   return items.map(item => ({
     ...item,
     image: item.image && !item.image.startsWith('/') && !item.image.startsWith('http')
@@ -154,7 +152,7 @@
         </div>
         ${thumbsHtml}
         <div class="order-card-footer">
-          <a href="order-detail.html?id=${order.id}" class="order-view-link">
+          <a href="/user/orders/${order.id}" class="order-view-link">
             Посмотреть заказ
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
               <path d="M2 5H8M8 5L5.5 2.5M8 5L5.5 7.5" stroke="#000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
@@ -252,7 +250,6 @@
   function connectWebSocket(orderId) {
     const token = getAuthToken();
     try {
-      // Измените /ws на ваш WebSocket endpoint если нужно
       const socket = new SockJS(API_BASE_URL + '/ws');
       stompClient  = Stomp.over(socket);
       stompClient.debug = null; // отключаем логи STOMP в консоль

@@ -309,6 +309,7 @@
 <section class="service-card-section" id="service-1">
   <div class="service-card reveal">
     <div class="service-photo" style="background:rgba(193,127,59,0.15);">
+      <!-- <img src="/assets/images\service1.png" alt="Индивидуальный заказ"> -->
       <span><img src="/assets/images/service1.png" alt="Индивидуальный заказ"></span>
     </div>
     <div class="service-info">
@@ -793,6 +794,7 @@
     }
   });
 
+  // обработка кнопки возврата
   window.addEventListener('popstate', (event) => {
     if (event.state?.modal === 'auth') {
       openAuthModal();
@@ -864,6 +866,7 @@
   });
 </script>
 
+<!-- корзина + оформление заказа -->
 <div id="cart-overlay" class="cart-overlay" aria-hidden="true">
   <div class="cart-panel" id="cart-panel">
 
@@ -1090,7 +1093,7 @@
           <p class="cart-item-name">${item.serviceName}</p>
           <div class="cart-item-specs">
             ${item.colorLabel   ? `<p>Цвет: ${item.colorLabel}</p>` : ''}
-            ${item.qtyTierLabel ? `<p>Количество: ${item.qtyTierLabel}</p>` : ''}
+            ${item.apiQty ? `<p>Количество: ${item.apiQty} шт.</p>` : ''}
             ${item.sizeLabel    ? `<p>Размер: ${item.sizeLabel}</p>` : ''}
           </div>
           ${item.description ? `<p class="cart-item-desc">${item.description}</p>` : ''}
@@ -1153,7 +1156,7 @@
     const cart = getLocalCart();
     const item = cart.find(i => i.localId === localId);
     if (item) item.comment = comment;
-    // Сохраняем без перерисовки чтобы не сбить фокус
+
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
   }
 
