@@ -62,9 +62,15 @@ public class SecurityConfig {
                         .requestMatchers("/user/register").permitAll()
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/user/orders").permitAll()
+                        .requestMatchers("/user/orders/{orderId}").permitAll()
                         .requestMatchers("/user/profile").permitAll()
                         .requestMatchers("/user/change-data").permitAll()
                         .requestMatchers("/chat/{orderId}").permitAll()
+
+                        .requestMatchers("/admin/users").hasRole("ADMIN")
+                        .requestMatchers("/admin/users/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/orders").hasRole("ADMIN")
+                        .requestMatchers("/admin/orders/**").hasRole("ADMIN")
 
                         .requestMatchers("/ws/**").permitAll()
 
@@ -78,6 +84,7 @@ public class SecurityConfig {
                                 "/index.html",
                                 "/profile.html",
                                 "/orders.html",
+                                "/order-detail.html",
                                 "/edit-profile.html",
                                 "/assets/**",
                                 "/images/**"
