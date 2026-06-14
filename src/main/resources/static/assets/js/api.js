@@ -397,3 +397,124 @@ async function getOrderDetails(orderId) {
     return { success: false, message: 'Ошибка подключения' };
   }
 }
+
+async function getAdminUsers() {
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/admin/users`, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (response.ok) return { success: true, data: await response.json() };
+    return { success: false, status: response.status };
+  } catch (e) {
+    return { success: false, message: 'Ошибка подключения' };
+  }
+}
+
+async function getAdminUser(userId) {
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (response.ok) return { success: true, data: await response.json() };
+    return { success: false, status: response.status };
+  } catch (e) {
+    return { success: false };
+  }
+}
+
+
+async function updateAdminNote(userId, note) {
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/admin/users/${userId}/note`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ adminNote: note })
+    });
+    return response.ok ? { success: true } : { success: false };
+  } catch (e) {
+    return { success: false };
+  }
+}
+
+async function getAdminOrders() {
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/admin/orders`, {
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (response.ok) return { success: true, data: await response.json() };
+    return { success: false, status: response.status };
+  } catch (e) {
+    return { success: false, message: 'Ошибка подключения' };
+  }
+}
+
+async function updateAdminOrder(orderId, data) {
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/admin/orders/${orderId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(data)
+    });
+    if (response.ok) return { success: true, data: await response.json() };
+    return { success: false, status: response.status };
+  } catch (e) {
+    return { success: false };
+  }
+}
+
+async function getAdminOrderDetails(orderId) {
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/admin/orders/${orderId}`, {
+      headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` }
+    });
+    if (response.ok) return { success: true, data: await response.json() };
+    return { success: false, status: response.status };
+  } catch (e) { return { success: false }; }
+}
+
+async function updateAdminUser(userId, data) {
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(data)
+    });
+    if (response.ok) return { success: true, data: await response.json() };
+    return { success: false };
+  } catch (e) { return { success: false }; }
+}
+
+async function deleteAdminUser(userId) {
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${API_BASE_URL}/admin/users/${userId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    return { success: response.ok || response.status === 204 };
+  } catch (e) { return { success: false }; }
+}

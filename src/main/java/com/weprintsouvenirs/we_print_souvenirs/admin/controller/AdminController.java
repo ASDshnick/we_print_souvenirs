@@ -8,6 +8,7 @@ import com.weprintsouvenirs.we_print_souvenirs.user.dto.AdminUserResponseDTO;
 import com.weprintsouvenirs.we_print_souvenirs.user.dto.AdminUserUpdateRequestDTO;
 import com.weprintsouvenirs.we_print_souvenirs.user.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,12 +26,12 @@ public class AdminController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/users")
+    @GetMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AdminUserResponseDTO>> getUsers() {
         return ResponseEntity.ok(userService.getAllUsersForAdmin());
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping(value = "/users/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdminUserResponseDTO> getUser(@PathVariable Long userId) {
         try {
             return ResponseEntity.ok(userService.getUserForAdmin(userId));
@@ -73,12 +74,12 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/orders")
+    @GetMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OrderResponseDTO>> getOrders() {
         return ResponseEntity.ok(orderService.getAllOrdersForAdmin());
     }
 
-    @GetMapping("/orders/{orderId}")
+    @GetMapping(value = "/orders/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OrderDetailsResponseDTO> getOrder(@PathVariable Long orderId) {
         try {
             return ResponseEntity.ok(orderService.getOrderDetailsForAdmin(orderId));

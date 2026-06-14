@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Пользователи — МоделМастер</title>
+  <link rel="stylesheet" href="/assets/css/styles.css"/>
+  <script src="/assets/js/api.js"></script>
+</head>
+<body>
+
+<div class="admin-page">
+
+  <h1 class="admin-title">Все пользователи</h1>
+
+  <div class="admin-section">
+
+    <div class="admin-toolbar">
+      <div class="admin-toolbar-search-wrap" id="admin-toolbar-search-wrap">
+        <input class="admin-toolbar-search-input" id="admin-toolbar-search-input"
+               type="text" placeholder="Поиск по имени или email"/>
+      </div>
+      <div class="admin-toolbar-btns">
+        <button class="admin-toolbar-btn" id="admin-search-btn" title="Поиск">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="6.5" cy="6.5" r="5.5" stroke="#333" stroke-width="1.4"/>
+            <line x1="10.5" y1="10.5" x2="14.5" y2="14.5" stroke="#333" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="admin-toolbar-btn" id="admin-filter-btn" title="Фильтр">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <line x1="2" y1="4" x2="14" y2="4" stroke="#333" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="4" y1="8" x2="12" y2="8" stroke="#333" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="6" y1="12" x2="10" y2="12" stroke="#333" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <div class="admin-thead">
+        <div class="admin-th admin-col-name">Имя пользователя</div>
+        <div class="admin-th admin-col-email">Email</div>
+        <div class="admin-th admin-col-notes">Заметки</div>
+        <div class="admin-th admin-col-reg">Регистрация</div>
+        <div class="admin-th admin-col-auth">Авторизация</div>
+      </div>
+      <div id="admin-tbody">
+        <div class="admin-state">Загружаем пользователей...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  if (!isAuthenticated()) { window.location.href = '/'; }
+
+  const AVATAR_COLORS = ['#75BD93', '#AEBD75', '#BDA075', '#75A7BD'];
+  function avatarColor(id) { return AVATAR_COLORS[Number(id) % 4]; }
+
+  function timeAgo(dt) {
+    if (!dt) return '—';
+    let d;
+    if (Array.isArray(dt)) {
+      d = new Date(dt[0], dt[1] - 1, dt[2], dt[3] || 0, dt[4] || 0, dt[5] || 0);
+    } else {
+      d = new Date(String(dt).replace(/(\.\d{3})\d+/, '$1'));
+    }
+    if (isNaN(d)) return '—';
+    const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (diff < 60) return 'только что';
+    const min = Math.floor(diff / 60);
+    if (min < 60) return `${min} мин. назад`;
+    const h = Math.floor(diff / 3600);
+    if (h < 24) {
+      if (h === 1) return 'час назад';
+      if (h < 5) return `${h} часа назад`;
+      return `${h} часов назад`;
+    }
+    const days = Math.floor(diff / 86400);
+    if (days === 1) return 'день назад';
+    if (days < 5) return `${days} дня назад`;
+    if (days < 30) return `${days} дней назад`;
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    return `${dd}.${mm}.${d.getFullYear()}`;
+  }
+
+  let allUsers = [];
+
+  function renderRows(users) {
+    const tbody = document.getElementById('admin-tbody');
+    if (!users.length) {
+      tbody.innerHTML = '<div class="admin-state">Пользователи не найдены</div>';
+      return;
+    }
+    tbody.innerHTML = users.map(u => {
+      const initial = (u.name || '?')[0].toUpperCase();
+      const color   = avatarColor(u.id);
+      const note    = u.adminNote || '';
+      return `
+        <div class="admin-tr" data-user-id="${u.id}">
+          <div class="admin-td admin-col-name">
+            <span class="admin-avatar" style="background:${color}">${initial}</span>
+            <span class="admin-user-name">${u.name || '—'}</span>
+          </div>
+          <div class="admin-td admin-col-email">
+            <span class="admin-cell-text">${u.email || '—'}</span>
+          </div>
+          <div class="admin-td admin-col-notes">
+            <input class="admin-note-input" type="text"
+                   value="${note.replace(/"/g, '&quot;')}"
+                   data-user-id="${u.id}"
+                   data-original="${note.replace(/"/g, '&quot;')}"
+                   placeholder="Добавить заметку"/>
+          </div>
+          <div class="admin-td admin-col-reg">
+            <span class="admin-cell-text">${timeAgo(u.registeredAt)}</span>
+          </div>
+          <div class="admin-td admin-col-auth">
+            <span class="admin-cell-text">${timeAgo(u.lastLoginAt)}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    tbody.querySelectorAll('.admin-tr').forEach(row => {
+      row.addEventListener('click', function(e) {
+        if (e.target.tagName === 'INPUT') return;
+        const userId = this.dataset.userId;
+        if (userId) window.location.href = `/admin/users/${userId}`;
+      });
+      row.style.cursor = 'pointer';
+    });
+
+    tbody.querySelectorAll('.admin-note-input').forEach(input => {
+      input.addEventListener('blur', async function () {
+        const userId   = this.dataset.userId;
+        const original = this.dataset.original;
+        const val      = this.value;
+        if (val === original) return;
+        const result = await updateAdminNote(userId, val);
+        if (result.success) { this.dataset.original = val; }
+        else { this.value = original; }
+      });
+    });
+  }
+
+  document.getElementById('admin-search-btn').addEventListener('click', function () {
+    const wrap = document.getElementById('admin-toolbar-search-wrap');
+    const inp  = document.getElementById('admin-toolbar-search-input');
+    const open = wrap.classList.toggle('open');
+    if (open) { inp.focus(); } else { inp.value = ''; renderRows(allUsers); }
+  });
+
+  document.getElementById('admin-toolbar-search-input').addEventListener('input', function () {
+    const q = this.value.toLowerCase().trim();
+    if (!q) { renderRows(allUsers); return; }
+    renderRows(allUsers.filter(u =>
+      (u.name  || '').toLowerCase().includes(q) ||
+      (u.email || '').toLowerCase().includes(q)
+    ));
+  });
+
+  let filterActive = false;
+  document.getElementById('admin-filter-btn').addEventListener('click', function () {
+    filterActive = !filterActive;
+    this.classList.toggle('active', filterActive);
+    renderRows(filterActive ? allUsers.filter(u => u.adminNote) : allUsers);
+  });
+
+  async function loadUsers() {
+    const result = await getAdminUsers();
+    const tbody = document.getElementById('admin-tbody');
+    if (!result.success) {
+      tbody.innerHTML = result.status === 403
+        ? '<div class="admin-state admin-state-error">Доступ запрещён. Требуется роль администратора.</div>'
+        : '<div class="admin-state admin-state-error">Не удалось загрузить пользователей.</div>';
+      return;
+    }
+    allUsers = result.data;
+    renderRows(allUsers);
+  }
+
+  document.addEventListener('DOMContentLoaded', loadUsers);
+</script>
+
+
+</body>
+</html>

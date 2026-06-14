@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Заказы — МоделМастер</title>
+  <link rel="stylesheet" href="/assets/css/styles.css"/>
+  <script src="/assets/js/api.js"></script>
+</head>
+<body>
+
+<div class="aord-page">
+  <h1 class="aord-title">Заказы</h1>
+
+  <div class="aord-container">
+    <div class="aord-thead">
+      <div class="aord-th aord-col-id">ID заказа</div>
+      <div class="aord-th aord-col-date">Дата</div>
+      <div class="aord-th aord-col-buyer">Покупатель</div>
+      <div class="aord-th aord-col-email">Почта</div>
+      <div class="aord-th aord-col-amount">Сумма</div>
+      <div class="aord-th aord-col-method">Способ оплаты</div>
+      <div class="aord-th aord-col-pay">Оплата</div>
+      <div class="aord-th aord-col-status">Статус заказа</div>
+      <div class="aord-th aord-col-goods">Товары</div>
+    </div>
+    <div id="aord-tbody">
+      <div class="aord-state">Загружаем заказы...</div>
+    </div>
+  </div>
+</div>
+
+<!-- панель деталей заказа -->
+<div class="adet-backdrop" id="adet-backdrop" style="display:none"></div>
+<div class="adet-panel" id="adet-panel" style="display:none">
+
+  <div class="adet-header">
+    <div class="adet-header-left">
+      <div class="adet-header-id">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <rect x="0.5" y="2.5" width="13" height="13" rx="1.5" stroke="#000"/>
+          <rect x="4.5" y="0.5" width="13" height="13" rx="1.5" fill="#F5F5F5" stroke="#000"/>
+        </svg>
+        <span id="adet-id-text">—</span>
+      </div>
+      <span class="adet-header-date" id="adet-date">—</span>
+      <div class="adet-header-selects">
+        <select class="aord-select adet-status-sel" id="adet-status-sel" style="background:#E4E5E5"></select>
+        <select class="aord-select adet-pay-sel" id="adet-pay-sel" style="background:#F6DDDD"></select>
+      </div>
+    </div>
+    <button class="adet-close-btn" id="adet-close-btn">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <line x1="1" y1="1" x2="17" y2="17" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="17" y1="1" x2="1" y2="17" stroke="#000" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="adet-body">
+
+    <div class="adet-col-left">
+
+      <div class="adet-section">
+        <div class="adet-section-title">Товары</div>
+        <div id="adet-items"></div>
+        <div class="adet-total-row">
+          <span class="adet-total-label">Сумма:</span>
+          <span class="adet-total-value" id="adet-total">—</span>
+        </div>
+      </div>
+
+      <div class="adet-section">
+        <div class="adet-section-title">Данные</div>
+        <div class="adet-data-list" id="adet-data-list"></div>
+      </div>
+
+    </div>
+
+    <div class="adet-col-right">
+
+      <div class="adet-section">
+        <div class="adet-section-hdr">
+          <span class="adet-section-title">Заметка</span>
+          <button class="adet-icon-btn" id="adet-note-edit-btn" title="Редактировать заметку">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M9.5 1.5L12.5 4.5L4.5 12.5H1.5V9.5L9.5 1.5Z" stroke="#000" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <textarea class="adet-note-textarea" id="adet-note-textarea" disabled placeholder="Нет заметки"></textarea>
+      </div>
+
+      <div class="adet-section">
+        <div class="adet-section-hdr">
+          <span class="adet-section-title">Чат заказа</span>
+          <a class="adet-icon-btn" id="adet-chat-link" href="#" title="Открыть чат">
+            <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
+              <rect x="0.5" y="0.5" width="14" height="11" rx="1.5" stroke="#000"/>
+              <path d="M4 14L7.5 11" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </a>
+        </div>
+        <p class="adet-chat-hint">Чат доступен покупателю в разделе "Заказы"</p>
+      </div>
+
+      <div class="adet-section">
+        <div class="adet-section-title">Платеж</div>
+        <div class="adet-pay-list" id="adet-pay-list"></div>
+      </div>
+
+      <div class="adet-section">
+        <div class="adet-section-title">Покупатель</div>
+        <div class="adet-buyer" id="adet-buyer"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  if (!isAuthenticated()) { window.location.href = '/'; }
+
+  const PRODUCT_IMAGE = {1:'/assets/images/service1.png',2:'/assets/images/service2.png',3:'/assets/images/service3.png'};
+  const PAYMENT_METHOD_LABEL = {CARD:'Безналичный расчёт',CASH:'Наличные'};
+  const PAYMENT_COLORS  = {PAID:'#DDF6E8',NOT_PAID:'#F6DDDD'};
+  const PAYMENT_LABELS  = {PAID:'Оплачен',NOT_PAID:'Не оплачен'};
+  const STATUS_COLORS   = {NEW:'#E4E5E5',IN_PROCESS:'#E4E5E5',DELIVERY:'#EFDBFB',DONE:'#DDF6E8',CANCEL:'#F6DDDD'};
+  const STATUS_LABELS   = {NEW:'',IN_PROCESS:'В обработке',DELIVERY:'В доставке',DONE:'Завершён',CANCEL:'Отменён'};
+  const COLOR_LABEL     = {WHITE:'Белый',BEIGE:'Бежевый',BROWN:'Коричневый',GRAY:'Серый',BLACK:'Чёрный',BLUE:'Синий',GREEN:'Зелёный',RED:'Красный',ORANGE:'Оранжевый',COLORED:'Цветной'};
+  const SIZE_LABEL      = {SMALL:'Маленький (до 5×5×5)',MEDIUM:'Средний (до 10×10×10)',BIG:'Большой (до 20×20×20)',LARGE:'Очень большой'};
+
+  function formatDate(dt) {
+    if (!dt) return '—';
+    let d = Array.isArray(dt) ? new Date(dt[0],dt[1]-1,dt[2],dt[3]||0,dt[4]||0) : new Date(String(dt).replace(/(\.\d{3})\d+/,'$1'));
+    if (isNaN(d)) return '—';
+    return `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}, ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  }
+
+  function applySelectColor(sel, map) { sel.style.background = map[sel.value] || '#E4E5E5'; }
+
+  // список заказов
+  function renderOrders(orders) {
+    const tbody = document.getElementById('aord-tbody');
+    if (!orders.length) { tbody.innerHTML='<div class="aord-state">Заказы не найдены</div>'; return; }
+    tbody.innerHTML = orders.map(o => {
+      const thumbs = (o.productIds||[]).map(pid => PRODUCT_IMAGE[pid]
+        ? `<img class="aord-thumb" src="${PRODUCT_IMAGE[pid]}" alt="">`
+        : `<span class="aord-thumb-placeholder"></span>`).join('');
+      const payOpts    = Object.entries(PAYMENT_LABELS).map(([v,l])=>`<option value="${v}" ${o.paymentStatus===v?'selected':''}>${l}</option>`).join('');
+      const statusOpts = Object.entries(STATUS_LABELS).map(([v,l])=>`<option value="${v}" ${o.status===v?'selected':''}>${l}</option>`).join('');
+      return `
+        <div class="aord-tr aord-tr-clickable" data-id="${o.id}">
+          <div class="aord-td aord-col-id"><span class="aord-id-text">№${o.id}</span></div>
+          <div class="aord-td aord-col-date">${formatDate(o.createdAt)}</div>
+          <div class="aord-td aord-col-buyer">${o.customerUsername||'—'}</div>
+          <div class="aord-td aord-col-email aord-ellipsis">${o.customerEmail||'—'}</div>
+          <div class="aord-td aord-col-amount">${(o.totalAmount||0).toLocaleString('ru-RU')} р.</div>
+          <div class="aord-td aord-col-method aord-ellipsis">${PAYMENT_METHOD_LABEL[o.paymentMethod]||'—'}</div>
+          <div class="aord-td aord-col-pay">
+            <select class="aord-select aord-pay-select" data-order-id="${o.id}" data-original="${o.paymentStatus}" style="background:${PAYMENT_COLORS[o.paymentStatus]||'#E4E5E5'}">${payOpts}</select>
+          </div>
+          <div class="aord-td aord-col-status">
+            <select class="aord-select aord-status-select" data-order-id="${o.id}" data-original="${o.status}" style="background:${STATUS_COLORS[o.status]||'#E4E5E5'}">${statusOpts}</select>
+          </div>
+          <div class="aord-td aord-col-goods"><div class="aord-thumbs">${thumbs}</div></div>
+        </div>`;
+    }).join('');
+
+    tbody.querySelectorAll('.aord-pay-select').forEach(sel => {
+      sel.addEventListener('change', async function(e) {
+        e.stopPropagation();
+        const id=this.dataset.orderId, orig=this.dataset.original, val=this.value;
+        applySelectColor(this,PAYMENT_COLORS);
+        const r=await updateAdminOrder(id,{paymentStatus:val});
+        if(r.success){this.dataset.original=val;}else{this.value=orig;applySelectColor(this,PAYMENT_COLORS);}
+      });
+    });
+    tbody.querySelectorAll('.aord-status-select').forEach(sel => {
+      sel.addEventListener('change', async function(e) {
+        e.stopPropagation();
+        const id=this.dataset.orderId, orig=this.dataset.original, val=this.value;
+        applySelectColor(this,STATUS_COLORS);
+        const r=await updateAdminOrder(id,{status:val});
+        if(r.success){this.dataset.original=val;}else{this.value=orig;applySelectColor(this,STATUS_COLORS);}
+      });
+    });
+    tbody.querySelectorAll('.aord-tr-clickable').forEach(row => {
+      row.addEventListener('click', function(e) {
+        if(e.target.tagName==='SELECT'||e.target.tagName==='OPTION') return;
+        openOrderDetail(this.dataset.id);
+      });
+    });
+  }
+
+  async function loadOrders() {
+    const r = await getAdminOrders();
+    const tbody = document.getElementById('aord-tbody');
+    if(!r.success){ tbody.innerHTML=r.status===403?'<div class="aord-state aord-state-error">Доступ запрещён.</div>':'<div class="aord-state aord-state-error">Не удалось загрузить заказы.</div>'; return; }
+    renderOrders(r.data);
+  }
+
+  // панель деталей
+  let currentOrderId = null;
+
+  async function openOrderDetail(orderId) {
+    currentOrderId = orderId;
+    history.pushState(null,'',`/admin/orders/${orderId}`);
+    document.getElementById('adet-backdrop').style.display = 'block';
+    document.getElementById('adet-panel').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    document.getElementById('adet-id-text').textContent = `№${orderId}`;
+    document.getElementById('adet-date').textContent = '…';
+    document.getElementById('adet-items').innerHTML = '<div class="adet-loading">Загружаем…</div>';
+
+    const r = await getAdminOrderDetails(orderId);
+    if(!r.success){ document.getElementById('adet-items').innerHTML='<div class="adet-loading">Ошибка загрузки</div>'; return; }
+    renderOrderDetail(r.data);
+  }
+
+  function closeOrderDetail() {
+    document.getElementById('adet-backdrop').style.display = 'none';
+    document.getElementById('adet-panel').style.display = 'none';
+    document.body.style.overflow = '';
+    history.pushState(null,'','/admin/orders');
+    currentOrderId = null;
+  }
+
+  function renderOrderDetail(o) {
+    const user = o.user || {};
+    document.getElementById('adet-id-text').textContent = `№${o.id}`;
+    document.getElementById('adet-date').textContent = formatDate(o.createdAt);
+
+    // хедеры
+    const statusSel = document.getElementById('adet-status-sel');
+    const paySel    = document.getElementById('adet-pay-sel');
+    statusSel.innerHTML = Object.entries(STATUS_LABELS).map(([v,l])=>`<option value="${v}" ${o.status===v?'selected':''}>${l||'—'}</option>`).join('');
+    paySel.innerHTML    = Object.entries(PAYMENT_LABELS).map(([v,l])=>`<option value="${v}" ${o.paymentStatus===v?'selected':''}>${l}</option>`).join('');
+    applySelectColor(statusSel, STATUS_COLORS);
+    applySelectColor(paySel, PAYMENT_COLORS);
+
+    // items
+    document.getElementById('adet-items').innerHTML = (o.items||[]).map(item => {
+      const img  = PRODUCT_IMAGE[item.productId];
+      const col  = COLOR_LABEL[item.color]  || item.color  || '';
+      const size = SIZE_LABEL[item.size]    || item.size   || '';
+      return `
+        <div class="adet-item">
+          <div class="adet-item-img-wrap">
+            ${img?`<img class="adet-item-img" src="${img}" alt="">`:'<div class="adet-item-img"></div>'}
+          </div>
+          <div class="adet-item-info">
+            <div class="adet-item-name">${item.productName||'—'}</div>
+            <div class="adet-item-meta">
+              ${item.productDescription?`${item.productDescription}<br>`:''}
+              ${col?`Доступные цвета (для цветной печати выбрать основной): ${col};<br>`:''}
+              ${item.quantity?`Количество: ${item.quantity};<br>`:''}
+              ${size?`Размер: ${size};`:''}
+            </div>
+          </div>
+          <div class="adet-item-price">${(item.pricePerItem||0).toLocaleString('ru-RU')} р.</div>
+          <div class="adet-item-qty">${item.quantity||1}</div>
+          <div class="adet-item-total">${(item.totalPrice||0).toLocaleString('ru-RU')} р.</div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('adet-total').textContent = `${(o.totalAmount||0).toLocaleString('ru-RU')} р.`;
+
+    // данные
+    document.getElementById('adet-data-list').innerHTML = `
+      <div class="adet-data-row"><span class="adet-data-label">Name:</span><span>${user.name||o.customerUsername||'—'}</span></div>
+      <div class="adet-data-row"><span class="adet-data-label">Email:</span><span>${user.email||o.customerEmail||'—'}</span></div>
+      <div class="adet-data-row"><span class="adet-data-label">Phone:</span><span>${user.phone||'—'}</span></div>`;
+
+    // заметка
+    const noteTA = document.getElementById('adet-note-textarea');
+    noteTA.value = o.adminNote || '';
+    noteTA.dataset.original = o.adminNote || '';
+    noteTA.disabled = true;
+
+    // чат
+    document.getElementById('adet-chat-link').href = `/chat/${o.id}`;
+
+    // платеж
+    document.getElementById('adet-pay-list').innerHTML = `
+      <div class="adet-pay-row">
+        <span class="adet-pay-label">Статус оплаты:</span>
+        <select class="adet-inline-select" id="adet-pay-inline" style="background:none;border:none;border-bottom:1px dashed #000;font-family:var(--font);font-size:14px;cursor:pointer;padding:0 16px 0 0;appearance:none">
+          ${Object.entries(PAYMENT_LABELS).map(([v,l])=>`<option value="${v}" ${o.paymentStatus===v?'selected':''}>${l}</option>`).join('')}
+        </select>
+      </div>
+      <div class="adet-pay-row">
+        <span class="adet-pay-label">Способ оплаты:</span>
+        <span>${PAYMENT_METHOD_LABEL[o.paymentMethod]||'—'}</span>
+      </div>
+      <div class="adet-pay-row">
+        <span class="adet-pay-label">Сумма:</span>
+        <span>${(o.totalAmount||0).toLocaleString('ru-RU')} р.</span>
+      </div>`;
+
+    document.getElementById('adet-pay-inline')?.addEventListener('change', async function() {
+      const r = await updateAdminOrder(o.id, {paymentStatus: this.value});
+      if(!r.success) { this.value = o.paymentStatus; }
+      else {
+        // sync header select
+        document.getElementById('adet-pay-sel').value = this.value;
+        applySelectColor(document.getElementById('adet-pay-sel'), PAYMENT_COLORS);
+      }
+    });
+
+    // покупатель
+    const initial = (user.name||user.username||'?')[0].toUpperCase();
+
+    sessionStorage.setItem('adminUserContext', JSON.stringify({
+      id: user.id, name: user.name, username: user.username,
+      email: user.email, phone: user.phone
+    }));
+    document.getElementById('adet-buyer').innerHTML = `
+      <div class="adet-buyer-name">
+        <span class="adet-buyer-avatar">${initial}</span>
+        <a class="adet-buyer-link" href="/admin/users/${user.id||''}">${user.username||o.customerUsername||'—'}</a>
+      </div>
+      <div class="adet-buyer-row">${user.email||o.customerEmail||'—'}</div>
+      <div class="adet-buyer-row">${user.phone||'—'}</div>`;
+  }
+
+  // header select events
+  document.getElementById('adet-status-sel').addEventListener('change', async function() {
+    if(!currentOrderId) return;
+    const r = await updateAdminOrder(currentOrderId, {status: this.value});
+    if(!r.success) { this.value = this.dataset.prev||this.value; }
+    else { applySelectColor(this, STATUS_COLORS); }
+  });
+  document.getElementById('adet-pay-sel').addEventListener('change', async function() {
+    if(!currentOrderId) return;
+    const r = await updateAdminOrder(currentOrderId, {paymentStatus: this.value});
+    if(!r.success) { this.value = this.dataset.prev||this.value; }
+    else { applySelectColor(this, PAYMENT_COLORS); }
+  });
+
+  // заметка — редактирование
+  document.getElementById('adet-note-edit-btn').addEventListener('click', function() {
+    const ta = document.getElementById('adet-note-textarea');
+    ta.disabled = false;
+    ta.focus();
+  });
+  document.getElementById('adet-note-textarea').addEventListener('blur', async function() {
+    if(this.value === this.dataset.original) { this.disabled=true; return; }
+    if(!currentOrderId) return;
+    const r = await updateAdminOrder(currentOrderId, {adminNote: this.value});
+    if(r.success){ this.dataset.original = this.value; }
+    else { this.value = this.dataset.original; }
+    this.disabled = true;
+  });
+
+  // закрытие
+  document.getElementById('adet-close-btn').addEventListener('click', closeOrderDetail);
+  document.getElementById('adet-backdrop').addEventListener('click', closeOrderDetail);
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeOrderDetail(); });
+
+  // инициализация
+  document.addEventListener('DOMContentLoaded', async () => {
+    await loadOrders();
+    // проверяем есть ли id в URL
+    const match = window.location.pathname.match(/\/admin\/orders\/(\d+)/);
+    if(match) openOrderDetail(match[1]);
+  });
+</script>
+
+</body>
+</html>

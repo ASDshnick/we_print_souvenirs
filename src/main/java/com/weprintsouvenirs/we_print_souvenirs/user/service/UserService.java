@@ -29,7 +29,7 @@ public class UserService {
     private final OrderItemRepository orderItemRepository;
     AuthenticationManager authenticationManager;
     JwtUtil jwtUtil;
-    
+
     public UserService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
@@ -251,12 +251,12 @@ public class UserService {
         return new AdminUserResponseDTO(
                 Long.valueOf(user.getId()),
                 user.getName(),
+                user.getUsername(),
                 user.getEmail(),
+                user.getPhone(),
                 user.getAdminNote(),
                 user.getRegisteredAt(),
                 user.getLastLoginAt()
         );
     }
 }
-
-
