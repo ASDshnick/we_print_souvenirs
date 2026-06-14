@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Личный кабинет — МоделМастер</title>
+  <link rel="stylesheet" href="/assets/css/styles.css"/>
+  <script src="/assets/js/api.js"></script>
+</head>
+<body>
+
+<!-- шапка -->
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_9_839)">
+            <path d="M3.25496 3.25499C1.45733 5.05262 3.91536 10.4252 8.74513 15.255C13.5749 20.0847 18.9475 22.5428 20.7451 20.7451C22.5427 18.9475 20.0847 13.5749 15.2549 8.74516C10.4252 3.91539 5.05259 1.45736 3.25496 3.25499Z" stroke="#333333" stroke-width="1.8"/>
+            <path d="M20.749 3.25498C22.5466 5.05261 20.0886 10.4252 15.2588 15.255C10.429 20.0847 5.05644 22.5428 3.2588 20.7451C1.46117 18.9475 3.91921 13.5749 8.74898 8.74516C13.5788 3.91539 18.9513 1.45735 20.749 3.25498Z" stroke="#333333" stroke-width="1.8"/>
+          </g>
+          <defs>
+            <clipPath id="clip0_9_839">
+              <rect width="24" height="24" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">МОДЕЛМАСТЕР</span>
+    </a>
+    <div class="header-right">
+      <div class="header-icons">
+        <button id="profile-button" class="icon-btn" aria-label="Профиль">
+          <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.49996 9.50003C11.4078 9.50003 12.9545 7.95338 12.9545 6.04549C12.9545 4.13759 11.4078 2.59094 9.49996 2.59094C7.59206 2.59094 6.04541 4.13759 6.04541 6.04549C6.04541 7.95338 7.59206 9.50003 9.49996 9.50003Z" stroke="black" stroke-width="1.72727"/>
+            <path d="M16.409 17.2728C16.409 14.4109 13.3157 12.0909 9.49991 12.0909C5.68412 12.0909 2.59082 14.4109 2.59082 17.2728" stroke="black" stroke-width="1.72727" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- страница личного кабинета -->
+<div class="profile-page">
+
+  <!-- хлебные крошки -->
+  <div class="profile-breadcrumb">
+    <div class="breadcrumb-inner">
+      <a href="/" class="breadcrumb-link">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.6544 7.50982L6.82716 0L0 7.50982H1.73879V13.6542H11.9408V7.50982H13.6544ZM5.45106 9.55777H8.23342V13.6541H5.45106V9.55777Z" fill="black"/></svg>
+      </a>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-text">Личный кабинет</span>
+    </div>
+  </div>
+
+  <!-- контент страницы -->
+  <div class="profile-content">
+    <div class="profile-container">
+
+      <!-- блок заказов -->
+      <section class="profile-section orders-section">
+        <div class="section-header">
+          <h2 class="section-title">Мои заказы</h2>
+          <a href="/user/orders" class="section-link">Все заказы (<span id="orders-count">0</span>)</a>
+        </div>
+
+        <div class="orders-list" id="orders-list">
+          <div class="empty-state">
+            <p>У вас пока нет заказов</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- блок профиля -->
+      <section class="profile-section profile-info-section">
+        <div class="section-header-top">
+          <h2 class="section-title">Профиль</h2>
+        </div>
+
+        <div class="profile-data">
+          <div class="profile-field">
+            <p class="profile-value" id="profile-login">-</p>
+          </div>
+          <div class="profile-field">
+            <p class="profile-value email" id="profile-email">-</p>
+          </div>
+        </div>
+
+        <div class="profile-actions">
+          <button class="profile-btn edit-btn">Редактировать</button>
+          <button class="profile-btn logout-btn">Выйти</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- скрипты страницы -->
+<script>
+  // URL меняем только если запущено через бэк
+  function setPageUrl(url) {
+    if (window.location.port === '5500' || window.location.port === '5501') return;
+    history.replaceState(null, '', url);
+  }
+
+  // проверяем что пользователь залогинен
+  if (!isAuthenticated()) {
+    window.location.href = '/';
+  }
+
+  // загружаем данные профиля
+  async function loadProfileData() {
+    const result = await getUserProfile();
+    if (result.success) {
+      const data = result.data;
+      document.getElementById('profile-login').textContent = data.name || data.username || data.login || '-';
+      document.getElementById('profile-email').textContent = data.email || '-';
+    } else {
+      window.location.href = '/';
+    }
+  }
+
+
+function fixImagePath(path) {
+    if (!path) return '';
+    if (!path.match(/^(https?:)?\//)) {
+        return '/' + path;
+    }
+    return path;
+}
+
+
+  // загружаем заказы
+  async function loadOrders() {
+    const result = await getUserOrders();
+    const ordersList  = document.getElementById('orders-list');
+    const ordersCount = document.getElementById('orders-count');
+
+    if (!result.success) {
+      ordersCount.textContent = 0;
+      ordersList.innerHTML = '<div class="empty-state"><p>Не удалось загрузить заказы</p></div>';
+      return;
+    }
+
+    const orders = result.data || [];
+    ordersCount.textContent = orders.length;
+
+    if (orders.length === 0) {
+      ordersList.innerHTML = '<div class="empty-state"><p>У вас пока нет заказов</p></div>';
+      return;
+    }
+
+    // последний заказ
+    const latest = orders[0];
+    const date = latest.date
+      || (latest.createdAt ? new Date(latest.createdAt).toLocaleDateString('ru-RU') : '');
+    // Сначала пробуем items из ответа бэка, потом из localStorage
+    const savedItems = JSON.parse(localStorage.getItem('order_items_' + latest.id) || '[]');
+    const items = (latest.items && latest.items.length > 0) ? latest.items : savedItems;
+
+    ordersList.innerHTML = `
+      <div class="order-header">
+        <p class="order-title">Последний заказ: №${latest.id} ${date}</p>
+        <span class="status-badge status-${(latest.status||'').toLowerCase()}">${formatStatus(latest.status)}</span>
+      </div>
+      ${items.length > 0 ? `
+      <div class="order-thumbs-row">
+        ${items.slice(0, 3).map(item =>
+          '<img src="' + fixImagePath(item.image) + '" alt="' + (item.serviceName||'') + '" class="order-thumb" onerror="this.style.display=\'none\'">'
+        ).join('')}
+      </div>` : ''}
+      <div class="order-price-row">
+        <span class="order-total">${latest.totalAmount ? latest.totalAmount + ' р.' : ''}</span>
+      </div>
+    `;
+  }
+
+  function formatStatus(status) {
+    const map = {
+      'NEW':                'Новый',
+      'NOT_PAID':             'Не оплачен',
+      'AWAITING_PAYMENT':   'Не оплачен',
+      'PAID':               'Оплачен',
+      'IN_PROCESS':         'В процессе',
+      'IN_PROGRESS':        'В процессе',
+      'PROCESSING':         'В обработке',
+      'DELIVERY':           'В доставке',
+      'DONE':               'Выполнен',
+      'COMPLETED':          'Завершён',
+      'CANCEL':             'Отменён',
+      'CANCELLED':          'Отменён'
+    };
+    return map[status] || status || '—';
+  }
+
+
+  // выход из аккаунта
+  document.querySelectorAll('.logout-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (confirm('Вы уверены, что хотите выйти?')) {
+        logout();
+      }
+    });
+  });
+
+  // переход на редактирование
+  document.querySelector('.edit-btn').addEventListener('click', () => {
+    window.location.href = '/user/change-data';
+  });
+
+  // запускаем при загрузке
+  window.addEventListener('load', () => {
+    setPageUrl('/user/profile');
+    loadProfileData();
+    loadOrders();
+  });
+</script>
+
+</body>
+</html>

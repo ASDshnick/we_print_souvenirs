@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Мои заказы — МоделМастер</title>
+  <link rel="stylesheet" href="/assets/css/styles.css"/>
+  <script src="/assets/js/api.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+
+<div class="orders-page">
+
+  <!-- хлебные крошки -->
+  <div class="orders-breadcrumb">
+    <div class="breadcrumb-inner">
+      <a href="/" class="breadcrumb-link">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M13.6544 7.50982L6.82716 0L0 7.50982H1.73879V13.6542H11.9408V7.50982H13.6544ZM5.45106 9.55777H8.23342V13.6541H5.45106V9.55777Z" fill="black"/>
+        </svg>
+      </a>
+      <span class="breadcrumb-separator">/</span>
+      <a href="/user/profile" class="breadcrumb-link">Личный кабинет</a>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-text">Мои заказы</span>
+    </div>
+  </div>
+
+  <!-- список заказов -->
+  <div class="orders-content" id="orders-list">
+    <div class="orders-empty">У вас пока нет заказов</div>
+  </div>
+
+</div>
+
+<!-- чат -->
+<div class="chat-overlay" id="chat-overlay">
+  <!-- размытый задний фон — клик закрывает -->
+  <div class="chat-backdrop" id="chat-backdrop"></div>
+
+  <!-- сама панель чата -->
+  <div class="chat-panel">
+    <!-- кнопка закрытия снаружи слева -->
+    <button class="chat-close-btn" id="chat-close-btn" aria-label="Закрыть чат">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1 1L13 13M13 1L1 13" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <!-- сообщения -->
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-loading">Загружаем историю…</div>
+    </div>
+
+    <!-- поле ввода -->
+    <div class="chat-input-area">
+      <textarea
+              class="chat-textarea"
+              id="chat-textarea"
+              placeholder="Введите сообщение"
+              rows="1"
+      ></textarea>
+
+      <!-- кнопка отправки -->
+      <button class="chat-send-btn" id="chat-send-btn" title="Отправить" disabled>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 13V3M8 3L3.5 7.5M8 3L12.5 7.5" stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <!-- скрепка (заглушка) -->
+      <button class="chat-attach-btn" title="Прикрепить файл">
+        <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
+          <path d="M16.5 9L8.5 17C7.74 17.76 6.71 18.19 5.64 18.19C4.57 18.19 3.54 17.76 2.78 17C2.02 16.24 1.59 15.21 1.59 14.14C1.59 13.07 2.02 12.04 2.78 11.28L10.78 3.28C11.29 2.77 11.98 2.49 12.7 2.49C13.42 2.49 14.11 2.77 14.62 3.28C15.13 3.79 15.41 4.48 15.41 5.2C15.41 5.92 15.13 6.61 14.62 7.12L6.61 15.12C6.36 15.37 6.01 15.51 5.65 15.51C5.29 15.51 4.94 15.37 4.69 15.12C4.44 14.87 4.3 14.52 4.3 14.16C4.3 13.8 4.44 13.45 4.69 13.2L12 5.9" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // replaceState только если запущено через бэк
+  function setPageUrl(url) {
+    const port = window.location.port;
+    if (port === '5500' || port === '5501' || window.location.protocol === 'file:') return;
+    history.replaceState(null, '', url);
+  }
+
+  if (!isAuthenticated()) {
+    window.location.href = '/';
+  }
+
+  // маппинг productId в картинку
+  const PRODUCT_IMAGE = {
+    1: '/assets/images/service1.png',
+    2: '/assets/images/service2.png',
+    3: '/assets/images/service3.png'
+  };
+  const PRODUCT_NAME = {
+    1: 'Индивидуальный заказ',
+    2: 'Разработка сувенирной продукции',
+    3: 'Карты города'
+  };
+
+  function isPaid(status) { return status === 'PAID'; }
+
+  function getItems(order) {
+  if (order.productIds && order.productIds.length > 0) {
+    return order.productIds.map(pid => ({
+      image: PRODUCT_IMAGE[pid] || '',
+      serviceName: PRODUCT_NAME[pid] || ('Товар #' + pid)
+    }));
+  }
+  let items = JSON.parse(localStorage.getItem('order_items_' + order.id) || '[]');
+  // 🔧 Исправляем пути (добавляем слеш, если нужно)
+  return items.map(item => ({
+    ...item,
+    image: item.image && !item.image.startsWith('/') && !item.image.startsWith('http')
+           ? '/' + item.image
+           : item.image
+  }));
+}
+
+  function renderOrder(order) {
+    const paid  = isPaid(order.status);
+    const items = getItems(order);
+    const thumbsHtml = items.length > 0
+      ? `<div class="order-thumbs">${
+          items.slice(0,3).map(item => item.image
+            ? `<img src="${item.image}" alt="${item.serviceName}" class="order-thumb" onerror="this.style.display='none'">`
+            : '').join('')
+        }</div>`
+      : '';
+
+    return `
+      <div class="order-card">
+        <div class="order-card-top">
+          <div class="order-card-left">
+            <span class="order-date">${order.date || ''}</span>
+            <span class="order-number">Заказ № ${order.id}</span>
+          </div>
+          <div class="order-card-right">
+            <button class="chat-open-btn" onclick="openChat(${order.id})" title="Открыть чат по заказу">
+              <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.25 6.5C13.25 9.67 10.7 12.25 7.5 12.25C6.54 12.25 5.63 12.01 4.83 11.59L2 12.5L2.91 9.67C2.49 8.87 2.25 7.96 2.25 7C2.25 3.8 4.83 1.25 8 1.25C10.82 1.25 13.11 3.25 13.22 5.85" stroke="#000" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <span class="pay-badge ${paid ? 'paid' : 'unpaid'}">${paid ? 'Оплачен' : 'Не оплачен'}</span>
+            <span class="order-price">${order.totalAmount ? order.totalAmount + ' р.' : ''}</span>
+          </div>
+        </div>
+        ${thumbsHtml}
+        <div class="order-card-footer">
+          <a href="order-detail.html?id=${order.id}" class="order-view-link">
+            Посмотреть заказ
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M2 5H8M8 5L5.5 2.5M8 5L5.5 7.5" stroke="#000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>`;
+  }
+
+  async function loadOrders() {
+    const list   = document.getElementById('orders-list');
+    const result = await getUserOrders();
+    if (!result.success || !result.data?.length) {
+      list.innerHTML = '<div class="orders-empty">У вас пока нет заказов</div>';
+      return;
+    }
+    const orders = [...result.data].sort((a, b) => Number(b.id) - Number(a.id));
+    list.innerHTML = orders.map(renderOrder).join('');
+  }
+
+  // чат
+  let currentOrderId = null;
+  let stompClient    = null;
+
+  // открыть чат для заказа
+  async function openChat(orderId) {
+    currentOrderId = orderId;
+    const overlay  = document.getElementById('chat-overlay');
+    const messages = document.getElementById('chat-messages');
+
+    messages.innerHTML = '<div class="chat-loading">Загружаем историю…</div>';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // меняем URL на /chat/{orderId}
+    if (!['5500','5501'].includes(window.location.port)) {
+      history.pushState({ chat: orderId }, '', '/chat/' + orderId);
+    }
+
+    // 1. Загружаем историю через REST
+    await loadChatHistory(orderId);
+
+    // 2. Подключаемся к WebSocket для real-time
+    connectWebSocket(orderId);
+  }
+
+  // закрыть чат
+  function closeChat() {
+    document.getElementById('chat-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+    // возвращаем URL обратно
+    if (!['5500','5501'].includes(window.location.port)) {
+      history.pushState(null, '', '/user/orders');
+    }
+    if (stompClient && stompClient.connected) {
+      stompClient.disconnect();
+    }
+    stompClient    = null;
+    currentOrderId = null;
+    document.getElementById('chat-messages').innerHTML = '';
+    document.getElementById('chat-textarea').value = '';
+    document.getElementById('chat-send-btn').disabled = true;
+  }
+
+  // загрузка истории сообщений
+  async function loadChatHistory(orderId) {
+    const messages = document.getElementById('chat-messages');
+    try {
+      const token = getAuthToken();
+      const res   = await fetch(API_BASE_URL + '/chat/' + orderId + '/history', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+
+      if (!res.ok) {
+        messages.innerHTML = '<div class="chat-error">Не удалось загрузить историю</div>';
+        return;
+      }
+
+      const history = await res.json();
+      messages.innerHTML = '';
+
+      if (history.length === 0) {
+        messages.innerHTML = '<div class="chat-loading">Сообщений пока нет</div>';
+      } else {
+        history.forEach(msg => appendMessage(msg, false));
+        scrollToBottom();
+      }
+    } catch (e) {
+      messages.innerHTML = '<div class="chat-error">Ошибка загрузки</div>';
+      console.error('Chat history error:', e);
+    }
+  }
+
+  // подключение к WebSocket
+  function connectWebSocket(orderId) {
+    const token = getAuthToken();
+    try {
+      // Измените /ws на ваш WebSocket endpoint если нужно
+      const socket = new SockJS(API_BASE_URL + '/ws');
+      stompClient  = Stomp.over(socket);
+      stompClient.debug = null; // отключаем логи STOMP в консоль
+
+      stompClient.connect(
+        { 'Authorization': 'Bearer ' + token },
+        function () {
+          // подписываемся на топик заказа
+          stompClient.subscribe('/topic/chat/' + orderId, function (frame) {
+            const msg = JSON.parse(frame.body);
+            appendMessage(msg, true);
+            scrollToBottom();
+          });
+
+          // разблокируем кнопку отправки
+          document.getElementById('chat-send-btn').disabled = false;
+        },
+        function (err) {
+          console.warn('WebSocket disconnected:', err);
+          document.getElementById('chat-send-btn').disabled = true;
+        }
+      );
+    } catch (e) {
+      console.error('WebSocket error:', e);
+    }
+  }
+
+  // отправить сообщение
+  function sendChatMessage() {
+    const textarea = document.getElementById('chat-textarea');
+    const text     = textarea.value.trim();
+    if (!text || !stompClient || !stompClient.connected || !currentOrderId) return;
+
+    stompClient.send(
+      '/app/chat/' + currentOrderId,
+      {},
+      JSON.stringify({ orderId: currentOrderId, content: text })
+    );
+
+    textarea.value = '';
+    textarea.style.height = 'auto';
+  }
+
+  // добавить сообщение в область
+  function appendMessage(msg, checkDuplicate) {
+    const container = document.getElementById('chat-messages');
+
+    // убираем заглушку "сообщений нет"
+    const placeholder = container.querySelector('.chat-loading, .chat-error');
+    if (placeholder) placeholder.remove();
+
+    // не дублируем по id
+    if (checkDuplicate && msg.id && container.querySelector('[data-msg-id="' + msg.id + '"]')) return;
+
+    const time = formatSentAt(msg.sentAt);
+    const div  = document.createElement('div');
+    if (msg.id) div.dataset.msgId = msg.id;
+
+    if (msg.fromAdmin) {
+      div.className = 'chat-msg chat-msg-admin';
+      div.innerHTML =
+        `<div class="chat-msg-sender">${escapeHtml(msg.senderUsername || 'Администратор')}</div>
+         <div class="chat-bubble chat-bubble-admin">
+           <div class="chat-msg-text">${escapeHtml(msg.content)}</div>
+           <div class="chat-msg-time">${time}</div>
+         </div>`;
+    } else {
+      div.className = 'chat-msg chat-msg-user';
+      div.innerHTML =
+        `<div class="chat-bubble chat-bubble-user">
+           <div class="chat-msg-text">${escapeHtml(msg.content)}</div>
+           <div class="chat-msg-time">${time}</div>
+         </div>`;
+    }
+
+    container.appendChild(div);
+  }
+
+  // форматирование LocalDateTime из Java
+  function formatSentAt(sentAt) {
+    if (!sentAt) return '';
+    let date;
+    if (Array.isArray(sentAt)) {
+      date = new Date(sentAt[0], sentAt[1] - 1, sentAt[2], sentAt[3] || 0, sentAt[4] || 0, sentAt[5] || 0);
+    } else {
+      date = new Date(sentAt);
+    }
+    if (isNaN(date)) return '';
+    return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function scrollToBottom() {
+    const c = document.getElementById('chat-messages');
+    c.scrollTop = c.scrollHeight;
+  }
+
+  // события
+
+  // закрыть по крестику
+  document.getElementById('chat-close-btn').addEventListener('click', closeChat);
+  // закрыть по клику на задний фон
+  document.getElementById('chat-backdrop').addEventListener('click', closeChat);
+
+  // отправка по кнопке
+  document.getElementById('chat-send-btn').addEventListener('click', sendChatMessage);
+
+  document.getElementById('chat-textarea').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendChatMessage();
+    }
+  });
+
+  // авторастягивание текста
+  document.getElementById('chat-textarea').addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+  });
+
+  // старт
+
+  // кнопка назад/вперёд браузера
+  window.addEventListener('popstate', (event) => {
+    if (event.state && event.state.chat) {
+      openChat(event.state.chat);
+    } else {
+      closeChat();
+    }
+  });
+
+  window.addEventListener('load', () => {
+    setPageUrl('/user/orders');
+    loadOrders().then(() => {
+      // если открыли напрямую /chat/5 — автооткрываем чат
+      const match = window.location.pathname.match(/^\/chat\/(\d+)$/);
+      if (match) {
+        const orderId = parseInt(match[1]);
+        if (!['5500','5501'].includes(window.location.port)) history.replaceState({ chat: orderId }, '', '/chat/' + orderId);
+        openChat(orderId);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

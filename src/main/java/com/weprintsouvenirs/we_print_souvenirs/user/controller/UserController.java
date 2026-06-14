@@ -53,7 +53,6 @@ public class UserController {
 
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(
-            @PathVariable("id") Long id,
             @RequestBody ChangePasswordRequestDTO requestDTO
     ) {
         try {
