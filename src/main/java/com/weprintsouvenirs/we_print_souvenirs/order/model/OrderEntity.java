@@ -25,6 +25,9 @@ public class OrderEntity {
     @Column(name = "customer_email")
     private String customerEmail;
 
+    @Column(name = "customer_phone")
+    private String customerPhone;
+
     @Column(name = "total_amount")
     private int totalAmount;
 
@@ -54,11 +57,12 @@ public class OrderEntity {
     public OrderEntity() {
     }
 
-    public OrderEntity(Long id, UserEntity user, String customerUsername, String customerEmail, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt, PaymentStatus paymentStatus, String adminNote) {
+    public OrderEntity(Long id, UserEntity user, String customerUsername, String customerEmail, String customerPhone, int totalAmount, Status status, Payment paymentMethod, LocalDateTime createdAt, PaymentStatus paymentStatus, String adminNote) {
         this.id = id;
         this.user = user;
         this.customerUsername = customerUsername;
         this.customerEmail = customerEmail;
+        this.customerPhone = customerPhone;
         this.totalAmount = totalAmount;
         this.status = status;
         this.paymentMethod = paymentMethod;
@@ -81,6 +85,10 @@ public class OrderEntity {
 
     public String getCustomerEmail() {
         return customerEmail;
+    }
+
+    public String getCustomerPhone() {
+        return customerPhone;
     }
 
     public int getTotalAmount() {
@@ -121,6 +129,10 @@ public class OrderEntity {
 
     public void setCustomerEmail(String customerEmail) {
         this.customerEmail = customerEmail;
+    }
+
+    public void setCustomerPhone(String customerPhone) {
+        this.customerPhone = customerPhone;
     }
 
     public void setTotalAmount(int totalAmount) {

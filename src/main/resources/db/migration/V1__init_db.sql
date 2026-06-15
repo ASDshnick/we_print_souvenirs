@@ -16,6 +16,7 @@ create table orders (
     user_id bigint not null references users(id) on delete cascade,
     customer_username varchar(255),
     customer_email varchar(255),
+    customer_phone varchar(255),
     total_amount bigint,
     status varchar(50) default 'NEW',
     created_at timestamp default current_timestamp,
