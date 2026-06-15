@@ -2,6 +2,8 @@ package com.weprintsouvenirs.we_print_souvenirs.user.service;
 
 import com.weprintsouvenirs.we_print_souvenirs.config.JwtUtil;
 import com.weprintsouvenirs.we_print_souvenirs.order.model.OrderEntity;
+import com.weprintsouvenirs.we_print_souvenirs.chat.repository.ChatMessageRepository;
+import com.weprintsouvenirs.we_print_souvenirs.order.repository.CartRepository;
 import com.weprintsouvenirs.we_print_souvenirs.order.repository.OrderItemRepository;
 import com.weprintsouvenirs.we_print_souvenirs.order.repository.OrderRepository;
 import com.weprintsouvenirs.we_print_souvenirs.user.Role;
@@ -27,8 +29,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final CartRepository cartRepository;
     AuthenticationManager authenticationManager;
     JwtUtil jwtUtil;
+    ChatMessageRepository chatMessageRepository;
 
     public UserService(
             UserRepository userRepository,
@@ -36,7 +40,9 @@ public class UserService {
             AuthenticationManager authenticationManager,
             JwtUtil jwtUtil,
             OrderRepository orderRepository,
-            OrderItemRepository orderItemRepository
+            OrderItemRepository orderItemRepository,
+            CartRepository cartRepository,
+            ChatMessageRepository chatMessageRepository
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -44,6 +50,8 @@ public class UserService {
         this.jwtUtil = jwtUtil;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
+        this.cartRepository = cartRepository;
+        this.chatMessageRepository = chatMessageRepository;
     }
 
     /**
@@ -238,8 +246,11 @@ public class UserService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        cartRepository.deleteByUser(user);
+
         List<OrderEntity> orders = orderRepository.findByUser(user);
         for (OrderEntity order : orders) {
+            chatMessageRepository.deleteByOrder(order);
             orderItemRepository.deleteByOrder(order);
             orderRepository.delete(order);
         }

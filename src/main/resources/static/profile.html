@@ -158,8 +158,6 @@ function fixImagePath(path) {
     };
     return map[order.status] || 'В обработке';
   }
-    return map[order.status] || 'В обработке';
-  }
 
   function getUserStatusColor(order) {
     if (!order || order.paymentStatus === 'NOT_PAID') return '#F6DDDD';

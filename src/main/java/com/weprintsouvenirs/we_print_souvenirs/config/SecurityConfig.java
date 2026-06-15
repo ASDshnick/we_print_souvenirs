@@ -73,13 +73,16 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/admin/orders").permitAll()
                         .requestMatchers(HttpMethod.GET, "/admin/orders/{orderId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/admin/orders/{orderId}/chat").permitAll()
-                        .requestMatchers("/admin/users/**").hasRole("ADMIN")
-                        .requestMatchers("/admin/orders/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/admin/users/{userId}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH,  "/admin/users/{userId}/note").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/admin/users/{userId}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,    "/admin/orders/{orderId}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH,  "/admin/orders/{orderId}/note").hasRole("ADMIN")
 
                         .requestMatchers("/ws/**").permitAll()
 
                         .requestMatchers(HttpMethod.PUT, "/user/change-data").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/order/checkout").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/order/checkout").authenticated()
                         .requestMatchers("/cart/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/chat/{orderId}/history").authenticated()
 
@@ -122,7 +125,7 @@ public class SecurityConfig {
                 "http://127.0.0.1:4200",
                 "http://localhost:8080"
         ));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 
