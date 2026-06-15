@@ -69,13 +69,13 @@ async function loginUser(credentials) {
       // Сохраняем токен и данные пользователя
       // LoginResponseDTO возвращает: { token, username, email }
       if (data.token) {
-        localStorage.setItem('authToken', data.token);
+        sessionStorage.setItem('authToken', data.token);
       }
       if (data.username) {
-        localStorage.setItem('userLogin', data.username);
+        sessionStorage.setItem('userLogin', data.username);
       }
       if (data.email) {
-        localStorage.setItem('userEmail', data.email);
+        sessionStorage.setItem('userEmail', data.email);
       }
 
       return { success: true, data: data };
@@ -95,7 +95,7 @@ async function loginUser(credentials) {
 // получение профиля пользователя
 async function getUserProfile() {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
 
     const response = await fetch(`${API_BASE_URL}/user/profile`, {
       method: 'GET',
@@ -111,9 +111,9 @@ async function getUserProfile() {
       return { success: true, data: data };
     } else if (response.status === 401) {
       // Токен истек или невалиден
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userLogin');
-      localStorage.removeItem('userId');
+      sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem('userLogin');
+      sessionStorage.removeItem('userId');
       return { success: false, message: 'Сессия истекла. Пожалуйста, авторизуйтесь снова' };
     } else {
       return { success: false, message: 'Ошибка получения профиля' };
@@ -128,7 +128,7 @@ async function getUserProfile() {
 // получение заказов пользователя
 async function getUserOrders() {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
 
     const response = await fetch(`${API_BASE_URL}/user/orders`, {
       method: 'GET',
@@ -143,9 +143,9 @@ async function getUserOrders() {
       const data = await response.json();
       return { success: true, data: data };
     } else if (response.status === 401) {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userLogin');
-      localStorage.removeItem('userId');
+      sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem('userLogin');
+      sessionStorage.removeItem('userId');
       return { success: false, message: 'Сессия истекла' };
     } else {
       return { success: false, message: 'Ошибка получения заказов' };
@@ -160,7 +160,7 @@ async function getUserOrders() {
 // смена пароля
 async function changePassword(passwordData) {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
 
     const response = await fetch(`${API_BASE_URL}/user/change-password`, {
       method: 'PUT',
@@ -175,7 +175,7 @@ async function changePassword(passwordData) {
     if (response.ok) {
       return { success: true, message: 'Пароль успешно изменен' };
     } else if (response.status === 401) {
-      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('authToken');
       return { success: false, message: 'Сессия истекла' };
     } else {
       const error = await response.text();
@@ -190,9 +190,9 @@ async function changePassword(passwordData) {
 
 // выход из аккаунта
 function logout() {
-  localStorage.removeItem('authToken');
-  localStorage.removeItem('userLogin');
-  localStorage.removeItem('userId');
+  sessionStorage.removeItem('authToken');
+  sessionStorage.removeItem('userLogin');
+  sessionStorage.removeItem('userId');
   console.log('Вы вышли из аккаунта');
   window.location.href = '/';
 }
@@ -200,20 +200,20 @@ function logout() {
 
 // проверка авторизации
 function isAuthenticated() {
-  return localStorage.getItem('authToken') !== null;
+  return sessionStorage.getItem('authToken') !== null;
 }
 
 
 // получение токена
 function getAuthToken() {
-  return localStorage.getItem('authToken');
+  return sessionStorage.getItem('authToken');
 }
 
 
 // добавить товар в корзину
 async function addToCart(itemData) {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
 
@@ -233,9 +233,9 @@ async function addToCart(itemData) {
     if (response.ok) {
       return { success: true };
     } else if (response.status === 401) {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userLogin');
-      localStorage.removeItem('userId');
+      sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem('userLogin');
+      sessionStorage.removeItem('userId');
       return { success: false, message: 'Сессия истекла' };
     } else {
       const error = await response.text();
@@ -251,7 +251,7 @@ async function addToCart(itemData) {
 // получить содержимое корзины
 async function getCartItems() {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
     const response = await fetch(`${API_BASE_URL}/cart/items`, {
       method: 'GET',
       headers: {
@@ -265,7 +265,7 @@ async function getCartItems() {
       const data = await response.json();
       return { success: true, data: data };
     } else if (response.status === 401) {
-      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('authToken');
       return { success: false, message: 'Сессия истекла' };
     } else {
       return { success: false, message: 'Ошибка получения корзины' };
@@ -279,7 +279,7 @@ async function getCartItems() {
 // удалить товар из корзины
 async function removeFromCart(itemId) {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
     const response = await fetch(`${API_BASE_URL}/cart/items/${itemId}`, {
       method: 'DELETE',
       headers: {
@@ -302,7 +302,7 @@ async function removeFromCart(itemId) {
 // Payment enum: CASH | CARD
 async function checkout(checkoutData) {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
 
     // Поддержка старого вызова checkout('CASH') и нового checkout({...})
     const payload = typeof checkoutData === 'string'
@@ -328,7 +328,7 @@ async function checkout(checkoutData) {
       const data = await response.json();
       return { success: true, data: data };
     } else if (response.status === 401) {
-      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('authToken');
       return { success: false, message: 'Сессия истекла' };
     } else {
       const error = await response.text();
@@ -343,7 +343,7 @@ async function checkout(checkoutData) {
 // обновление данных пользователя
 async function changeUserData(userData) {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
 
     const response = await fetch(`${API_BASE_URL}/user/change-data`, {
       method: 'PUT',
@@ -357,13 +357,13 @@ async function changeUserData(userData) {
 
     if (response.ok) {
       const data = await response.json();
-      // Обновляем имя в localStorage если изменилось
-      if (data.username) localStorage.setItem('userLogin', data.username);
+      // Обновляем имя в sessionStorage если изменилось
+      if (data.username) sessionStorage.setItem('userLogin', data.username);
       return { success: true, data: data };
     } else if (response.status === 401) {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userLogin');
-      localStorage.removeItem('userId');
+      sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem('userLogin');
+      sessionStorage.removeItem('userId');
       return { success: false, message: 'Сессия истекла' };
     } else {
       const error = await response.text();
@@ -387,7 +387,7 @@ async function getOrderDetails(orderId) {
     if (response.ok) {
       return { success: true, data: await response.json() };
     } else if (response.status === 401) {
-      localStorage.removeItem('authToken');
+      sessionStorage.removeItem('authToken');
       return { success: false, message: 'Сессия истекла' };
     } else {
       return { success: false, message: 'Ошибка загрузки заказа' };

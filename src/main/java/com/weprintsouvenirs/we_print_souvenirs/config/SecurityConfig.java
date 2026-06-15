@@ -72,6 +72,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/admin/users/{userId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/admin/orders").permitAll()
                         .requestMatchers(HttpMethod.GET, "/admin/orders/{orderId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/admin/orders/{orderId}/chat").permitAll()
                         .requestMatchers("/admin/users/**").hasRole("ADMIN")
                         .requestMatchers("/admin/orders/**").hasRole("ADMIN")
 
@@ -91,6 +92,7 @@ public class SecurityConfig {
                                 "/admin.html",
                                 "/admin-user.html",
                                 "/admin-orders.html",
+                                "/admin-chat.html",
                                 "/edit-profile.html",
                                 "/assets/**",
                                 "/images/**",

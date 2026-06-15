@@ -304,7 +304,6 @@
 <section class="service-card-section" id="service-1">
   <div class="service-card reveal">
     <div class="service-photo" style="background:rgba(193,127,59,0.15);">
-      <!-- <img src="/assets/images\service1.png" alt="Индивидуальный заказ"> -->
       <span><img src="/assets/images/service1.png" alt="Индивидуальный заказ"></span>
     </div>
     <div class="service-info">
@@ -558,17 +557,19 @@
   <p class="contacts-email">ryb.modelmaster@bk.ru</p>
   <p class="contacts-phone">+7 (995) 931-24-60</p>
   <div class="social-list">
-    <button class="social-btn" aria-label="Email">
+    <!-- ссылка на почту -->
+    <a class="social-btn" href="mailto:ryb.modelmaster@bk.ru" aria-label="Email">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <rect x="2" y="4" width="20" height="16" rx="2" stroke="#555" stroke-width="1.8"/>
         <path d="M2 7l10 7 10-7" stroke="#555" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
-    </button>
-    <button class="social-btn" aria-label="Телефон">
+    </a>
+    <!-- ссылка на номер телефона -->
+    <a class="social-btn" href="tel:+79959312460" aria-label="Телефон">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2C7 21 3 7 3 6a2 2 0 0 1 2-2z" stroke="#555" stroke-width="1.8"/>
       </svg>
-    </button>
+    </a>
   </div>
 </section>
 
@@ -748,7 +749,7 @@
     const result = await registerUser({
       username: regNameInput.value.trim(),
       login:    regLoginInput.value.trim(),
-      password: regPassInput.value
+            password: regPassInput.value
     });
 
     if (result.success) {
@@ -788,7 +789,6 @@
     }
   });
 
-  // обработка кнопки возврата
   window.addEventListener('popstate', (event) => {
     if (event.state?.modal === 'auth') {
       openAuthModal();
@@ -860,7 +860,6 @@
   });
 </script>
 
-<!-- корзина + оформление заказа -->
 <div id="cart-overlay" class="cart-overlay" aria-hidden="true">
   <div class="cart-panel" id="cart-panel">
 
@@ -1087,7 +1086,7 @@
           <p class="cart-item-name">${item.serviceName}</p>
           <div class="cart-item-specs">
             ${item.colorLabel   ? `<p>Цвет: ${item.colorLabel}</p>` : ''}
-            ${item.apiQty ? `<p>Количество: ${item.apiQty} шт.</p>` : ''}
+            ${item.qtyTierLabel ? `<p>Количество: ${item.qtyTierLabel}</p>` : ''}
             ${item.sizeLabel    ? `<p>Размер: ${item.sizeLabel}</p>` : ''}
           </div>
           ${item.description ? `<p class="cart-item-desc">${item.description}</p>` : ''}

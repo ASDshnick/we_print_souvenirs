@@ -78,4 +78,10 @@ public class PageController {
     public String adminOrderDetailPage() {
         return "forward:/admin-orders.html";
     }
+
+    // чат заказа (админ)
+    @GetMapping(value = "/admin/orders/{orderId}/chat", produces = MediaType.TEXT_HTML_VALUE)
+    public String adminOrderChatPage() {
+        return "forward:/admin-chat.html";
+    }
 }
