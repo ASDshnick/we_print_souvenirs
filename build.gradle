@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'jacoco'
 	id 'org.springframework.boot' version '4.0.5'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -7,27 +8,22 @@ plugins {
 group = 'com.weprintsouvenirs'
 version = '0.0.1-SNAPSHOT'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
-}
-
 repositories {
 	mavenCentral()
 }
+
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.flywaydb:flyway-database-postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-websocket-test'
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.mockito:mockito-junit-jupiter'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	// Source: https://mvnrepository.com/artifact/org.projectlombok/lombok
 	implementation 'org.projectlombok:lombok:1.18.44'
@@ -40,6 +36,48 @@ dependencies {
 	implementation 'io.github.cdimascio:dotenv-java:3.2.0'
 }
 
-tasks.named('test') {
+tasks.test {
 	useJUnitPlatform()
+	jvmArgs("-XX:+EnableDynamicAgentLoading")
+}
+
+jacoco {
+	toolVersion = "0.8.12"
+}
+
+tasks.jacocoTestReport {
+	dependsOn test
+	reports {
+		xml.required = true
+		html.required = true
+		csv.required = false
+	}
+}
+
+def coverageExclusions = [
+		'**/*Application*',
+		'**/config/**',
+		'**/controller/**',
+		'**/repository/**'
+]
+
+tasks.jacocoTestReport {
+	classDirectories.setFrom(files(classDirectories.files.collect {
+		fileTree(dir: it, exclude: coverageExclusions)
+	}))
+	finalizedBy jacocoTestCoverageVerification
+}
+
+tasks.jacocoTestCoverageVerification {
+	dependsOn jacocoTestReport
+	classDirectories.setFrom(files(classDirectories.files.collect {
+		fileTree(dir: it, exclude: coverageExclusions)
+	}))
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.60
+			}
+		}
+	}
 }
