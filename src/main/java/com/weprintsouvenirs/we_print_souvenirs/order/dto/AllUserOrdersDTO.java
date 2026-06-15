@@ -70,7 +70,11 @@ public class AllUserOrdersDTO {
         this.date = date;
     }
 
-    public void setProductsIds(List<Long> productsIds) {
+    public void setProductIds(List<Long> productIds) {
         this.productIds = productIds;
+    }
+
+    public void setProductsIds(List<Long> productsIds) {
+        this.productIds = productsIds;
     }
 }
