@@ -169,13 +169,11 @@
       }).join('');
 
       document.getElementById('ausr-orders-info').innerHTML =
-        `<div class="ausr-orders-count">Заказы: ${count}` +
-        (count > 0 ? ` (<a class="ausr-orders-link" href="/admin/orders">перейти ко всем заказам пользователя</a>)` : '') +
-        `</div>` +
-        (count > 0 ? `<div class="ausr-orders-recent-label">Последние заказы</div>${recentHtml}` : '');
-    } else {
-      document.getElementById('ausr-orders-info').innerHTML = '<div class="ausr-orders-count">Заказы: 0</div>';
-    }
+        `<div class="ausr-orders-count">Заказы: ${count}</div>` +
+               (count > 0 ? `<div class="ausr-orders-recent-label">ПОСЛЕДНИЕ ЗАКАЗЫ</div>${recentHtml}` : '');
+          } else {
+              document.getElementById('ausr-orders-info').innerHTML = '<div class="ausr-orders-count">Заказы: 0</div>';
+          }
   }
 
   // редактирование заметки
@@ -188,6 +186,14 @@
   // сохранение
   document.getElementById('ausr-save-btn').addEventListener('click', async () => {
     const btn = document.getElementById('ausr-save-btn');
+    const emailInput = (document.getElementById('ausr-email')?.value || '').trim();
+    const phoneInput = (document.getElementById('ausr-phone')?.value || '').trim();
+    if (emailInput && (!emailInput.includes('@') || emailInput.startsWith('@') || emailInput.endsWith('@'))) {
+      alert('Введите корректный email (должен содержать @)'); return;
+    }
+    if (phoneInput && phoneInput.replace(/\D/g,'').length < 10) {
+      alert('Номер телефона должен содержать не менее 10 цифр'); return;
+    }
     btn.disabled = true;
     btn.textContent = 'Сохраняем…';
 

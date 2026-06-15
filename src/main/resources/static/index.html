@@ -326,6 +326,7 @@
             <option value="60" data-enum="BROWN">Коричневый</option>
             <option value="60" data-enum="BEIGE">Бежевый</option>
             <option value="60" data-enum="ORANGE">Оранжевый</option>
+            <option value="60" data-enum="COLORED">Цветной</option>
           </select>
         </div>
 
@@ -342,7 +343,7 @@
           <select class="wide" id="size-select">
             <option value="0"    data-enum="SMALL"  selected>Маленький (до 5×5×5)</option>
             <option value="350"  data-enum="MEDIUM">Средний (до 10×10×10)</option>
-            <option value="550"  data-enum="BIG">Большой (до 20×20×20)</option>
+            <option value="550"  data-enum="BIG">Большой (до 22×22×22)</option>
             <option value="1150" data-enum="LARGE">Очень Большой</option>
           </select>
         </div>
@@ -423,6 +424,7 @@
             <option value="60" data-enum="BROWN">Коричневый</option>
             <option value="60" data-enum="BEIGE">Бежевый</option>
             <option value="60" data-enum="ORANGE">Оранжевый</option>
+            <option value="60" data-enum="COLORED">Цветной</option>
           </select>
         </div>
         <div class="field-row">
@@ -436,7 +438,7 @@
           <select class="wide" id="size-select-2">
             <option value="0"    data-enum="SMALL"  selected>Маленький (до 5×5×5)</option>
             <option value="350"  data-enum="MEDIUM">Средний (до 10×10×10)</option>
-            <option value="550"  data-enum="BIG">Большой (до 20×20×20)</option>
+            <option value="550"  data-enum="BIG">Большой (до 22×22×22)</option>
             <option value="1150" data-enum="LARGE">Очень большой</option>
           </select>
         </div>
@@ -457,9 +459,9 @@
     { min: 1,   label: '1–5 шт.',     discount: 0   },
     { min: 6,   label: '6–20 шт.',    discount: 100 },
     { min: 21,  label: '21–50 шт.',   discount: 100 },
-    { min: 51,  label: '51–100 шт.',  discount: 120 },
-    { min: 101, label: '101–200 шт.', discount: 140 },
-    { min: 201, label: '201+ шт.',    discount: 150 },
+    { min: 51,  label: '51–100 шт.',  discount: 150 },
+    { min: 101, label: '101–200 шт.', discount: 120 },
+    { min: 201, label: '201+ шт.',    discount: 140 },
   ];
 
   const sizeSelect2   = document.getElementById('size-select-2');
@@ -859,7 +861,7 @@
 <div id="cart-overlay" class="cart-overlay" aria-hidden="true">
   <div class="cart-panel-outer">
 
-    <!-- Кнопка закрытия  -->
+    <!-- Кнопка закрытия (парит слева от панели) -->
     <button class="cart-close-btn" id="cart-close-btn" aria-label="Закрыть корзину">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#clip0_cart_close)">
@@ -1151,6 +1153,7 @@
     const cart = getLocalCart();
     const item = cart.find(i => i.localId === localId);
     if (item) item.comment = comment;
+    // Сохраняем без перерисовки чтобы не сбить фокус
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
   }
 
@@ -1262,6 +1265,21 @@
     errEl.classList.remove('visible');
 
     try {
+      // Валидация полей
+      const emailVal = document.getElementById('cart-email')?.value?.trim() || '';
+      const phoneVal = document.getElementById('cart-phone')?.value?.trim() || '';
+      if (!emailVal || !emailVal.includes('@') || emailVal.indexOf('@') === 0 || emailVal.indexOf('@') === emailVal.length - 1) {
+        errEl.textContent = 'Введите корректный email (должен содержать @)';
+        errEl.classList.add('visible'); errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'ОФОРМИТЬ'; return;
+      }
+      const phoneDigits = phoneVal.replace(/\D/g, '');
+      if (phoneDigits.length < 10) {
+        errEl.textContent = 'Введите корректный номер телефона (не менее 10 цифр)';
+        errEl.classList.add('visible'); errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'ОФОРМИТЬ'; return;
+      }
+
       // Добавляем все товары на сервер
       for (const item of cart) {
         const r = await addToCart({
@@ -1278,7 +1296,8 @@
       const paymentMethod  = document.querySelector('input[name="cart-payment"]:checked')?.value || 'CASH';
       const contactName    = document.getElementById('cart-name')?.value?.trim()  || '';
       const contactEmail   = document.getElementById('cart-email')?.value?.trim() || '';
-      const contactPhone   = document.getElementById('cart-phone')?.value?.trim() || '';
+      const rawPhone = document.getElementById('cart-phone')?.value?.trim() || '';
+      const contactPhone = rawPhone ? '+7' + rawPhone.replace(/\D/g,'') : '';
 
       const orderResult = await checkout({ paymentMethod, contactName, contactEmail, contactPhone });
       if (!orderResult.success) throw new Error(orderResult.message || 'Ошибка оформления заказа');

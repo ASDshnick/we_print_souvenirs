@@ -143,6 +143,14 @@
       let phoneRaw = document.getElementById('ep-phone')?.value.trim() || '';
       const phone = phoneRaw ? '+7' + phoneRaw : '';
       const btn   = e.target.querySelector('button[type="submit"]');
+
+      if (email && (!email.includes('@') || email.startsWith('@') || email.endsWith('@'))) {
+        alert('Введите корректный email (должен содержать @)'); return;
+      }
+      if (phoneRaw && phoneRaw.replace(/\D/g,'').length < 10) {
+        alert('Номер телефона должен содержать не менее 10 цифр'); return;
+      }
+
       if (btn) { btn.disabled = true; btn.textContent = 'Сохраняем...'; }
       try {
         const result = await changeUserData({ name, email, phone });
