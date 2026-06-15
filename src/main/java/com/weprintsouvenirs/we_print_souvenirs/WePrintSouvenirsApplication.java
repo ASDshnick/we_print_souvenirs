@@ -12,12 +12,19 @@ public class WePrintSouvenirsApplication {
 		Dotenv dotenv = Dotenv.configure()
 				.ignoreIfMissing()
 				.load();
-		System.setProperty("DB_NAME", dotenv.get("DB_NAME"));
-		System.setProperty("DB_USER", dotenv.get("DB_USER"));
-		System.setProperty("DB_PASS", dotenv.get("DB_PASS"));
-		System.setProperty("DB_PORT", dotenv.get("DB_PORT"));
-		System.setProperty("JWT_SECRET_KEY", dotenv.get("JWT_SECRET_KEY"));
+		setSystemPropertyIfPresent(dotenv, "DB_NAME");
+		setSystemPropertyIfPresent(dotenv, "DB_USER");
+		setSystemPropertyIfPresent(dotenv, "DB_PASS");
+		setSystemPropertyIfPresent(dotenv, "DB_PORT");
+		setSystemPropertyIfPresent(dotenv, "JWT_SECRET_KEY");
 		SpringApplication.run(WePrintSouvenirsApplication.class, args);
+	}
+
+	private static void setSystemPropertyIfPresent(Dotenv dotenv, String key) {
+		String value = dotenv.get(key);
+		if (value != null) {
+			System.setProperty(key, value);
+		}
 	}
 
 }
