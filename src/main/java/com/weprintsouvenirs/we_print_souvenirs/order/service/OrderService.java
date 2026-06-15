@@ -145,6 +145,7 @@ public class OrderService {
                             order.getId(),
                             order.getTotalAmount(),
                             order.getStatus(),
+                            order.getPaymentStatus(),
                             order.getCreatedAt().format(formatter),
                             productIds
                     );

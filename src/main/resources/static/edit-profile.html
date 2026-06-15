@@ -9,78 +9,6 @@
 </head>
 <body>
 
-<!-- шапка -->
-<header>
-  <div class="header-inner">
-    <a href="/" class="logo">
-      <div class="logo-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g clip-path="url(#clip0_9_839)">
-            <path d="M3.25496 3.25499C1.45733 5.05262 3.91536 10.4252 8.74513 15.255C13.5749 20.0847 18.9475 22.5428 20.7451 20.7451C22.5427 18.9475 20.0847 13.5749 15.2549 8.74516C10.4252 3.91539 5.05259 1.45736 3.25496 3.25499Z" stroke="#333333" stroke-width="1.8"/>
-            <path d="M20.749 3.25498C22.5466 5.05261 20.0886 10.4252 15.2588 15.255C10.429 20.0847 5.05644 22.5428 3.2588 20.7451C1.46117 18.9475 3.91921 13.5749 8.74898 8.74516C13.5788 3.91539 18.9513 1.45735 20.749 3.25498Z" stroke="#333333" stroke-width="1.8"/>
-          </g>
-          <defs>
-            <clipPath id="clip0_9_839">
-              <rect width="24" height="24" fill="white"/>
-            </clipPath>
-          </defs>
-        </svg>
-      </div>
-      <span class="logo-text">МОДЕЛМАСТЕР</span>
-    </a>
-    <nav class="header-nav">
-      <a href="index.html#about">О мастере</a>
-      <a href="index.html#work-types">Виды работ</a>
-      <a href="index.html#contacts">Контакты</a>
-    </nav>
-    <div class="header-right">
-      <div class="header-icons">
-        <div class="header-profile-wrap">
-          <button id="profile-button" class="icon-btn" aria-label="Профиль">
-            <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
-              <path d="M9.49996 9.50003C11.4078 9.50003 12.9545 7.95338 12.9545 6.04549C12.9545 4.13759 11.4078 2.59094 9.49996 2.59094C7.59206 2.59094 6.04541 4.13759 6.04541 6.04549C6.04541 7.95338 7.59206 9.50003 9.49996 9.50003Z" stroke="black" stroke-width="1.72727"/>
-              <path d="M16.409 17.2728C16.409 14.4109 13.3157 12.0909 9.49991 12.0909C5.68412 12.0909 2.59082 14.4109 2.59082 17.2728" stroke="black" stroke-width="1.72727" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <div class="profile-menu" id="profile-menu">
-            <div class="profile-menu-top">
-              <div class="profile-menu-user">
-                <span class="profile-menu-name" id="menu-username">—</span>
-                <a href="/user/profile" class="profile-menu-edit">Редактировать профиль</a>
-              </div>
-              <button class="profile-menu-logout" id="menu-logout-btn" aria-label="Выйти">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <polyline points="16 17 21 12 16 7" stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <line x1="21" y1="12" x2="9" y2="12" stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-            </div>
-            <div class="profile-menu-links">
-              <a href="/user/profile">Личный кабинет</a>
-              <a href="/user/profile">Мои заказы</a>
-            </div>
-          </div>
-        </div>
-        <button class="icon-btn" aria-label="Корзина">
-          <svg width="19" height="19" viewBox="0 0 19 19" fill="none">
-            <g clip-path="url(#clip0_9_870)">
-              <path d="M3.17817 5.96787C3.21829 5.52274 3.59139 5.18176 4.03832 5.18176H14.9619C15.4088 5.18176 15.7819 5.52274 15.822 5.96787L16.7562 16.3315C16.8017 16.8371 16.4036 17.2727 15.896 17.2727H3.10418C2.5966 17.2727 2.19847 16.8371 2.24403 16.3315L3.17817 5.96787Z" stroke="black" stroke-width="1.55455"/>
-              <path d="M12.9545 7.77274V4.31819C12.9545 2.4103 11.4078 0.863647 9.49996 0.863647C7.59206 0.863647 6.04541 2.4103 6.04541 4.31819V7.77274" stroke="black" stroke-width="1.59773"/>
-            </g>
-            <defs>
-              <clipPath id="clip0_9_870">
-                <rect width="19" height="19" fill="white"/>
-              </clipPath>
-            </defs>
-          </svg>
-        </button>
-      </div>
-      <button class="btn-cta">Сделать заказ</button>
-    </div>
-  </div>
-</header>
-
 <!-- страница редактирования профиля -->
 <div class="edit-profile-page">
 
@@ -134,16 +62,9 @@
                   </svg>
                   <span>+7</span>
                 </div>
-                <input class="ep-phone-input" id="ep-phone" type="tel" name="phone" placeholder="(900) 000-00-00" autocomplete="tel"/>
+                <input class="ep-phone-input" id="ep-phone" type="tel" name="phone" placeholder="(900) 000-00-00" autocomplete="tel-national"
+                       oninput="this.value=this.value.replace(/^\+?7/,'').replace(/[^\d]/g,'').replace(/^(\d{10}).*/,'$1')"/>
               </div>
-            </div>
-
-            <!-- поле пароль -->
-            <div class="ep-field ep-field-password">
-              <label class="ep-label-password">Пароль</label>
-              <button type="button" class="ep-change-password-btn" id="change-password-btn">
-                Изменить пароль
-              </button>
             </div>
 
           </div>
@@ -155,19 +76,11 @@
 
       <!-- аватар -->
       <div class="ep-avatar-col">
-        <p class="ep-avatar-label">Изображение профиля</p>
-        <div class="ep-avatar-wrap">
-          <div class="ep-avatar-circle" id="avatar-preview">
-            <!-- Иконка пользователя -->
-            <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15 15.5C18.866 15.5 22 12.366 22 8.5C22 4.634 18.866 1.5 15 1.5C11.134 1.5 8 4.634 8 8.5C8 12.366 11.134 15.5 15 15.5Z" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-              <path d="M1 32C1 25.373 7.268 20 15 20C22.732 20 29 25.373 29 32" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <button type="button" class="ep-avatar-edit-btn" id="avatar-upload-btn">
-            Редактировать
-          </button>
-          <input type="file" id="avatar-file-input" accept="image/*" style="display:none"/>
+        <div class="ep-avatar-circle">
+          <svg width="30" height="34" viewBox="0 0 30 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 15.5C18.866 15.5 22 12.366 22 8.5C22 4.634 18.866 1.5 15 1.5C11.134 1.5 8 4.634 8 8.5C8 12.366 11.134 15.5 15 15.5Z" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M1 32C1 25.373 7.268 20 15 20C22.732 20 29 25.373 29 32" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
         </div>
       </div>
 
@@ -206,7 +119,12 @@
           const mu = document.getElementById('menu-username');
           if (n)  n.value  = d.name || d.username || d.login || '';
           if (em) em.value = d.email || '';
-          if (ph) ph.value = d.phone || '';
+          if (ph) {
+            let v = d.phone || '';
+            if (v.startsWith('+7')) v = v.slice(2).trim();
+            if (v.startsWith('7') && v.length === 11) v = v.slice(1);
+            ph.value = v;
+          }
           if (mu) mu.textContent = d.name || d.username || '-';
         } else {
           window.location.href = '/';
@@ -222,7 +140,8 @@
       e.preventDefault();
       const name  = document.getElementById('ep-name')?.value.trim() || '';
       const email = document.getElementById('ep-email')?.value.trim() || '';
-      const phone = document.getElementById('ep-phone')?.value.trim() || '';
+      let phoneRaw = document.getElementById('ep-phone')?.value.trim() || '';
+      const phone = phoneRaw ? '+7' + phoneRaw : '';
       const btn   = e.target.querySelector('button[type="submit"]');
       if (btn) { btn.disabled = true; btn.textContent = 'Сохраняем...'; }
       try {
@@ -238,71 +157,6 @@
         alert('Ошибка: ' + err.message);
         if (btn) { btn.disabled = false; btn.textContent = 'Сохранить'; }
       }
-    });
-
-    // попап смены пароля
-    const overlay = document.getElementById('password-popup-overlay');
-    const ppError = document.getElementById('pp-error');
-    const ppOld   = document.getElementById('pp-old');
-    const ppNew   = document.getElementById('pp-new');
-
-    document.getElementById('change-password-btn')?.addEventListener('click', function () {
-      if (ppOld) ppOld.value = '';
-      if (ppNew) ppNew.value = '';
-      if (ppError) ppError.classList.remove('visible');
-      if (overlay) overlay.classList.add('active');
-    });
-
-    document.getElementById('pp-cancel')?.addEventListener('click', function () {
-      if (overlay) overlay.classList.remove('active');
-    });
-
-    overlay?.addEventListener('click', function (e) {
-      if (e.target === overlay) overlay.classList.remove('active');
-    });
-
-    document.getElementById('pp-save')?.addEventListener('click', async function () {
-      const oldPass = ppOld ? ppOld.value : '';
-      const newPass = ppNew ? ppNew.value : '';
-      if (!oldPass) {
-        if (ppError) { ppError.textContent = 'введите старый пароль'; ppError.classList.add('visible'); }
-        return;
-      }
-      if (newPass.length < 5) {
-        if (ppError) { ppError.textContent = 'минимум 5 символов'; ppError.classList.add('visible'); }
-        return;
-      }
-      const saveBtn = document.getElementById('pp-save');
-      if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Сохраняем...'; }
-      try {
-        const result = await changePassword({ oldPassword: oldPass, newPassword: newPass });
-        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Сохранить'; }
-        if (result.success) {
-          if (overlay) overlay.classList.remove('active');
-          alert('Пароль успешно изменён!');
-        } else {
-          if (ppError) { ppError.textContent = result.message || 'ошибка'; ppError.classList.add('visible'); }
-        }
-      } catch (err) {
-        if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Сохранить'; }
-        console.error('ошибка смены пароля:', err);
-      }
-    });
-
-    // аватар
-    document.getElementById('avatar-upload-btn')?.addEventListener('click', function () {
-      document.getElementById('avatar-file-input')?.click();
-    });
-    document.getElementById('avatar-file-input')?.addEventListener('change', function (e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function (ev) {
-        const circle = document.getElementById('avatar-preview');
-        if (circle) circle.innerHTML = '<img src="' + ev.target.result + '" class="avatar-img-small" alt="аватар"/>';
-        localStorage.setItem('userAvatar', ev.target.result);
-      };
-      reader.readAsDataURL(file);
     });
 
     // меню профиля в шапке
@@ -324,26 +178,6 @@
 
   }); // domcontentloaded
 </script>
-
-<!-- попап смены пароля -->
-<div class="password-popup-overlay" id="password-popup-overlay">
-  <div class="password-popup">
-    <h3>Смена пароля</h3>
-    <div class="pp-field">
-      <label for="pp-old">Старый пароль</label>
-      <input type="password" id="pp-old" placeholder="Введите старый пароль"/>
-    </div>
-    <div class="pp-field">
-      <label for="pp-new">Новый пароль</label>
-      <input type="password" id="pp-new" placeholder="Минимум 5 символов"/>
-    </div>
-    <div class="pp-error" id="pp-error"></div>
-    <div class="pp-actions">
-      <button class="pp-btn-cancel" id="pp-cancel">Отмена</button>
-      <button class="pp-btn-save" id="pp-save">Сохранить</button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>

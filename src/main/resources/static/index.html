@@ -50,10 +50,8 @@
             <div class="pm-user-section">
               <span class="pm-username" id="menu-username">—</span>
               <button class="pm-logout-btn" id="menu-logout-btn" aria-label="Выйти">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M13 3h4a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-4" stroke="#8F8F8F" stroke-width="1.5" stroke-linecap="round"/>
-                  <polyline points="10 14 14 10 10 6" stroke="#8F8F8F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <line x1="14" y1="10" x2="3" y2="10" stroke="#8F8F8F" stroke-width="1.5" stroke-linecap="round"/>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.76206 1.66675C3.9731 1.66675 3.3335 2.25585 3.3335 2.98253V17.0176C3.3335 17.7442 3.9731 18.3334 4.76206 18.3334H15.2383C16.0272 18.3334 16.6668 17.7442 16.6668 17.0176V15.2632H15.7144V17.0176C15.7144 17.2599 15.5012 17.4562 15.2383 17.4562H4.76206C4.49908 17.4562 4.28588 17.2599 4.28588 17.0176V2.98253C4.28588 2.74031 4.49908 2.54395 4.76206 2.54395H15.2383C15.5012 2.54395 15.7144 2.74031 15.7144 2.98253V5.00008H16.6668V2.98253C16.6668 2.25585 16.0272 1.66675 15.2383 1.66675H4.76206ZM18.2115 9.68L15.5598 6.79933C15.3971 6.62255 15.1333 6.62255 14.9705 6.79933C14.8078 6.9761 14.8078 7.2627 14.9705 7.43948L16.9108 9.54743H10.0002V10.4527H16.9108L14.9705 12.5607C14.8078 12.7375 14.8078 13.0241 14.9705 13.2008C15.1333 13.3776 15.3971 13.3776 15.5598 13.2008L18.2115 10.3202C18.3742 10.1434 18.3742 9.85678 18.2115 9.68Z" fill="#8F8F8F"/>
                 </svg>
               </button>
               <a href="/user/change-data" class="pm-edit-link">Редактировать профиль</a>
@@ -304,7 +302,6 @@
 <section class="service-card-section" id="service-1">
   <div class="service-card reveal">
     <div class="service-photo" style="background:rgba(193,127,59,0.15);">
-      <!-- <img src="/assets/images\service1.png" alt="Индивидуальный заказ"> -->
       <span><img src="/assets/images/service1.png" alt="Индивидуальный заказ"></span>
     </div>
     <div class="service-info">
@@ -558,17 +555,17 @@
   <p class="contacts-email">ryb.modelmaster@bk.ru</p>
   <p class="contacts-phone">+7 (995) 931-24-60</p>
   <div class="social-list">
-    <button class="social-btn" aria-label="Email">
+    <a class="social-btn" href="mailto:ryb.modelmaster@bk.ru" aria-label="Email">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <rect x="2" y="4" width="20" height="16" rx="2" stroke="#555" stroke-width="1.8"/>
         <path d="M2 7l10 7 10-7" stroke="#555" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
-    </button>
-    <button class="social-btn" aria-label="Телефон">
+    </a>
+    <a class="social-btn" href="tel:+79959312460" aria-label="Телефон">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2C7 21 3 7 3 6a2 2 0 0 1 2-2z" stroke="#555" stroke-width="1.8"/>
       </svg>
-    </button>
+    </a>
   </div>
 </section>
 
@@ -748,7 +745,7 @@
     const result = await registerUser({
       username: regNameInput.value.trim(),
       login:    regLoginInput.value.trim(),
-      password: regPassInput.value
+            password: regPassInput.value
     });
 
     if (result.success) {
@@ -788,7 +785,6 @@
     }
   });
 
-  // обработка кнопки возврата
   window.addEventListener('popstate', (event) => {
     if (event.state?.modal === 'auth') {
       openAuthModal();
@@ -813,7 +809,7 @@
   function updateUIAfterLogin() {
     console.log('UI обновлен после логина');
     // Обновляем имя в меню если оно уже открыто
-    const username = localStorage.getItem('userLogin') || '';
+    const username = sessionStorage.getItem('userLogin') || '';
     const menuUsername = document.getElementById('menu-username');
     if (menuUsername && username) menuUsername.textContent = username;
   }
@@ -829,7 +825,7 @@
 
     if (isAuthenticated()) {
       // Показываем имя и переключаем меню
-      const username = localStorage.getItem('userLogin') || 'Профиль';
+      const username = sessionStorage.getItem('userLogin') || 'Профиль';
       if (menuUsername) menuUsername.textContent = username;
       profileMenu?.classList.toggle('open');
     } else {
@@ -855,109 +851,114 @@
   // подставляем имя при загрузке
   window.addEventListener('load', () => {
     if (isAuthenticated() && menuUsername) {
-      menuUsername.textContent = localStorage.getItem('userLogin') || 'Профиль';
+      menuUsername.textContent = sessionStorage.getItem('userLogin') || 'Профиль';
     }
   });
 </script>
 
-<!-- корзина + оформление заказа -->
 <div id="cart-overlay" class="cart-overlay" aria-hidden="true">
-  <div class="cart-panel" id="cart-panel">
+  <div class="cart-panel-outer">
 
-    <!-- Кнопка закрытия -->
+    <!-- Кнопка закрытия  -->
     <button class="cart-close-btn" id="cart-close-btn" aria-label="Закрыть корзину">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="1" y="1" width="26" height="26" rx="2" stroke="#222D38" stroke-width="1.5"/>
-        <line x1="9" y1="9" x2="19" y2="19" stroke="#222D38" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="19" y1="9" x2="9" y2="19" stroke="#222D38" stroke-width="1.5" stroke-linecap="round"/>
+        <g clip-path="url(#clip0_cart_close)">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M2 14C2 20.623 7.37702 26 14 26C20.623 26 26 20.623 26 14C26 7.37702 20.623 2 14 2C7.37702 2 2 7.37702 2 14Z" fill="white"/>
+          <path d="M1.25 14C1.25 21.0369 6.96308 26.75 14 26.75C21.0369 26.75 26.75 21.0369 26.75 14C26.75 6.96308 21.0369 1.25 14 1.25C6.96308 1.25 1.25 6.96308 1.25 14V14" stroke="#222D38" stroke-width="1.5"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M19.1559 9.09559L19.1552 9.09489C19.4697 9.40944 19.4697 9.92019 19.1552 10.2347L10.4662 18.9237C10.1515 19.2384 9.64114 19.2384 9.32637 18.9237L9.32708 18.9244C9.01232 18.6096 9.01232 18.0993 9.32708 17.7845L18.016 9.09559C18.3308 8.78083 18.8411 8.78083 19.1559 9.09559Z" fill="#222D38"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M9.32606 7.95547L9.32676 7.95476C9.64153 8.26952 9.64153 8.77985 9.32676 9.09462L18.0157 17.7835C18.3305 17.4688 18.8408 17.4688 19.1555 17.7835L19.1548 17.7843C18.8401 17.4695 18.8401 16.9592 19.1548 16.6444L10.4659 7.95547C10.1512 8.27023 9.64082 8.27023 9.32606 7.95547Z" fill="#222D38"/>
+        </g>
+        <defs><clipPath id="clip0_cart_close"><rect width="28" height="28" fill="white"/></clipPath></defs>
       </svg>
     </button>
 
-    <!-- Заголовок -->
-    <div class="cart-panel-header">
-      <h2 class="cart-panel-title">Ваш заказ:</h2>
-    </div>
-
-    <!-- Список товаров -->
-    <div class="cart-items-list" id="cart-items-list"></div>
-
-    <!-- Промежуточная сумма -->
-    <div class="cart-subtotal-row" id="cart-subtotal-row">
-      <span class="cart-subtotal-label">Сумма:&nbsp;</span>
-      <span class="cart-subtotal-label" id="cart-subtotal-amount">0</span>
-      <span class="cart-subtotal-label">&nbsp;р.</span>
-    </div>
-
-    <!-- Форма оформления -->
-    <div class="cart-form-section" id="cart-form-section">
-
-      <!-- Блок авторизации -->
-      <div class="cart-auth-block">
-        <div class="cart-auth-text">
-          Вы авторизованы как
-          <a href="/user/profile" class="cart-auth-link" id="cart-auth-username">—</a>
-        </div>
-        <button class="cart-auth-logout-btn" id="cart-logout-btn">Выйти</button>
+    <div class="cart-panel" id="cart-panel">
+      <div class="cart-panel-header">
+        <h2 class="cart-panel-title">Ваш заказ:</h2>
       </div>
 
-      <!-- Имя -->
-      <div class="cart-field">
-        <label class="cart-field-label" for="cart-name">Имя</label>
-        <input class="cart-field-input" id="cart-name" type="text" placeholder="Ваше имя" autocomplete="name"/>
+      <!-- Список товаров -->
+      <div class="cart-items-list" id="cart-items-list"></div>
+
+      <!-- Промежуточная сумма -->
+      <div class="cart-subtotal-row" id="cart-subtotal-row">
+        <span class="cart-subtotal-label">Сумма:&nbsp;</span>
+        <span class="cart-subtotal-label" id="cart-subtotal-amount">0</span>
+        <span class="cart-subtotal-label">&nbsp;р.</span>
       </div>
 
-      <!-- Email -->
-      <div class="cart-field">
-        <label class="cart-field-label" for="cart-email">Email</label>
-        <input class="cart-field-input" id="cart-email" type="email" placeholder="Email для связи" autocomplete="email"/>
-      </div>
+      <!-- Форма оформления -->
+      <div class="cart-form-section" id="cart-form-section">
 
-      <!-- Телефон -->
-      <div class="cart-field">
-        <label class="cart-field-label" for="cart-phone">Номер телефона для связи</label>
-        <div class="cart-phone-wrap">
-          <div class="cart-phone-flag">
-            <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
-              <rect width="18" height="4.33" fill="white"/>
-              <rect y="4.33" width="18" height="4.33" fill="#0039A6"/>
-              <rect y="8.67" width="18" height="4.33" fill="#D52B1E"/>
-            </svg>
-            <span>+7</span>
+        <!-- Блок авторизации -->
+        <div class="cart-auth-block">
+          <div class="cart-auth-text">
+            Вы авторизованы как
+            <a href="/user/profile" class="cart-auth-link" id="cart-auth-username">—</a>
           </div>
-          <input class="cart-phone-input" id="cart-phone" type="tel" placeholder="(920) 655-24-60" autocomplete="tel"/>
+          <button class="cart-auth-logout-btn" id="cart-logout-btn">Выйти</button>
         </div>
+
+        <!-- Имя -->
+        <div class="cart-field">
+          <label class="cart-field-label" for="cart-name">Имя</label>
+          <input class="cart-field-input" id="cart-name" type="text" placeholder="Ваше имя" autocomplete="name"/>
+        </div>
+
+        <!-- Email -->
+        <div class="cart-field">
+          <label class="cart-field-label" for="cart-email">Email</label>
+          <input class="cart-field-input" id="cart-email" type="email" placeholder="Email для связи" autocomplete="email"/>
+        </div>
+
+        <!-- Телефон -->
+        <div class="cart-field">
+          <label class="cart-field-label" for="cart-phone">Номер телефона для связи</label>
+          <div class="cart-phone-wrap">
+            <div class="cart-phone-flag">
+              <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                <rect width="18" height="4.33" fill="white"/>
+                <rect y="4.33" width="18" height="4.33" fill="#0039A6"/>
+                <rect y="8.67" width="18" height="4.33" fill="#D52B1E"/>
+              </svg>
+              <span>+7</span>
+            </div>
+            <input class="cart-phone-input" id="cart-phone" type="tel" placeholder="(920) 655-24-60" autocomplete="tel-national"
+                   oninput="this.value=this.value.replace(/^\+?7/,'').replace(/[^\d]/g,'').replace(/^(\d{10}).*/,'$1')"/>
+          </div>
+        </div>
+
+        <!-- Способ оплаты -->
+        <div class="cart-payment-section">
+          <p class="cart-payment-title">Способ оплаты</p>
+          <div class="cart-payment-options">
+            <label class="cart-payment-label">
+              <input type="radio" name="cart-payment" value="CASH" checked>
+              Наличными при получении
+            </label>
+            <label class="cart-payment-label">
+              <input type="radio" name="cart-payment" value="CARD">
+              Безналичная оплата
+            </label>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Способ оплаты -->
-      <div class="cart-payment-section">
-        <p class="cart-payment-title">Способ оплаты</p>
-        <div class="cart-payment-options">
-          <label class="cart-payment-label">
-            <input type="radio" name="cart-payment" value="CASH" checked>
-            Наличными при получении
-          </label>
-          <label class="cart-payment-label">
-            <input type="radio" name="cart-payment" value="CARD">
-            Безналичная оплата
-          </label>
-        </div>
+      <!-- Итоговая сумма -->
+      <div class="cart-total-row" id="cart-total-row">
+        <span class="cart-total-label">Итоговая сумма:&nbsp;</span>
+        <span class="cart-total-label" id="cart-total-amount">0</span>
+        <span class="cart-total-label">&nbsp;р.</span>
       </div>
 
+      <!-- Ошибка -->
+      <p class="cart-error" id="cart-error"></p>
+
+      <!-- Кнопка -->
+      <button class="cart-submit-btn" id="cart-submit">ОФОРМИТЬ</button>
+
     </div>
-
-    <!-- Итоговая сумма -->
-    <div class="cart-total-row" id="cart-total-row">
-      <span class="cart-total-label">Итоговая сумма:&nbsp;</span>
-      <span class="cart-total-label" id="cart-total-amount">0</span>
-      <span class="cart-total-label">&nbsp;р.</span>
-    </div>
-
-    <!-- Ошибка -->
-    <p class="cart-error" id="cart-error"></p>
-
-    <!-- Кнопка -->
-    <button class="cart-submit-btn" id="cart-submit">ОФОРМИТЬ</button>
-
   </div>
 </div>
 
@@ -1087,7 +1088,7 @@
           <p class="cart-item-name">${item.serviceName}</p>
           <div class="cart-item-specs">
             ${item.colorLabel   ? `<p>Цвет: ${item.colorLabel}</p>` : ''}
-            ${item.apiQty ? `<p>Количество: ${item.apiQty} шт.</p>` : ''}
+            ${item.cartQty ? `<p>Количество: ${item.cartQty}</p>` : ''}
             ${item.sizeLabel    ? `<p>Размер: ${item.sizeLabel}</p>` : ''}
           </div>
           ${item.description ? `<p class="cart-item-desc">${item.description}</p>` : ''}
@@ -1156,7 +1157,7 @@
   // предзаполнение формы данными профиля
   async function prefillCartForm() {
     if (!isAuthenticated()) return;
-    const login = localStorage.getItem('userLogin') || '';
+    const login = sessionStorage.getItem('userLogin') || '';
     const usernameEl = document.getElementById('cart-auth-username');
     if (usernameEl) usernameEl.textContent = login;
 
@@ -1168,7 +1169,12 @@
     const phoneEl = document.getElementById('cart-phone');
     if (nameEl  && !nameEl.value)  nameEl.value  = d.username || d.login || '';
     if (emailEl && !emailEl.value) emailEl.value = d.email || '';
-    if (phoneEl && !phoneEl.value) phoneEl.value = d.phone || '';
+    if (phoneEl && !phoneEl.value) {
+      let ph = d.phone || '';
+      if (ph.startsWith('+7')) ph = ph.slice(2).trim();
+      if (ph.startsWith('7') && ph.length === 11) ph = ph.slice(1);
+      phoneEl.value = ph;
+    }
   }
 
   // добавление товара в корзину с карточки услуги
@@ -1192,7 +1198,7 @@
       sizeLabel:     sSel?.options[sSel.selectedIndex]?.text || '',
       qtyTierLabel:  tier1.label,
       apiQty:        qty1,
-      cartQty:       1,
+      cartQty:       qty1,
       unitPrice:     parseInt(document.getElementById('total-price')?.textContent) || 650
     });
     openCartModal();
@@ -1215,7 +1221,7 @@
       sizeLabel:     sSel?.options[sSel.selectedIndex]?.text || '',
       qtyTierLabel:  tier2.label,
       apiQty:        qty2,
-      cartQty:       1,
+      cartQty:       qty2,
       unitPrice:     parseInt(document.getElementById('total-price-2')?.textContent) || 450
     });
     openCartModal();
@@ -1237,7 +1243,7 @@
       sizeLabel:     '',
       qtyTierLabel:  tier3.label,
       apiQty:        qty3,
-      cartQty:       1,
+      cartQty:       qty3,
       unitPrice:     parseInt(document.getElementById('total-price-3')?.textContent) || 900
     });
     openCartModal();
@@ -1260,7 +1266,7 @@
       for (const item of cart) {
         const r = await addToCart({
           productId: item.productId,
-          quantity:  item.apiQty * item.cartQty,
+          quantity:  item.cartQty,
           size:      item.sizeEnum,
           color:     item.colorEnum,
           comment:   item.comment || ''

@@ -6,6 +6,8 @@
   <title>Заказы — МоделМастер</title>
   <link rel="stylesheet" href="/assets/css/styles.css"/>
   <script src="/assets/js/api.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </head>
 <body>
 
@@ -95,9 +97,9 @@
         <div class="adet-section-hdr">
           <span class="adet-section-title">Чат заказа</span>
           <a class="adet-icon-btn" id="adet-chat-link" href="#" title="Открыть чат">
-            <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
-              <rect x="0.5" y="0.5" width="14" height="11" rx="1.5" stroke="#000"/>
-              <path d="M4 14L7.5 11" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>
+            <svg width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="27" height="25" rx="12.5" fill="#F3F3F3"/>
+              <path d="M8.5 7.16669H18.5C18.7208 7.16669 18.8925 7.23515 19.042 7.37469C19.1904 7.51324 19.25 7.65814 19.25 7.83368V14.8337C19.2499 15.009 19.1902 15.1533 19.042 15.2917C18.8925 15.4312 18.7208 15.4997 18.5 15.4997H9.55273L9.40918 15.6345L7.75 17.1823V7.83368C7.75 7.65814 7.80959 7.51324 7.95801 7.37469C8.10752 7.23515 8.27917 7.16669 8.5 7.16669Z" stroke="black"/>
             </svg>
           </a>
         </div>
@@ -126,7 +128,7 @@
   const PAYMENT_COLORS  = {PAID:'#DDF6E8',NOT_PAID:'#F6DDDD'};
   const PAYMENT_LABELS  = {PAID:'Оплачен',NOT_PAID:'Не оплачен'};
   const STATUS_COLORS   = {NEW:'#E4E5E5',IN_PROCESS:'#E4E5E5',DELIVERY:'#EFDBFB',DONE:'#DDF6E8',CANCEL:'#F6DDDD'};
-  const STATUS_LABELS   = {NEW:'',IN_PROCESS:'В обработке',DELIVERY:'В доставке',DONE:'Завершён',CANCEL:'Отменён'};
+  const STATUS_LABELS   = {NEW:'В обработке',IN_PROCESS:'В процессе',DELIVERY:'В доставке',DONE:'Завершён',CANCEL:'Отменён'};
   const COLOR_LABEL     = {WHITE:'Белый',BEIGE:'Бежевый',BROWN:'Коричневый',GRAY:'Серый',BLACK:'Чёрный',BLUE:'Синий',GREEN:'Зелёный',RED:'Красный',ORANGE:'Оранжевый',COLORED:'Цветной'};
   const SIZE_LABEL      = {SMALL:'Маленький (до 5×5×5)',MEDIUM:'Средний (до 10×10×10)',BIG:'Большой (до 20×20×20)',LARGE:'Очень большой'};
 
@@ -232,7 +234,7 @@
     document.getElementById('adet-id-text').textContent = `№${o.id}`;
     document.getElementById('adet-date').textContent = formatDate(o.createdAt);
 
-    // хедеры
+    // выбор хедера
     const statusSel = document.getElementById('adet-status-sel');
     const paySel    = document.getElementById('adet-pay-sel');
     statusSel.innerHTML = Object.entries(STATUS_LABELS).map(([v,l])=>`<option value="${v}" ${o.status===v?'selected':''}>${l||'—'}</option>`).join('');
@@ -280,7 +282,8 @@
     noteTA.disabled = true;
 
     // чат
-    document.getElementById('adet-chat-link').href = `/chat/${o.id}`;
+    document.getElementById('adet-chat-link').onclick = (e) => { e.preventDefault(); openAdminChat(o.id); };
+    document.getElementById('adet-chat-link').href = 'javascript:void(0)';
 
     // платеж
     document.getElementById('adet-pay-list').innerHTML = `
@@ -311,7 +314,7 @@
 
     // покупатель
     const initial = (user.name||user.username||'?')[0].toUpperCase();
-
+    // хранение сессии чата
     sessionStorage.setItem('adminUserContext', JSON.stringify({
       id: user.id, name: user.name, username: user.username,
       email: user.email, phone: user.phone
@@ -365,6 +368,168 @@
     // проверяем есть ли id в URL
     const match = window.location.pathname.match(/\/admin\/orders\/(\d+)/);
     if(match) openOrderDetail(match[1]);
+  });
+</script>
+
+
+<!-- ── чат-оверлей для админа ── -->
+<div class="chat-overlay" id="chat-overlay">
+  <div class="chat-backdrop" id="chat-backdrop"></div>
+  <div class="chat-panel">
+    <button class="chat-close-btn" id="chat-close-btn" aria-label="Закрыть чат">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1 1L13 13M13 1L1 13" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-loading">Загружаем историю…</div>
+    </div>
+    <div class="chat-input-area">
+      <textarea class="chat-textarea" id="chat-textarea"
+                placeholder="Введите сообщение" rows="1"></textarea>
+      <button class="chat-send-btn" id="chat-send-btn" title="Отправить" disabled>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M8 13V3M8 3L3.5 7.5M8 3L12.5 7.5"
+                stroke="#444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // админ чат
+  let chatOrderId  = null;
+  let stompClient  = null;
+
+  function openAdminChat(orderId) {
+    chatOrderId = orderId;
+    const overlay  = document.getElementById('chat-overlay');
+    const messages = document.getElementById('chat-messages');
+    messages.innerHTML = '<div class="chat-loading">Загружаем историю…</div>';
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    loadAdminChatHistory(orderId);
+    connectAdminWebSocket(orderId);
+  }
+
+  function closeAdminChat() {
+    document.getElementById('chat-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+    if (stompClient && stompClient.connected) stompClient.disconnect();
+    stompClient  = null;
+    chatOrderId  = null;
+    document.getElementById('chat-messages').innerHTML = '';
+    document.getElementById('chat-textarea').value     = '';
+    document.getElementById('chat-send-btn').disabled  = true;
+  }
+
+  async function loadAdminChatHistory(orderId) {
+    const messages = document.getElementById('chat-messages');
+    try {
+      const token = getAuthToken();
+      const res   = await fetch(`${API_BASE_URL}/chat/${orderId}/history`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) { messages.innerHTML = '<div class="chat-error">Не удалось загрузить историю</div>'; return; }
+      const history = await res.json();
+      messages.innerHTML = '';
+      if (!history.length) {
+        messages.innerHTML = '<div class="chat-loading">Сообщений пока нет</div>';
+      } else {
+        history.forEach(msg => appendAdminMessage(msg, false));
+        document.getElementById('chat-messages').scrollTop = 99999;
+      }
+    } catch (e) {
+      messages.innerHTML = '<div class="chat-error">Ошибка загрузки</div>';
+    }
+  }
+
+  function connectAdminWebSocket(orderId) {
+    const token = getAuthToken();
+    try {
+      const socket = new SockJS(`${API_BASE_URL}/ws`);
+      stompClient  = Stomp.over(socket);
+      stompClient.debug = null;
+      stompClient.connect(
+        { 'Authorization': `Bearer ${token}` },
+        function() {
+          stompClient.subscribe(`/topic/chat/${orderId}`, function(frame) {
+            const msg = JSON.parse(frame.body);
+            appendAdminMessage(msg, true);
+            document.getElementById('chat-messages').scrollTop = 99999;
+          });
+          document.getElementById('chat-send-btn').disabled = false;
+        },
+        function(err) {
+          console.warn('WS disconnected:', err);
+          document.getElementById('chat-send-btn').disabled = true;
+        }
+      );
+    } catch (e) { console.error('WS error:', e); }
+  }
+
+  function sendAdminMessage() {
+    const textarea = document.getElementById('chat-textarea');
+    const text     = textarea.value.trim();
+    if (!text || !stompClient?.connected || !chatOrderId) return;
+    stompClient.send(`/app/chat/${chatOrderId}`, {}, JSON.stringify({ orderId: Number(chatOrderId), content: text }));
+    textarea.value = '';
+    textarea.style.height = 'auto';
+  }
+
+  // fromAdmin=true - сообщения админа,
+  // fromAdmin=false - сообщения пользователя
+  function appendAdminMessage(msg, checkDuplicate) {
+    const container = document.getElementById('chat-messages');
+    const placeholder = container.querySelector('.chat-loading, .chat-error');
+    if (placeholder) placeholder.remove();
+    if (checkDuplicate && msg.id && container.querySelector(`[data-msg-id="${msg.id}"]`)) return;
+
+    const time = formatChatTime(msg.sentAt);
+    const div  = document.createElement('div');
+    if (msg.id) div.dataset.msgId = msg.id;
+
+    if (msg.fromAdmin) {
+      // правые сообщения
+      div.className = 'chat-msg chat-msg-user';
+      div.innerHTML = `<div class="chat-bubble chat-bubble-user">
+        <div class="chat-msg-text">${escapeChat(msg.content)}</div>
+        <div class="chat-msg-time">${time}</div>
+      </div>`;
+    } else {
+      // левые сообщения
+      div.className = 'chat-msg chat-msg-admin';
+      div.innerHTML = `<div class="chat-msg-sender">${escapeChat(msg.senderUsername || 'Пользователь')}</div>
+        <div class="chat-bubble chat-bubble-admin">
+          <div class="chat-msg-text">${escapeChat(msg.content)}</div>
+          <div class="chat-msg-time">${time}</div>
+        </div>`;
+    }
+    container.appendChild(div);
+  }
+
+  function formatChatTime(sentAt) {
+    if (!sentAt) return '';
+    let d = Array.isArray(sentAt)
+      ? new Date(sentAt[0], sentAt[1]-1, sentAt[2], sentAt[3]||0, sentAt[4]||0, sentAt[5]||0)
+      : new Date(sentAt);
+    return isNaN(d) ? '' : d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function escapeChat(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.getElementById('chat-close-btn').addEventListener('click', closeAdminChat);
+  document.getElementById('chat-backdrop').addEventListener('click', closeAdminChat);
+  document.getElementById('chat-send-btn').addEventListener('click', sendAdminMessage);
+  document.getElementById('chat-textarea').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAdminMessage(); }
+  });
+  document.getElementById('chat-textarea').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
   });
 </script>
 

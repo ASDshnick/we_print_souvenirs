@@ -56,8 +56,28 @@
 
   const PAYMENT_LABEL = { CARD: 'Картой', CASH: 'Наличными' };
 
-  function isPaid(status) {
-    return status === 'PAID';
+  function getUserStatusLabel(order) {
+    if (!order || order.paymentStatus === 'NOT_PAID') return 'Не оплачен';
+    const map = {
+      NEW:        'В обработке',
+      IN_PROCESS: 'В процессе',
+      DELIVERY:   'В доставке',
+      DONE:       'Завершён',
+      CANCEL:     'Отменён'
+    };
+    return map[order.status] || 'В обработке';
+  }
+
+  function getUserStatusColor(order) {
+    if (!order || order.paymentStatus === 'NOT_PAID') return '#F6DDDD';
+    const map = {
+      NEW:        '#E4E5E5',
+      IN_PROCESS: '#E4E5E5',
+      DELIVERY:   '#EFDBFB',
+      DONE:       '#DDF6E8',
+      CANCEL:     '#F6DDDD'
+    };
+    return map[order.status] || '#E4E5E5';
   }
 
   function formatCreatedAt(createdAt) {
@@ -81,7 +101,7 @@
     return n.toLocaleString('ru-RU') + ' р.';
   }
 
-  // получаем id заказа из url
+  // id из пути /user/orders/17 или fallback ?id=X (Live Server)
   function getOrderId() {
     const match = window.location.pathname.match(/\/user\/orders\/(\d+)/);
     if (match) return match[1];
@@ -89,7 +109,8 @@
   }
 
   function renderOrder(order) {
-    const paid = isPaid(order.paymentStatus);
+    const statusLabel = getUserStatusLabel(order);
+    const statusColor  = getUserStatusColor(order);
     const date = order.date || formatCreatedAt(order.createdAt);
     const payLabel = PAYMENT_LABEL[order.paymentMethod] || order.paymentMethod || '—';
     const user = order.user || {};
@@ -116,9 +137,10 @@
           <div class="od-item-info">
             <div class="od-item-name">${item.productName || '—'}</div>
             <div class="od-item-meta">
-              ${color ? `Цвет: ${color}<br>` : ''}
-              ${size  ? `Размер: ${size}<br>` : ''}
-              ${item.comment ? `Комментарий: ${item.comment}` : ''}
+              ${color ? `Доступные цвета для цветной печати: ${color}<br>` : ''}
+              ${item.quantity ? `Количество (влияет на скидку): ${item.quantity}<br>` : ''}
+              ${size  ? `Размер: ${size}` : ''}
+              ${item.comment ? `<br>Комментарий: ${item.comment}` : ''}
             </div>
           </div>
           <div class="od-item-qty">${item.quantity}</div>
@@ -133,7 +155,7 @@
         <div class="od-header-left">
           <span class="od-order-num">Заказ №${order.id}</span>
           <span class="od-order-date">${date}</span>
-          <span class="pay-badge ${paid ? 'paid' : 'unpaid'}">${paid ? 'Оплачен' : 'Не оплачен'}</span>
+          <span class="pay-badge" style="background:${statusColor};padding:3px 10px;border-radius:4px;font-size:13px;">${statusLabel}</span>
         </div>
         <button class="od-repeat-btn" id="repeat-btn">Повторить заказ</button>
       </div>
@@ -203,7 +225,7 @@
         return;
       }
 
-      // записываем в корзину
+      // пишем в localStorage (корзина работает через него)
       const cartItems = order.items.map(item => ({
         localId:      'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
         productId:    item.productId,
@@ -215,15 +237,15 @@
         sizeEnum:     item.size    || null,
         sizeLabel:    SIZE_LABEL[item.size]    || '',
         qtyTierLabel: '',
-        apiQty:       item.quantity,   // кол-во для API при оформлении
-        cartQty:      1,               // кол-во "позиций" в корзине
+        apiQty:       item.quantity,
+        cartQty:      item.quantity,
         unitPrice:    item.totalPrice, // цена за всю позицию
         comment:      item.comment || ''
       }));
 
       localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
 
-      // открываем корзину
+      // открываем корзину прямо здесь
       openCartModal();
     });
   }
@@ -289,7 +311,8 @@
             <svg width="18" height="13" viewBox="0 0 18 13" fill="none"><rect width="18" height="4.33" fill="white"/><rect y="4.33" width="18" height="4.33" fill="#0039A6"/><rect y="8.67" width="18" height="4.33" fill="#D52B1E"/></svg>
             <span>+7</span>
           </div>
-          <input class="cart-phone-input" id="cart-phone" type="tel" placeholder="(920) 655-24-60" autocomplete="tel"/>
+          <input class="cart-phone-input" id="cart-phone" type="tel" placeholder="(920) 655-24-60" autocomplete="tel-national"
+                 oninput="this.value=this.value.replace(/^\+?7/,'').replace(/[^\d]/g,'').replace(/^(\d{10}).*/,'$1')"/>
         </div>
       </div>
       <div class="cart-payment-section">
@@ -311,7 +334,7 @@
 </div>
 
 <script>
-  // корзина
+  // корзина (localStorage)
   const CART_KEY = 'modelmaster_cart';
 
   function getLocalCart() {
@@ -384,7 +407,7 @@
           <p class="cart-item-name">${item.serviceName}</p>
           <div class="cart-item-specs">
             ${item.colorLabel ? `<p>Цвет: ${item.colorLabel}</p>` : ''}
-            ${item.apiQty ? `<p>Количество: ${item.apiQty} шт.</p>` : ''}
+            ${item.cartQty ? `<p>Количество: ${item.cartQty} шт.</p>` : ''}
             ${item.sizeLabel ? `<p>Размер: ${item.sizeLabel}</p>` : ''}
           </div>
           ${item.description ? `<p class="cart-item-desc">${item.description}</p>` : ''}
@@ -433,7 +456,7 @@
 
   async function prefillCartForm() {
     if (!isAuthenticated()) return;
-    const login = localStorage.getItem('userLogin') || '';
+    const login = sessionStorage.getItem('userLogin') || '';
     const usernameEl = document.getElementById('cart-auth-username');
     if (usernameEl) usernameEl.textContent = login;
     const result = await getUserProfile();
@@ -444,10 +467,15 @@
     const phoneEl = document.getElementById('cart-phone');
     if (nameEl  && !nameEl.value)  nameEl.value  = d.name || d.username || '';
     if (emailEl && !emailEl.value) emailEl.value = d.email || '';
-    if (phoneEl && !phoneEl.value) phoneEl.value = d.phone || '';
+    if (phoneEl && !phoneEl.value) {
+      let v = d.phone || '';
+      if (v.startsWith('+7')) v = v.slice(2).trim();
+      if (v.startsWith('7') && v.length === 11) v = v.slice(1);
+      phoneEl.value = v;
+    }
   }
 
-  // события
+  // события корзины
   document.getElementById('cart-overlay')?.addEventListener('click', e => {
     if (e.target === document.getElementById('cart-overlay')) closeCartModal();
   });
@@ -456,7 +484,7 @@
     if (confirm('Вы уверены, что хотите выйти?')) logout();
   });
 
-  // оформление
+  // оформление заказа
   document.getElementById('cart-submit')?.addEventListener('click', async () => {
     const cart = getLocalCart();
     if (!cart.length) return;
@@ -470,7 +498,7 @@
       for (const item of cart) {
         const r = await addToCart({
           productId: item.productId,
-          quantity:  item.apiQty * item.cartQty,
+          quantity:  item.cartQty,
           size:      item.sizeEnum,
           color:     item.colorEnum,
           comment:   item.comment || ''
