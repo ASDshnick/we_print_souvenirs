@@ -122,13 +122,25 @@ function fixImagePath(path) {
       return;
     }
 
+    const PRODUCT_IMAGE = {
+      1: '/assets/images/service1.png',
+      2: '/assets/images/service2.png',
+      3: '/assets/images/service3.png'
+    };
+
     // последний заказ
     const latest = orders[0];
     const date = latest.date
       || (latest.createdAt ? new Date(latest.createdAt).toLocaleDateString('ru-RU') : '');
     // Сначала пробуем items из ответа бэка, потом из localStorage
     const savedItems = JSON.parse(localStorage.getItem('order_items_' + latest.id) || '[]');
-    const items = (latest.items && latest.items.length > 0) ? latest.items : savedItems;
+    const apiItems = (latest.productIds || latest.productsIds || []).map(pid => ({
+      image: PRODUCT_IMAGE[pid] || '',
+      serviceName: ''
+    })).filter(i => i.image);
+    const items = (latest.items && latest.items.length > 0)
+      ? latest.items
+      : (savedItems.length > 0 ? savedItems : apiItems);
 
     ordersList.innerHTML = `
       <div class="order-header">
