@@ -327,13 +327,13 @@ header {
 
 .process-step {
   display: grid;
-  grid-template-columns: 560px 1fr;
+  grid-template-columns: minmax(0, 50%) 1fr;
   gap: 40px;
   align-items: center;
 }
 
 .process-step.reverse {
-  grid-template-columns: 1fr 560px;
+  grid-template-columns: 1fr minmax(0, 50%);
 }
 
 .process-step.reverse .step-img { order: 2; }
@@ -398,7 +398,7 @@ header {
   margin: 0 auto;
   padding: 0 20px;
   display: grid;
-  grid-template-columns: 760px 1fr;
+  grid-template-columns: minmax(0, 55%) 1fr;
   gap: 60px;
   align-items: start;
 }
@@ -3411,18 +3411,29 @@ header {
   .profile-content { padding: 0 60px 40px; }
   .edit-profile-page { padding: 40px 60px 80px; }
   .ep-body { gap: 48px; }
+
+  /* service cards — tablet */
+  .service-card {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .service-photo { height: 420px; }
+
+  .process-step { grid-template-columns: 1fr 1fr; }
+  .process-step.reverse { grid-template-columns: 1fr 1fr; }
+  .step-img { height: 320px; }
 }
 
-/* ── мобилка ── */
+/*  мобилка ≤767px */
 @media (max-width: 767px) {
 
-  /* хедеры */
+  /* ХЕДЕР */
   .header-inner { padding: 0 16px; height: 56px; gap: 12px; }
   .header-nav { display: none; }
   .btn-cta { display: none; }
   .logo-text { font-size: 14px; }
 
-  /* хлебные крошки */
+  /* ХЛЕБНЫЕ КРОШКИ */
   .profile-breadcrumb,
   .orders-breadcrumb { padding: 20px 16px 16px; }
   .profile-content { padding: 0 16px 32px; }
@@ -3430,7 +3441,7 @@ header {
   .edit-profile-page { padding: 20px 16px 40px; gap: 16px; }
   .od-breadcrumb { padding: 20px 16px 16px !important; }
 
-  /* профиль */
+  /* ПРОФИЛЬ */
   .profile-columns,
   .profile-grid { flex-direction: column !important; }
   .profile-section { min-width: 0 !important; border-radius: 8px; }
@@ -3440,16 +3451,16 @@ header {
   .profile-info-section .profile-info-body,
   .profile-info-body { flex-direction: column; gap: 16px; }
 
-  /* профиль + заказы */
+  /* КАРТОЧКИ ЗАКАЗОВ */
   .order-card { padding: 16px; }
   .order-header { flex-direction: column; align-items: flex-start; gap: 8px; }
   .order-items-row { flex-wrap: wrap; gap: 6px; }
 
-  /* страница заказов */
+  /* МОИ ЗАКАЗЫ */
   .orders-container { padding: 0 16px 40px; }
   .orders-list { gap: 12px; }
 
-  /* страница деталей заказов */
+  /* ДЕТАЛИ ЗАКАЗА */
   .od-layout { flex-direction: column !important; }
   .od-col-main,
   .od-col-side { width: 100% !important; max-width: 100% !important; }
@@ -3457,23 +3468,100 @@ header {
   .od-header-left { flex-wrap: wrap; gap: 8px; }
   .od-item-row { flex-wrap: wrap; gap: 8px; }
 
-  /* редактирование профиля */
+  /* РЕДАКТИРОВАНИЕ ПРОФИЛЯ */
   .ep-body { flex-direction: column; gap: 24px; }
   .ep-form-col,
   .ep-avatar-col { max-width: 100% !important; width: 100%; }
-  .ep-avatar-col { align-items: flex-start; flex-direction: row; gap: 16px; align-items: center; }
+  .ep-avatar-col { flex-direction: row; gap: 16px; align-items: center; }
   .ep-card { padding: 20px 16px; border-radius: 8px; }
   .ep-save-btn { width: 100%; }
 
-  /* корзина */
-  .cart-panel { width: 100% !important; max-width: 100vw; border-radius: 0; }
-  .cart-panel-header { width: 100% !important; }
+  /* КОРЗИНА */
+  .cart-panel {
+    width: 100% !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    padding: 24px 16px 40px !important;
+  }
+  .cart-panel-header,
+  .cart-items-list,
+  .cart-item,
+  .cart-subtotal-row,
+  .cart-form-section,
+  .cart-auth-block,
+  .cart-field,
+  .cart-field-input { width: 100% !important; box-sizing: border-box !important; }
+  .cart-item { gap: 12px; }
+  .cart-item-info { width: auto !important; flex: 1; }
   .cart-close-btn { left: auto; right: 12px; top: 12px; }
+  .cart-phone-wrap { width: 100%; }
 
-  /* модалка */
+  /* МОДАЛКА */
   .modal-content { width: calc(100vw - 32px) !important; max-width: 480px; margin: 16px; }
 
-  /* админ панель мобла */
+  /* ГЛАВНАЯ hero */
+  .hero-section { padding: 32px 0 8px; }
+  .hero-text h1 { font-size: 28px; line-height: 1.3; }
+  .hero-text p { font-size: 15px; line-height: 24px; }
+  .hero-img-wrap { padding: 0 12px; }
+
+  /* ГЛАВНАЯ О мастере */
+  .about-section { padding: 32px 0; }
+  .about-inner { flex-direction: column; gap: 24px; padding: 0 16px; }
+  .about-text { max-width: 100%; }
+
+  /* ГЛАВНАЯ примеры работ */
+  .work-types-section { padding: 32px 0; }
+  .work-types-grid,
+  .services-grid { grid-template-columns: 1fr !important; gap: 16px; }
+
+  /* ГЛАВНАЯ процесс работы */
+  .process-section { padding: 32px 0; }
+  .process-steps { gap: 32px; padding: 0 16px; }
+  .process-step,
+  .process-step.reverse { grid-template-columns: 1fr; gap: 16px; }
+  .process-step.reverse .step-img { order: 0; }
+  .process-step.reverse .step-info { order: 1; }
+  .step-img { height: 220px; }
+
+  /* ГЛАВНАЯ услуги */
+  .services-header-section { padding: 40px 0 32px; }
+  .services-header-section .section-heading h2 { font-size: 24px; }
+  .services-header-section .section-heading p { font-size: 16px; }
+  .service-card-section { padding: 40px 0; }
+  .service-card {
+    grid-template-columns: 1fr !important;
+    gap: 24px;
+    padding: 0 16px;
+  }
+  .service-photo { height: 260px; }
+  .service-info { gap: 12px; }
+  .service-info h3 { font-size: 20px; }
+  .field-row { flex-direction: column; gap: 8px; }
+  .field-row select,
+  .field-row select.wide { width: 100%; }
+  .qty-input-wrap { width: 100%; }
+  .qty-input { width: 100%; }
+  .service-price { font-size: 20px; }
+
+  /* ГЛАВНАЯ контакты */
+  .contacts-section { padding: 32px 0; }
+
+  /* ГЛАВНАЯ футер */
+  .footer-section .wrap { padding: 0 16px; }
+  .footer-cols,
+  .footer-grid { flex-direction: column; gap: 24px; }
+
+  /* ОБЩИЕ */
+  .hero-section .wrap,
+  .about-section .wrap,
+  .work-types-section .wrap,
+  .process-section .wrap,
+  .services-header-section .wrap,
+  .contacts-section .wrap { padding: 0 16px; }
+
+  /* админка */
   .admin-page { padding: 16px; }
   .admin-table-wrap { overflow-x: auto; }
   .admin-section { border-radius: 8px; }
@@ -3489,35 +3577,6 @@ header {
   .ausr-avatar { width: 72px; height: 72px; font-size: 28px; }
   .achat-card { height: calc(100vh - 32px); border-radius: 8px; }
   .achat-page { padding: 16px; }
-
-  /* главная страница по секциям */
-  .hero-section .wrap,
-  .about-section .wrap,
-  .work-types-section .wrap,
-  .process-section .wrap,
-  .services-header-section .wrap,
-  .service-card-section .wrap,
-  .contacts-section .wrap { padding: 0 16px; }
-
-  .hero-section { padding: 40px 0; }
-  .about-section { padding: 40px 0; }
-  .work-types-section { padding: 40px 0; }
-  .process-section { padding: 40px 0; }
-  .service-card-section { padding: 40px 0; }
-  .contacts-section { padding: 40px 0; }
-
-  /*  */
-  .service-cards-grid,
-  .services-grid,
-  .work-types-grid,
-  .process-steps { grid-template-columns: 1fr !important; }
-
-  .service-card { min-width: 0; }
-
-  /* футеры */
-  .footer-section .wrap { padding: 0 16px; }
-  .footer-cols,
-  .footer-grid { flex-direction: column; gap: 24px; }
 }
 
 a.social-btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
