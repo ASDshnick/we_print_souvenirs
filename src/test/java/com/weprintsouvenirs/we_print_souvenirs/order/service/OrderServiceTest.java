@@ -132,7 +132,7 @@ class OrderServiceTest {
 
         assertThat(orders).hasSize(2);
         assertThat(orders.get(0).getId()).isEqualTo(2L);
-        assertThat(orders.get(0).getProductsIds()).containsExactly(21L);
+        assertThat(orders.get(0).getProductIds()).containsExactly(21L);
         assertThat(orders.get(1).getId()).isEqualTo(1L);
     }
 
@@ -195,7 +195,7 @@ class OrderServiceTest {
     }
 
     private OrderEntity order(Long id, int total, LocalDateTime createdAt) {
-        return new OrderEntity(id, user, "alice", "alice@example.com", total, Status.NEW, Payment.CARD,
+        return new OrderEntity(id, user, "alice", "alice@example.com","+793215436789", total, Status.NEW, Payment.CARD,
                 createdAt, PaymentStatus.NOT_PAID, null);
     }
 

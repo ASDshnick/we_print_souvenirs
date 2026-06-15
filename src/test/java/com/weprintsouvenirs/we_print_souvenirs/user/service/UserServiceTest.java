@@ -1,7 +1,9 @@
 package com.weprintsouvenirs.we_print_souvenirs.user.service;
 
 import com.weprintsouvenirs.we_print_souvenirs.config.JwtUtil;
+import com.weprintsouvenirs.we_print_souvenirs.chat.repository.ChatMessageRepository;
 import com.weprintsouvenirs.we_print_souvenirs.order.model.OrderEntity;
+import com.weprintsouvenirs.we_print_souvenirs.order.repository.CartRepository;
 import com.weprintsouvenirs.we_print_souvenirs.order.repository.OrderItemRepository;
 import com.weprintsouvenirs.we_print_souvenirs.order.repository.OrderRepository;
 import com.weprintsouvenirs.we_print_souvenirs.user.Role;
@@ -53,6 +55,10 @@ class UserServiceTest {
     private OrderRepository orderRepository;
     @Mock
     private OrderItemRepository orderItemRepository;
+    @Mock
+    private CartRepository cartRepository;
+    @Mock
+    private ChatMessageRepository chatMessageRepository;
 
     @InjectMocks
     private UserService userService;
