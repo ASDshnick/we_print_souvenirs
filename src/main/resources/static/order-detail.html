@@ -495,6 +495,21 @@
     errEl.style.display = 'none';
     errEl.classList.remove('visible');
     try {
+      // Валидация полей
+      const emailVal = document.getElementById('cart-email')?.value?.trim() || '';
+      const phoneVal = document.getElementById('cart-phone')?.value?.trim() || '';
+      if (!emailVal || !emailVal.includes('@') || emailVal.indexOf('@') === 0 || emailVal.indexOf('@') === emailVal.length - 1) {
+        errEl.textContent = 'Введите корректный email (должен содержать @)';
+        errEl.classList.add('visible'); errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'ОФОРМИТЬ'; return;
+      }
+      const phoneDigits = phoneVal.replace(/\D/g, '');
+      if (phoneDigits.length < 10) {
+        errEl.textContent = 'Введите корректный номер телефона (не менее 10 цифр)';
+        errEl.classList.add('visible'); errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'ОФОРМИТЬ'; return;
+      }
+
       for (const item of cart) {
         const r = await addToCart({
           productId: item.productId,
@@ -508,7 +523,8 @@
       const paymentMethod = document.querySelector('input[name="cart-payment"]:checked')?.value || 'CASH';
       const contactName   = document.getElementById('cart-name')?.value?.trim()  || '';
       const contactEmail  = document.getElementById('cart-email')?.value?.trim() || '';
-      const contactPhone  = document.getElementById('cart-phone')?.value?.trim() || '';
+      const rawPhone = document.getElementById('cart-phone')?.value?.trim() || '';
+      const contactPhone = rawPhone ? '+7' + rawPhone.replace(/\D/g,'') : '';
       const orderResult = await checkout({ paymentMethod, contactName, contactEmail, contactPhone });
       if (!orderResult.success) throw new Error(orderResult.message || 'Ошибка оформления заказа');
       const orderId = orderResult.data?.id;
