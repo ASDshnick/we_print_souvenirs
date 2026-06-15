@@ -62,7 +62,8 @@
                   </svg>
                   <span>+7</span>
                 </div>
-                <input class="ep-phone-input" id="ep-phone" type="tel" name="phone" placeholder="(900) 000-00-00" autocomplete="tel"/>
+                <input class="ep-phone-input" id="ep-phone" type="tel" name="phone" placeholder="(900) 000-00-00" autocomplete="tel-national"
+                       oninput="this.value=this.value.replace(/^\+?7/,'').replace(/[^\d]/g,'').replace(/^(\d{10}).*/,'$1')"/>
               </div>
             </div>
 
@@ -118,7 +119,12 @@
           const mu = document.getElementById('menu-username');
           if (n)  n.value  = d.name || d.username || d.login || '';
           if (em) em.value = d.email || '';
-          if (ph) ph.value = d.phone || '';
+          if (ph) {
+            let v = d.phone || '';
+            if (v.startsWith('+7')) v = v.slice(2).trim();
+            if (v.startsWith('7') && v.length === 11) v = v.slice(1);
+            ph.value = v;
+          }
           if (mu) mu.textContent = d.name || d.username || '-';
         } else {
           window.location.href = '/';
@@ -134,7 +140,8 @@
       e.preventDefault();
       const name  = document.getElementById('ep-name')?.value.trim() || '';
       const email = document.getElementById('ep-email')?.value.trim() || '';
-      const phone = document.getElementById('ep-phone')?.value.trim() || '';
+      let phoneRaw = document.getElementById('ep-phone')?.value.trim() || '';
+      const phone = phoneRaw ? '+7' + phoneRaw : '';
       const btn   = e.target.querySelector('button[type="submit"]');
       if (btn) { btn.disabled = true; btn.textContent = 'Сохраняем...'; }
       try {

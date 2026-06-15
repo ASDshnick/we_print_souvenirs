@@ -446,8 +446,8 @@
         sizeEnum:     item.size    || null,
         sizeLabel:    SIZE_LABEL[item.size]    || '',
         qtyTierLabel: '',
-        apiQty:       item.quantity,   // кол-во для API при оформлении
-        cartQty:      1,               // кол-во "позиций" в корзине
+        apiQty:       item.quantity,
+        cartQty:      item.quantity,
         unitPrice:    item.totalPrice, // цена за всю позицию
         comment:      item.comment || ''
       }));
@@ -520,7 +520,8 @@
             <svg width="18" height="13" viewBox="0 0 18 13" fill="none"><rect width="18" height="4.33" fill="white"/><rect y="4.33" width="18" height="4.33" fill="#0039A6"/><rect y="8.67" width="18" height="4.33" fill="#D52B1E"/></svg>
             <span>+7</span>
           </div>
-          <input class="cart-phone-input" id="cart-phone" type="tel" placeholder="(920) 655-24-60" autocomplete="tel"/>
+          <input class="cart-phone-input" id="cart-phone" type="tel" placeholder="(920) 655-24-60" autocomplete="tel-national"
+                 oninput="this.value=this.value.replace(/^\+?7/,'').replace(/[^\d]/g,'').replace(/^(\d{10}).*/,'$1')"/>
         </div>
       </div>
       <div class="cart-payment-section">
@@ -615,7 +616,7 @@
           <p class="cart-item-name">${item.serviceName}</p>
           <div class="cart-item-specs">
             ${item.colorLabel ? `<p>Цвет: ${item.colorLabel}</p>` : ''}
-            ${item.apiQty ? `<p>Количество: ${item.apiQty} шт.</p>` : ''}
+            ${item.cartQty ? `<p>Количество: ${item.cartQty} шт.</p>` : ''}
             ${item.sizeLabel ? `<p>Размер: ${item.sizeLabel}</p>` : ''}
           </div>
           ${item.description ? `<p class="cart-item-desc">${item.description}</p>` : ''}
@@ -675,7 +676,12 @@
     const phoneEl = document.getElementById('cart-phone');
     if (nameEl  && !nameEl.value)  nameEl.value  = d.name || d.username || '';
     if (emailEl && !emailEl.value) emailEl.value = d.email || '';
-    if (phoneEl && !phoneEl.value) phoneEl.value = d.phone || '';
+    if (phoneEl && !phoneEl.value) {
+      let v = d.phone || '';
+      if (v.startsWith('+7')) v = v.slice(2).trim();
+      if (v.startsWith('7') && v.length === 11) v = v.slice(1);
+      phoneEl.value = v;
+    }
   }
 
   // события корзины
@@ -701,7 +707,7 @@
       for (const item of cart) {
         const r = await addToCart({
           productId: item.productId,
-          quantity:  item.apiQty * item.cartQty,
+          quantity:  item.cartQty,
           size:      item.sizeEnum,
           color:     item.colorEnum,
           comment:   item.comment || ''

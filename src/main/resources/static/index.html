@@ -557,14 +557,12 @@
   <p class="contacts-email">ryb.modelmaster@bk.ru</p>
   <p class="contacts-phone">+7 (995) 931-24-60</p>
   <div class="social-list">
-    <!-- ссылка на почту -->
     <a class="social-btn" href="mailto:ryb.modelmaster@bk.ru" aria-label="Email">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <rect x="2" y="4" width="20" height="16" rx="2" stroke="#555" stroke-width="1.8"/>
         <path d="M2 7l10 7 10-7" stroke="#555" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
     </a>
-    <!-- ссылка на номер телефона -->
     <a class="social-btn" href="tel:+79959312460" aria-label="Телефон">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2C7 21 3 7 3 6a2 2 0 0 1 2-2z" stroke="#555" stroke-width="1.8"/>
@@ -923,7 +921,8 @@
             </svg>
             <span>+7</span>
           </div>
-          <input class="cart-phone-input" id="cart-phone" type="tel" placeholder="(920) 655-24-60" autocomplete="tel"/>
+          <input class="cart-phone-input" id="cart-phone" type="tel" placeholder="(920) 655-24-60" autocomplete="tel-national"
+                 oninput="this.value=this.value.replace(/^\+?7/,'').replace(/[^\d]/g,'').replace(/^(\d{10}).*/,'$1')"/>
         </div>
       </div>
 
@@ -1086,7 +1085,7 @@
           <p class="cart-item-name">${item.serviceName}</p>
           <div class="cart-item-specs">
             ${item.colorLabel   ? `<p>Цвет: ${item.colorLabel}</p>` : ''}
-            ${item.qtyTierLabel ? `<p>Количество: ${item.qtyTierLabel}</p>` : ''}
+            ${item.cartQty ? `<p>Количество: ${item.cartQty}</p>` : ''}
             ${item.sizeLabel    ? `<p>Размер: ${item.sizeLabel}</p>` : ''}
           </div>
           ${item.description ? `<p class="cart-item-desc">${item.description}</p>` : ''}
@@ -1167,7 +1166,12 @@
     const phoneEl = document.getElementById('cart-phone');
     if (nameEl  && !nameEl.value)  nameEl.value  = d.username || d.login || '';
     if (emailEl && !emailEl.value) emailEl.value = d.email || '';
-    if (phoneEl && !phoneEl.value) phoneEl.value = d.phone || '';
+    if (phoneEl && !phoneEl.value) {
+      let ph = d.phone || '';
+      if (ph.startsWith('+7')) ph = ph.slice(2).trim();
+      if (ph.startsWith('7') && ph.length === 11) ph = ph.slice(1);
+      phoneEl.value = ph;
+    }
   }
 
   // добавление товара в корзину с карточки услуги
@@ -1191,7 +1195,7 @@
       sizeLabel:     sSel?.options[sSel.selectedIndex]?.text || '',
       qtyTierLabel:  tier1.label,
       apiQty:        qty1,
-      cartQty:       1,
+      cartQty:       qty1,
       unitPrice:     parseInt(document.getElementById('total-price')?.textContent) || 650
     });
     openCartModal();
@@ -1214,7 +1218,7 @@
       sizeLabel:     sSel?.options[sSel.selectedIndex]?.text || '',
       qtyTierLabel:  tier2.label,
       apiQty:        qty2,
-      cartQty:       1,
+      cartQty:       qty2,
       unitPrice:     parseInt(document.getElementById('total-price-2')?.textContent) || 450
     });
     openCartModal();
@@ -1236,7 +1240,7 @@
       sizeLabel:     '',
       qtyTierLabel:  tier3.label,
       apiQty:        qty3,
-      cartQty:       1,
+      cartQty:       qty3,
       unitPrice:     parseInt(document.getElementById('total-price-3')?.textContent) || 900
     });
     openCartModal();
@@ -1259,7 +1263,7 @@
       for (const item of cart) {
         const r = await addToCart({
           productId: item.productId,
-          quantity:  item.apiQty * item.cartQty,
+          quantity:  item.cartQty,
           size:      item.sizeEnum,
           color:     item.colorEnum,
           comment:   item.comment || ''
