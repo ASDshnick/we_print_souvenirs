@@ -665,7 +665,7 @@
 
   async function prefillCartForm() {
     if (!isAuthenticated()) return;
-    const login = localStorage.getItem('userLogin') || '';
+    const login = sessionStorage.getItem('userLogin') || '';
     const usernameEl = document.getElementById('cart-auth-username');
     if (usernameEl) usernameEl.textContent = login;
     const result = await getUserProfile();
