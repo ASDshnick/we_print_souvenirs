@@ -104,7 +104,25 @@
     3: 'Карты города'
   };
 
-  function isPaid(status) { return status === 'PAID'; }
+  function getUserStatusLabel(order) {
+    if (!order || order.paymentStatus === 'NOT_PAID') return 'Не оплачен';
+    const map = {
+      NEW:        'В обработке',
+      IN_PROCESS: 'В процессе',
+      DELIVERY:   'В доставке',
+      DONE:       'Завершён',
+      CANCEL:     'Отменён'
+    };
+    return map[order.status] || 'В обработке';
+  }
+    return map[order.status] || 'В обработке';
+  }
+
+  function getUserStatusColor(order) {
+    if (!order || order.paymentStatus === 'NOT_PAID') return '#F6DDDD';
+    const map = { NEW:'#E4E5E5', IN_PROCESS:'#E4E5E5', DELIVERY:'#EFDBFB', DONE:'#DDF6E8', CANCEL:'#F6DDDD' };
+    return map[order.status] || '#E4E5E5';
+  }
 
   function getItems(order) {
   if (order.productIds && order.productIds.length > 0) {
@@ -123,7 +141,8 @@
 }
 
   function renderOrder(order) {
-    const paid  = isPaid(order.status);
+    const statusLabel = getUserStatusLabel(order);
+    const statusColor = getUserStatusColor(order);
     const items = getItems(order);
     const thumbsHtml = items.length > 0
       ? `<div class="order-thumbs">${
@@ -146,7 +165,7 @@
                 <path d="M13.25 6.5C13.25 9.67 10.7 12.25 7.5 12.25C6.54 12.25 5.63 12.01 4.83 11.59L2 12.5L2.91 9.67C2.49 8.87 2.25 7.96 2.25 7C2.25 3.8 4.83 1.25 8 1.25C10.82 1.25 13.11 3.25 13.22 5.85" stroke="#000" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-            <span class="pay-badge ${paid ? 'paid' : 'unpaid'}">${paid ? 'Оплачен' : 'Не оплачен'}</span>
+            <span class="pay-badge" style="background:${statusColor};padding:3px 10px;border-radius:4px;font-size:13px;">${statusLabel}</span>
             <span class="order-price">${order.totalAmount ? order.totalAmount + ' р.' : ''}</span>
           </div>
         </div>

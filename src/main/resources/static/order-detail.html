@@ -6,6 +6,216 @@
   <title>Заказ — МоделМастер</title>
   <link rel="stylesheet" href="/assets/css/styles.css"/>
   <script src="/assets/js/api.js"></script>
+  <style>
+    .order-detail-page {
+      min-height: 100vh;
+      background: #F5F5F5;
+    }
+
+    .od-breadcrumb {
+      padding: 48px 140px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+    }
+    .od-breadcrumb a { color: #000; text-decoration: none; }
+    .od-breadcrumb .sep { color: #000; }
+    .od-breadcrumb .current { color: #000; opacity: .5; }
+
+    .od-content {
+      padding: 0 140px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* шапка заказа */
+    .od-header-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+    .od-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .od-order-num {
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+    }
+    .od-order-date {
+      font-size: 16px;
+      font-weight: 400;
+      color: #000;
+    }
+    .od-repeat-btn {
+      box-sizing: border-box;
+      padding: 4px 14px;
+      height: 33px;
+      background: #fff;
+      border: 1px solid #000;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: 400;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity .15s;
+    }
+    .od-repeat-btn:hover { opacity: .7; }
+    .od-repeat-btn:disabled { opacity: .4; cursor: default; }
+
+    /* основная сетка */
+    .od-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 10px;
+      align-items: start;
+    }
+    .od-left { display: flex; flex-direction: column; gap: 10px; }
+
+    /* карточки */
+    .od-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 26px 24px;
+    }
+    .od-card-title {
+      font-size: 16px;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+      color: #000;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: none;
+    }
+
+    /* список товаров */
+    .od-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+    .od-item:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .od-item-img {
+      width: 50px;
+      min-width: 50px;
+      height: 50px;
+      border-radius: 4px;
+      background: #F8F8F8;
+      object-fit: cover;
+      margin-right: 14px;
+      margin-top: 2px;
+    }
+
+    .od-item-info { flex: 1; min-width: 0; }
+    .od-item-name {
+      font-size: 16px;
+      font-weight: 400;
+      color: #000;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .od-item-meta {
+      font-size: 12px;
+      line-height: 18px;
+      color: #000;
+      opacity: .7;
+    }
+
+    .od-item-qty {
+      min-width: 30px;
+      text-align: center;
+      font-size: 14px;
+      color: #000;
+      padding: 0 10px;
+      align-self: center;
+    }
+    .od-item-price {
+      min-width: 70px;
+      text-align: right;
+      font-size: 14px;
+      color: #000;
+      align-self: center;
+      white-space: nowrap;
+    }
+
+    /* итог */
+    .od-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,.08);
+    }
+    .od-total-label { font-size: 16px; font-weight: 700; color: #000; }
+    .od-total-value { font-size: 16px; font-weight: 700; color: #000; }
+
+    /* данные */
+    .od-data-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      line-height: 24px;
+    }
+    .od-data-label { font-size: 16px; color: #000; opacity: .5; min-width: 80px; }
+    .od-data-value { font-size: 16px; color: #000; opacity: .8; text-align: right; }
+
+    /* оплата */
+    .od-pay-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      line-height: 24px;
+    }
+    .od-pay-label { font-size: 16px; color: #000; opacity: .5; }
+    .od-pay-value { font-size: 16px; color: #000; opacity: .8; text-align: right; }
+    .od-pay-total { font-size: 16px; color: #000; font-weight: 700; text-align: right; }
+
+    /* назад */
+    .od-back {
+      margin-top: 8px;
+    }
+    .od-back a {
+      font-size: 16px;
+      color: #000;
+      text-decoration: none;
+      opacity: .7;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity .15s;
+    }
+    .od-back a:hover { opacity: 1; }
+
+    .od-loading {
+      text-align: center;
+      padding: 80px 0;
+      color: #999;
+      font-size: 18px;
+    }
+    .od-error {
+      text-align: center;
+      padding: 80px 0;
+      color: #c0392b;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
 
@@ -56,8 +266,30 @@
 
   const PAYMENT_LABEL = { CARD: 'Картой', CASH: 'Наличными' };
 
-  function isPaid(status) {
-    return status === 'PAID';
+  function getUserStatusLabel(order) {
+    if (!order || order.paymentStatus === 'NOT_PAID') return 'Не оплачен';
+    const map = {
+      NEW:        'В обработке',
+      IN_PROCESS: 'В процессе',
+      DELIVERY:   'В доставке',
+      DONE:       'Завершён',
+      CANCEL:     'Отменён'
+    };
+    return map[order.status] || 'В обработке';
+  }
+    return map[order.status] || 'В обработке';
+  }
+
+  function getUserStatusColor(order) {
+    if (!order || order.paymentStatus === 'NOT_PAID') return '#F6DDDD';
+    const map = {
+      NEW:        '#E4E5E5',
+      IN_PROCESS: '#E4E5E5',
+      DELIVERY:   '#EFDBFB',
+      DONE:       '#DDF6E8',
+      CANCEL:     '#F6DDDD'
+    };
+    return map[order.status] || '#E4E5E5';
   }
 
   function formatCreatedAt(createdAt) {
@@ -81,7 +313,7 @@
     return n.toLocaleString('ru-RU') + ' р.';
   }
 
-  // получаем id заказа из url
+  // id из пути /user/orders/17 или fallback ?id=X (Live Server)
   function getOrderId() {
     const match = window.location.pathname.match(/\/user\/orders\/(\d+)/);
     if (match) return match[1];
@@ -89,7 +321,8 @@
   }
 
   function renderOrder(order) {
-    const paid = isPaid(order.paymentStatus);
+    const statusLabel = getUserStatusLabel(order);
+    const statusColor  = getUserStatusColor(order);
     const date = order.date || formatCreatedAt(order.createdAt);
     const payLabel = PAYMENT_LABEL[order.paymentMethod] || order.paymentMethod || '—';
     const user = order.user || {};
@@ -133,7 +366,7 @@
         <div class="od-header-left">
           <span class="od-order-num">Заказ №${order.id}</span>
           <span class="od-order-date">${date}</span>
-          <span class="pay-badge ${paid ? 'paid' : 'unpaid'}">${paid ? 'Оплачен' : 'Не оплачен'}</span>
+          <span class="pay-badge" style="background:${statusColor};padding:3px 10px;border-radius:4px;font-size:13px;">${statusLabel}</span>
         </div>
         <button class="od-repeat-btn" id="repeat-btn">Повторить заказ</button>
       </div>
@@ -203,7 +436,7 @@
         return;
       }
 
-      // записываем в корзину
+      // пишем в localStorage (корзина работает через него)
       const cartItems = order.items.map(item => ({
         localId:      'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
         productId:    item.productId,
@@ -223,7 +456,7 @@
 
       localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
 
-      // открываем корзину
+      // открываем корзину прямо здесь
       openCartModal();
     });
   }
@@ -311,7 +544,7 @@
 </div>
 
 <script>
-  // корзина
+  // корзина (localStorage)
   const CART_KEY = 'modelmaster_cart';
 
   function getLocalCart() {
@@ -447,7 +680,7 @@
     if (phoneEl && !phoneEl.value) phoneEl.value = d.phone || '';
   }
 
-  // события
+  // события корзины
   document.getElementById('cart-overlay')?.addEventListener('click', e => {
     if (e.target === document.getElementById('cart-overlay')) closeCartModal();
   });
@@ -456,7 +689,7 @@
     if (confirm('Вы уверены, что хотите выйти?')) logout();
   });
 
-  // оформление
+  // оформление заказа
   document.getElementById('cart-submit')?.addEventListener('click', async () => {
     const cart = getLocalCart();
     if (!cart.length) return;

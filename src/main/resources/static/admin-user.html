@@ -144,11 +144,16 @@
 
     // заказы пользователя — фильтруем по email
     const ordersR = await getAdminOrders();
-    if (ordersR.success && u.email) {
+    if (ordersR.success) {
+      console.log('[debug] user:', { username: u.username, email: u.email });
+      if (ordersR.data.length > 0) {
+        console.log('[debug] first order:', { customerUsername: ordersR.data[0].customerUsername, customerEmail: ordersR.data[0].customerEmail });
+      }
       const userOrders = ordersR.data.filter(o =>
         (u.username && o.customerUsername === u.username) ||
         (u.email && o.customerEmail === u.email)
       );
+      console.log('[debug] matched orders:', userOrders.length, 'of', ordersR.data.length);
       const count = userOrders.length;
       const noun = count === 1 ? 'заказ' : count < 5 ? 'заказа' : 'заказов';
       const recentHtml = userOrders.slice(0, 3).map(o => {

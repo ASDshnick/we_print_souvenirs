@@ -128,7 +128,7 @@
   const PAYMENT_COLORS  = {PAID:'#DDF6E8',NOT_PAID:'#F6DDDD'};
   const PAYMENT_LABELS  = {PAID:'Оплачен',NOT_PAID:'Не оплачен'};
   const STATUS_COLORS   = {NEW:'#E4E5E5',IN_PROCESS:'#E4E5E5',DELIVERY:'#EFDBFB',DONE:'#DDF6E8',CANCEL:'#F6DDDD'};
-  const STATUS_LABELS   = {NEW:'',IN_PROCESS:'В обработке',DELIVERY:'В доставке',DONE:'Завершён',CANCEL:'Отменён'};
+  const STATUS_LABELS   = {NEW:'В обработке',IN_PROCESS:'В процессе',DELIVERY:'В доставке',DONE:'Завершён',CANCEL:'Отменён'};
   const COLOR_LABEL     = {WHITE:'Белый',BEIGE:'Бежевый',BROWN:'Коричневый',GRAY:'Серый',BLACK:'Чёрный',BLUE:'Синий',GREEN:'Зелёный',RED:'Красный',ORANGE:'Оранжевый',COLORED:'Цветной'};
   const SIZE_LABEL      = {SMALL:'Маленький (до 5×5×5)',MEDIUM:'Средний (до 10×10×10)',BIG:'Большой (до 20×20×20)',LARGE:'Очень большой'};
 
@@ -398,7 +398,7 @@
 </div>
 
 <script>
-
+  // админ чат
   let chatOrderId  = null;
   let stompClient  = null;
 

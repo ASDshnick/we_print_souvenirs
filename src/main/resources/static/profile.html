@@ -133,7 +133,7 @@ function fixImagePath(path) {
     ordersList.innerHTML = `
       <div class="order-header">
         <p class="order-title">Последний заказ: №${latest.id} ${date}</p>
-        <span class="status-badge status-${(latest.status||'').toLowerCase()}">${formatStatus(latest.status)}</span>
+        <span class="status-badge" style="background:${getUserStatusColor(latest)}">${getUserStatusLabel(latest)}</span>
       </div>
       ${items.length > 0 ? `
       <div class="order-thumbs-row">
@@ -147,22 +147,30 @@ function fixImagePath(path) {
     `;
   }
 
-  function formatStatus(status) {
+  function getUserStatusLabel(order) {
+    if (!order || order.paymentStatus === 'NOT_PAID') return 'Не оплачен';
     const map = {
-      'NEW':                'Новый',
-      'NOT_PAID':             'Не оплачен',
-      'AWAITING_PAYMENT':   'Не оплачен',
-      'PAID':               'Оплачен',
-      'IN_PROCESS':         'В процессе',
-      'IN_PROGRESS':        'В процессе',
-      'PROCESSING':         'В обработке',
-      'DELIVERY':           'В доставке',
-      'DONE':               'Выполнен',
-      'COMPLETED':          'Завершён',
-      'CANCEL':             'Отменён',
-      'CANCELLED':          'Отменён'
+      NEW:        'В обработке',
+      IN_PROCESS: 'В процессе',
+      DELIVERY:   'В доставке',
+      DONE:       'Завершён',
+      CANCEL:     'Отменён'
     };
-    return map[status] || status || '—';
+    return map[order.status] || 'В обработке';
+  }
+    return map[order.status] || 'В обработке';
+  }
+
+  function getUserStatusColor(order) {
+    if (!order || order.paymentStatus === 'NOT_PAID') return '#F6DDDD';
+    const map = {
+      NEW:        '#E4E5E5',
+      IN_PROCESS: '#E4E5E5',
+      DELIVERY:   '#EFDBFB',
+      DONE:       '#DDF6E8',
+      CANCEL:     '#F6DDDD'
+    };
+    return map[order.status] || '#E4E5E5';
   }
 
 
