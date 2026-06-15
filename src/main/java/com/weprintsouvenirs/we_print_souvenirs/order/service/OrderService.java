@@ -82,6 +82,8 @@ public class OrderService {
                 ? requestDTO.getCustomerUsername() : user.getUsername());
         order.setCustomerEmail(requestDTO.getCustomerEmail() != null
                 ? requestDTO.getCustomerEmail() : user.getEmail());
+        order.setCustomerPhone(requestDTO.getCustomerPhone() != null
+                ? requestDTO.getCustomerPhone() : user.getPhone());
 
         Payment paymentMethod = requestDTO.getPaymentMethod();
         if ((paymentMethod == Payment.CARD || paymentMethod == Payment.CASH)) {
