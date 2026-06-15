@@ -161,9 +161,10 @@
           </div>
           <div class="order-card-right">
             <button class="chat-open-btn" onclick="openChat(${order.id})" title="Открыть чат по заказу">
-              <svg width="15" height="14" viewBox="0 0 15 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M13.25 6.5C13.25 9.67 10.7 12.25 7.5 12.25C6.54 12.25 5.63 12.01 4.83 11.59L2 12.5L2.91 9.67C2.49 8.87 2.25 7.96 2.25 7C2.25 3.8 4.83 1.25 8 1.25C10.82 1.25 13.11 3.25 13.22 5.85" stroke="#000" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+<svg width="27" height="25" viewBox="0 0 27 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="27" height="25" rx="12.5" fill="#F3F3F3"/>
+<path d="M8.5 7.16669H18.5C18.7208 7.16669 18.8925 7.23515 19.042 7.37469C19.1904 7.51324 19.25 7.65814 19.25 7.83368V14.8337C19.2499 15.009 19.1902 15.1533 19.042 15.2917C18.8925 15.4312 18.7208 15.4997 18.5 15.4997H9.55273L9.40918 15.6345L7.75 17.1823V7.83368C7.75 7.65814 7.80959 7.51324 7.95801 7.37469C8.10752 7.23515 8.27917 7.16669 8.5 7.16669Z" stroke="black"/>
+</svg>
             </button>
             <span class="pay-badge" style="background:${statusColor};padding:3px 10px;border-radius:4px;font-size:13px;">${statusLabel}</span>
             <span class="order-price">${order.totalAmount ? order.totalAmount + ' р.' : ''}</span>
